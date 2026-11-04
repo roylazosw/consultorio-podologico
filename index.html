@@ -34,7 +34,6 @@
     <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
-                <!-- Logotipo de los piecitos (Morado y Verde Pistache) -->
                 <div class="bg-emerald-50 p-2 rounded-2xl border border-emerald-100 shadow-sm flex items-center justify-center w-12 h-12">
                     <svg viewBox="0 0 512 512" class="w-8 h-8" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M110 90C90 90 75 110 80 145C85 175 115 195 130 180C145 165 140 110 125 95C120 90 115 90 110 90Z" fill="#a21caf"/>
@@ -51,7 +50,6 @@
                     <p class="text-xs text-slate-500">Sistema de Expedientes y Citas Podológicas</p>
                 </div>
             </div>
-            <!-- Botones de Pestañas -->
             <div class="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200 gap-1">
                 <button onclick="switchTab('pacientes')" id="btn-tab-pacientes" class="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-emerald-600 text-white shadow">
                     <i class="fa-solid fa-users mr-2"></i>Pacientes
@@ -66,7 +64,6 @@
     <!-- Contenido Principal -->
     <main class="max-w-7xl mx-auto px-4 py-6">
 
-        <!-- ================= VISTA PACIENTES ================= -->
         <div id="view-pacientes" class="space-y-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                 <div class="relative w-full md:w-96">
@@ -78,12 +75,9 @@
                 </button>
             </div>
 
-            <div id="patientsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                <!-- Se inyecta dinámicamente -->
-            </div>
+            <div id="patientsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
         </div>
 
-        <!-- ================= VISTA CITAS ================= -->
         <div id="view-citas" class="space-y-6 hidden">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-3 w-full md:w-auto">
@@ -99,14 +93,12 @@
                 </button>
             </div>
 
-            <div id="appointmentsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                <!-- Se inyecta dinámicamente -->
-            </div>
+            <div id="appointmentsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
         </div>
 
     </main>
 
-    <!-- ================= MODAL: NUEVO / EDITAR PACIENTE ================= -->
+    <!-- Modales -->
     <div id="patientModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white border border-slate-200 rounded-3xl max-w-xl w-full p-6 space-y-6 shadow-xl my-8">
             <div class="flex justify-between items-center border-b border-slate-100 pb-4">
@@ -118,7 +110,6 @@
             
             <form id="patientForm" onsubmit="savePatient(event)" class="space-y-4">
                 <input type="hidden" id="patientId">
-                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre Completo *</label>
@@ -129,7 +120,6 @@
                         <input type="number" id="edad" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
                     </div>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Teléfono</label>
@@ -140,17 +130,14 @@
                         <input type="file" id="fotoFile" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-600 hover:file:bg-emerald-100 cursor-pointer">
                     </div>
                 </div>
-
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-2">Padecimientos Podológicos Frecuentes</label>
                     <div id="padecimientosContainer" class="flex flex-wrap gap-2"></div>
                 </div>
-
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Observaciones / Alergias / Medicamentos</label>
                     <textarea id="observaciones" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900"></textarea>
                 </div>
-
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
                     <button type="button" onclick="closeModal('patientModal')" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200">Cancelar</button>
                     <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/20">Guardar Paciente</button>
@@ -159,7 +146,6 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: AGENDAR CITA ================= -->
     <div id="appointmentModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 space-y-6 shadow-xl">
             <div class="flex justify-between items-center border-b border-slate-100 pb-4">
@@ -168,13 +154,11 @@
                 </h3>
                 <button onclick="closeModal('appointmentModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            
             <form id="appointmentForm" onsubmit="saveAppointment(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Seleccionar Paciente *</label>
                     <select id="citaPacienteId" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900"></select>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Fecha *</label>
@@ -185,12 +169,10 @@
                         <input type="time" id="citaHora" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
                     </div>
                 </div>
-
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Motivo de la Cita / Tratamiento</label>
                     <input type="text" id="citaMotivo" placeholder="Ej. Corte clínico, revisión pie diabético..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
                 </div>
-
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
                     <button type="button" onclick="closeModal('appointmentModal')" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200">Cancelar</button>
                     <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/20">Agendar</button>
@@ -199,7 +181,6 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: EXPEDIENTE DETALLADO ================= -->
     <div id="detailModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full p-6 space-y-6 shadow-xl my-8">
             <div class="flex justify-between items-center border-b border-slate-100 pb-4">
@@ -208,16 +189,14 @@
                 </h3>
                 <button onclick="closeModal('detailModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            
             <div id="detailContent" class="space-y-6"></div>
         </div>
     </div>
 
-    <!-- SCRIPT CON CONEXIÓN A SUPABASE -->
+    <!-- Script Supabase -->
     <script>
-        // Configuración de Supabase
         const SUPABASE_URL = 'https://ajjiliervgekpgjkguuf.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_92ubysrrZJZ69DiWHbSKw_y-PE7...'; // Tu Publishable Key configurada
+        const SUPABASE_ANON_KEY = 'sb_publishable_92ubysrRZJLz69DIwHBSkw_y-PE71KE';
         
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -243,21 +222,25 @@
 
         async function loadDataFromCloud() {
             try {
-                // Cargar pacientes desde Supabase
                 const { data: pacientesData, error: errPac } = await _supabase.from('pacientes').select('*');
-                if (errPac) console.error('Error cargando pacientes:', errPac);
-                else pacientes = pacientesData || [];
+                if (errPac) {
+                    console.error('Error cargando pacientes:', errPac);
+                } else {
+                    pacientes = pacientesData || [];
+                }
 
-                // Cargar citas desde Supabase
                 const { data: citasData, error: errCit } = await _supabase.from('citas').select('*');
-                if (errCit) console.error('Error cargando citas:', errCit);
-                else citas = citasData || [];
+                if (errCit) {
+                    console.error('Error cargando citas:', errCit);
+                } else {
+                    citas = citasData || [];
+                }
 
                 renderPatients();
                 renderAppointments();
                 updatePatientSelect();
             } catch (e) {
-                console.error('Error de conexión con Supabase:', e);
+                console.error('Excepción de conexión:', e);
             }
         }
 
@@ -342,8 +325,8 @@
             
             const { error } = await _supabase.from('pacientes').upsert([patientData]);
             if (error) {
-                console.error('Error al guardar en Supabase:', error);
-                alert('Hubo un error al guardar en la nube.');
+                console.error('Error al guardar paciente:', error);
+                alert('Error al guardar en Supabase: ' + (error.message || JSON.stringify(error)));
                 return;
             }
 
@@ -417,8 +400,7 @@
             if(confirm('¿Estás seguro de eliminar este paciente y su historial?')) {
                 const { error } = await _supabase.from('pacientes').delete().eq('id', id);
                 if (error) {
-                    console.error('Error al eliminar:', error);
-                    alert('No se pudo eliminar el paciente.');
+                    alert('Error al eliminar: ' + error.message);
                     return;
                 }
                 await loadDataFromCloud();
@@ -469,7 +451,6 @@
             openModal('detailModal');
         }
 
-        // FUNCIONES DE CITAS
         function updatePatientSelect() {
             const select = document.getElementById('citaPacienteId');
             select.innerHTML = '<option value="">Selecciona un paciente</option>';
@@ -496,8 +477,7 @@
 
             const { error } = await _supabase.from('citas').insert([nuevaCita]);
             if (error) {
-                console.error('Error al agendar cita:', error);
-                alert('No se pudo guardar la cita en la nube.');
+                alert('Error al agendar cita: ' + error.message);
                 return;
             }
 
@@ -562,7 +542,7 @@
         async function updateCitaStatus(id, newStatus) {
             const { error } = await _supabase.from('citas').update({ status: newStatus }).eq('id', id);
             if (error) {
-                console.error('Error al actualizar estado:', error);
+                alert('Error al actualizar estado: ' + error.message);
                 return;
             }
             await loadDataFromCloud();
@@ -572,7 +552,7 @@
             if(confirm('¿Deseas eliminar esta cita?')) {
                 const { error } = await _supabase.from('citas').delete().eq('id', id);
                 if (error) {
-                    console.error('Error al eliminar cita:', error);
+                    alert('Error al eliminar cita: ' + error.message);
                     return;
                 }
                 await loadDataFromCloud();
