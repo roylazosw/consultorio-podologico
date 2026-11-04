@@ -47,37 +47,99 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-bold text-slate-900 tracking-wide">Pie saludable</h1>
-                    <p class="text-xs text-slate-500">Sistema de Expedientes y Citas Podológicas</p>
+                    <p class="text-xs text-emerald-600 font-semibold uppercase tracking-wider">Gestión Podológica Clínica</p>
                 </div>
             </div>
-            <div class="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200 gap-1">
-                <button onclick="switchTab('pacientes')" id="btn-tab-pacientes" class="px-4 py-2 rounded-lg text-sm font-medium transition-all bg-emerald-600 text-white shadow">
-                    <i class="fa-solid fa-users mr-2"></i>Pacientes
+            
+            <!-- Botones de Pestañas y Acciones Rápidas -->
+            <div class="flex flex-wrap items-center gap-2">
+                <div class="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200 gap-1">
+                    <button onclick="switchTab('pacientes')" id="btn-tab-pacientes" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow">
+                        <i class="fa-solid fa-users mr-1.5"></i>Pacientes
+                    </button>
+                    <button onclick="switchTab('citas')" id="btn-tab-citas" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900">
+                        <i class="fa-solid fa-calendar-days mr-1.5"></i>Agenda de Citas
+                    </button>
+                </div>
+                <button onclick="openModal('appointmentModal')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-md shadow-emerald-600/20 flex items-center gap-2">
+                    <i class="fa-solid fa-calendar-plus"></i> Agendar Cita
                 </button>
-                <button onclick="switchTab('citas')" id="btn-tab-citas" class="px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900">
-                    <i class="fa-solid fa-calendar-days mr-2"></i>Agenda de Citas
+                <button onclick="openModal('patientModal')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-md shadow-emerald-600/20 flex items-center gap-2">
+                    <i class="fa-solid fa-user-plus"></i> Nuevo Paciente
                 </button>
             </div>
         </div>
     </header>
 
     <!-- Contenido Principal -->
-    <main class="max-w-7xl mx-auto px-4 py-6">
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
 
+        <!-- ================= TARJETAS DE ESTADÍSTICAS (KPIs) ================= -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                <div class="bg-blue-50 text-blue-600 p-3 rounded-xl border border-blue-100 text-lg">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div>
+                    <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Total Pacientes</p>
+                    <h3 id="statTotalPacientes" class="text-2xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                <div class="bg-amber-50 text-amber-600 p-3 rounded-xl border border-amber-100 text-lg">
+                    <i class="fa-solid fa-clock"></i>
+                </div>
+                <div>
+                    <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Citas Pendientes</p>
+                    <h3 id="statCitasPendientes" class="text-2xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                <div class="bg-red-50 text-red-600 p-3 rounded-xl border border-red-100 text-lg">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div>
+                    <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Pacientes Diabéticos</p>
+                    <h3 id="statPacientesDiabeticos" class="text-2xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                <div class="bg-emerald-50 text-emerald-600 p-3 rounded-xl border border-emerald-100 text-lg">
+                    <i class="fa-solid fa-calendar-day"></i>
+                </div>
+                <div>
+                    <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Citas de Hoy</p>
+                    <h3 id="statCitasHoy" class="text-2xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= VISTA PACIENTES ================= -->
         <div id="view-pacientes" class="space-y-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                 <div class="relative w-full md:w-96">
                     <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-slate-400"></i>
-                    <input type="text" id="searchInput" oninput="filterPatients()" placeholder="Buscar por nombre o padecimiento..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900 placeholder-slate-400">
+                    <input type="text" id="searchInput" oninput="filterPatients()" placeholder="Buscar por nombre, teléfono o padecimiento..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900 placeholder-slate-400">
                 </div>
-                <button onclick="openModal('patientModal')" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-user-plus"></i> Nuevo Paciente
-                </button>
+                <div class="flex items-center gap-2 w-full md:w-auto">
+                    <span class="text-xs text-slate-500 font-medium whitespace-nowrap">Filtrar por:</span>
+                    <select id="filterPadecimientosSelect" onchange="filterPatients()" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-emerald-500 w-full md:w-auto">
+                        <option value="todos">Todos los padecimientos</option>
+                        <option value="Diabetes">Diabetes Mellitus</option>
+                        <option value="Onicocriptosis">Onicocriptosis (Uña encarnada)</option>
+                        <option value="Onicomicosis">Onicomicosis (Hongos)</option>
+                        <option value="Pie de Atleta">Pie de Atleta</option>
+                    </select>
+                </div>
             </div>
 
             <div id="patientsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
         </div>
 
+        <!-- ================= VISTA CITAS ================= -->
         <div id="view-citas" class="space-y-6 hidden">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                 <div class="flex items-center gap-3 w-full md:w-auto">
@@ -88,9 +150,6 @@
                         <option value="Cancelada">Canceladas</option>
                     </select>
                 </div>
-                <button onclick="openModal('appointmentModal')" class="w-full md:w-auto bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-calendar-plus"></i> Agendar Cita
-                </button>
             </div>
 
             <div id="appointmentsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
@@ -193,7 +252,7 @@
         </div>
     </div>
 
-    <!-- Script Supabase -->
+    <!-- Script Supabase y Lógica -->
     <script>
         const SUPABASE_URL = 'https://ajjiliervgekpgjkguuf.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_92ubysrRZJLz69DIwHBSkw_y-PE71KE';
@@ -223,25 +282,32 @@
         async function loadDataFromCloud() {
             try {
                 const { data: pacientesData, error: errPac } = await _supabase.from('pacientes').select('*');
-                if (errPac) {
-                    console.error('Error cargando pacientes:', errPac);
-                } else {
-                    pacientes = pacientesData || [];
-                }
+                if (!errPac) pacientes = pacientesData || [];
 
                 const { data: citasData, error: errCit } = await _supabase.from('citas').select('*');
-                if (errCit) {
-                    console.error('Error cargando citas:', errCit);
-                } else {
-                    citas = citasData || [];
-                }
+                if (!errCit) citas = citasData || [];
 
+                updateStats();
                 renderPatients();
                 renderAppointments();
                 updatePatientSelect();
             } catch (e) {
                 console.error('Excepción de conexión:', e);
             }
+        }
+
+        function updateStats() {
+            const totalPacientes = pacientes.length;
+            const citasPendientes = citas.filter(c => c.status === 'Programada').length;
+            const diabeticos = pacientes.filter(p => p.padecimientos && p.padecimientos.some(pad => pad.includes('Diabetes'))).length;
+            
+            const todayStr = new Date().toISOString().split('T')[0];
+            const citasHoy = citas.filter(c => c.fecha === todayStr).length;
+
+            document.getElementById('statTotalPacientes').innerText = totalPacientes;
+            document.getElementById('statCitasPendientes').innerText = citasPendientes;
+            document.getElementById('statPacientesDiabeticos').innerText = diabeticos;
+            document.getElementById('statCitasHoy').innerText = citasHoy;
         }
 
         function switchTab(tab) {
@@ -251,13 +317,13 @@
             const viewCitas = document.getElementById('view-citas');
 
             if (tab === 'pacientes') {
-                btnPacientes.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all bg-emerald-600 text-white shadow";
-                btnCitas.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900";
+                btnPacientes.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow";
+                btnCitas.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900";
                 viewPacientes.classList.remove('hidden');
                 viewCitas.classList.add('hidden');
             } else {
-                btnCitas.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all bg-emerald-600 text-white shadow";
-                btnPacientes.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-600 hover:text-slate-900";
+                btnCitas.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow";
+                btnPacientes.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900";
                 viewCitas.classList.remove('hidden');
                 viewPacientes.classList.add('hidden');
             }
@@ -325,8 +391,7 @@
             
             const { error } = await _supabase.from('pacientes').upsert([patientData]);
             if (error) {
-                console.error('Error al guardar paciente:', error);
-                alert('Error al guardar en Supabase: ' + (error.message || JSON.stringify(error)));
+                alert('Error al guardar en Supabase: ' + error.message);
                 return;
             }
 
@@ -354,15 +419,21 @@
                                 <div class="flex items-center gap-3">
                                     <img src="${p.foto}" alt="Foto" class="w-12 h-12 rounded-full object-cover border border-slate-200">
                                     <div>
-                                        <h4 class="font-bold text-slate-900 text-base">${p.nombre}</h4>
+                                        <h4 class="font-bold text-slate-900 text-base flex items-center gap-1.5">
+                                            ${p.nombre} 
+                                            ${isDiabetico ? '<i class="fa-solid fa-triangle-exclamation text-red-500 text-xs" title="Paciente con Diabetes"></i>' : ''}
+                                        </h4>
                                         <p class="text-xs text-slate-500">${p.edad} años • <i class="fa-solid fa-phone text-[10px]"></i> ${p.telefono || 'Sin teléfono'}</p>
                                     </div>
                                 </div>
                             </div>
-                            ${isDiabetico ? '<div class="mt-3 bg-red-50 border border-red-200 text-red-600 text-xs px-3 py-1.5 rounded-xl font-medium flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> Paciente con Diabetes (Precaución)</div>' : ''}
-                            <div class="flex flex-wrap gap-1.5 mt-3">
-                                ${badges || '<span class="text-xs text-slate-400">Sin padecimientos marcados</span>'}
+                            <div class="mt-4">
+                                <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Padecimientos:</p>
+                                <div class="flex flex-wrap gap-1.5">
+                                    ${badges || '<span class="text-xs text-slate-400">Sin padecimientos marcados</span>'}
+                                </div>
                             </div>
+                            ${p.observaciones ? `<div class="mt-3 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-200"><strong>Observación:</strong> ${p.observaciones}</div>` : ''}
                         </div>
                         <div class="flex gap-2 pt-3 border-t border-slate-100">
                             <button onclick="viewDetail('${p.id}')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl text-xs font-semibold transition-all">Ver Expediente</button>
@@ -376,10 +447,18 @@
 
         function filterPatients() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = pacientes.filter(p => 
-                p.nombre.toLowerCase().includes(query) || 
-                (p.padecimientos && p.padecimientos.some(pad => pad.toLowerCase().includes(query)))
-            );
+            const padecimientoFilter = document.getElementById('filterPadecimientosSelect').value;
+
+            const filtered = pacientes.filter(p => {
+                const matchQuery = p.nombre.toLowerCase().includes(query) || 
+                                   (p.telefono && p.telefono.includes(query)) || 
+                                   (p.padecimientos && p.padecimientos.some(pad => pad.toLowerCase().includes(query)));
+                
+                const matchPadecimiento = padecimientoFilter === 'todos' || 
+                                         (p.padecimientos && p.padecimientos.some(pad => pad.includes(padecimientoFilter)));
+
+                return matchQuery && matchPadecimiento;
+            });
             renderPatients(filtered);
         }
 
