@@ -3,19 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pie saludable - Sistema Podológico</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Pie saludable - Gestión Podológica Clínica</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen font-sans flex flex-col justify-between">
 
-    <!-- Cabecera Principal -->
+    <!-- PANTALLA DE LOGIN (Imagen 2) -->
+    <div id="loginScreen" class="fixed inset-0 bg-slate-100 z-50 flex items-center justify-center p-4">
+        <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6">
+            <div class="text-center">
+                <div class="bg-emerald-50 text-emerald-600 w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 border border-emerald-100 shadow-sm">
+                    <svg viewBox="0 0 512 512" class="w-8 h-8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M110 90C90 90 75 110 80 145C85 175 115 195 130 180C145 165 140 110 125 95C120 90 115 90 110 90Z" fill="#a21caf"/>
+                        <ellipse cx="190" cy="85" rx="20" ry="35" transform="rotate(-10 190 85)" fill="#84cc16"/>
+                        <ellipse cx="250" cy="85" rx="18" ry="32" transform="rotate(5 250 85)" fill="#84cc16"/>
+                        <ellipse cx="305" cy="100" rx="16" ry="28" transform="rotate(20 305 100)" fill="#84cc16"/>
+                        <ellipse cx="350" cy="130" rx="14" ry="24" transform="rotate(35 350 130)" fill="#84cc16"/>
+                        <path d="M125 155C125 155 190 220 250 280C310 340 340 375 320 405C305 425 270 425 240 395C210 365 155 305 125 275C115 265 105 245 115 215C125 185 135 165 125 155Z" fill="#a21caf"/>
+                        <path d="M225 385C200 395 180 390 170 375C155 355 175 335 205 325C235 315 275 330 290 355C305 380 285 415 240 435C220 444 195 440 180 425" stroke="#84cc16" stroke-width="20" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 tracking-wide">Pie saludable</h3>
+                <p class="text-[11px] text-emerald-600 font-semibold uppercase tracking-wider mt-0.5">Acceso al Sistema Podológico</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Usuario</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400"><i class="fa-solid fa-user text-xs"></i></span>
+                        <input type="text" id="loginUser" required placeholder="admin" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1.5">Contraseña</label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400"><i class="fa-solid fa-lock text-xs"></i></span>
+                        <input type="password" id="loginPass" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 text-xs text-slate-600 pt-1">
+                    <input type="checkbox" id="rememberMe" class="rounded border-slate-300 text-emerald-600 w-4 h-4">
+                    <label for="rememberMe">Recordar contraseña</label>
+                </div>
+                <div id="loginError" class="hidden text-xs text-red-600 bg-red-50 p-3 rounded-xl border border-red-200 text-center font-medium"></div>
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl text-sm font-semibold transition-all shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CABECERA DEL GESTOR (Imagen 3) -->
     <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
-        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3">
                 <div class="bg-emerald-50 p-2 rounded-2xl border border-emerald-100 shadow-sm flex items-center justify-center w-12 h-12 flex-shrink-0">
                     <svg viewBox="0 0 512 512" class="w-7 h-7" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,159 +73,112 @@
                 </div>
                 <div>
                     <h1 class="text-base font-bold text-slate-900 tracking-wide">Pie saludable</h1>
-                    <p id="appSubtitle" class="text-[11px] text-emerald-600 font-semibold uppercase tracking-wider">Portal Público de Citas</p>
+                    <p class="text-[11px] text-emerald-600 font-semibold uppercase tracking-wider">Gestión Podológica Clínica</p>
                 </div>
             </div>
-            
-            <div id="headerActions">
-                <button onclick="toggleLoginModal(true)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all border border-slate-200 flex items-center gap-1.5 shadow-sm cursor-pointer">
-                    <i class="fa-solid fa-lock text-emerald-600"></i> Acceso Clínico
+
+            <!-- Botones superiores exactos a la Imagen 3 -->
+            <div class="flex items-center gap-2 flex-wrap justify-center">
+                <a href="citas.html" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-xl text-xs font-semibold transition-all shadow-sm flex items-center gap-1.5">
+                    <i class="fa-solid fa-calendar-plus"></i> Agendar Cita
+                </a>
+                <button onclick="logoutAdmin()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl text-xs font-semibold transition-all border border-slate-200 flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-solid fa-right-from-bracket text-red-500"></i> Salir
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- VISTA PÚBLICA (Agendar Citas) -->
-    <main id="publicView" class="max-w-4xl mx-auto px-4 py-8 w-full flex-grow">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-6">
+    <!-- CONTENIDO DEL GESTOR (Imagen 3) -->
+    <main class="max-w-7xl mx-auto px-4 py-8 w-full flex-grow space-y-6">
+        
+        <!-- Tarjetas KPI (Imagen 3) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="bg-emerald-50 text-emerald-600 p-3.5 rounded-2xl border border-emerald-100"><i class="fa-solid fa-users text-lg"></i></div>
                 <div>
-                    <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                        <i class="fa-solid fa-calendar-plus text-emerald-600"></i> Reserva tu Cita Podológica
-                    </h2>
-                    <p class="text-xs text-slate-500 mt-1">Completa tus datos y selecciona el horario de tu preferencia.</p>
+                    <p class="text-xs text-slate-500 font-medium">TOTAL PACIENTES</p>
+                    <h3 id="statTotalPacientes" class="text-xl font-bold text-slate-900">0</h3>
                 </div>
+            </div>
+            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="bg-amber-50 text-amber-600 p-3.5 rounded-2xl border border-amber-100"><i class="fa-solid fa-clock text-lg"></i></div>
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">CITAS PENDIENTES</p>
+                    <h3 id="statTotalCitas" class="text-xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="bg-red-50 text-red-600 p-3.5 rounded-2xl border border-red-100"><i class="fa-solid fa-triangle-exclamation text-lg"></i></div>
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">PACIENTES DIABÉTICOS</p>
+                    <h3 id="statDiabeticos" class="text-xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+            <div class="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm flex items-center gap-4">
+                <div class="bg-emerald-50 text-emerald-600 p-3.5 rounded-2xl border border-emerald-100"><i class="fa-solid fa-calendar-day text-lg"></i></div>
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">CITAS DE HOY</p>
+                    <h3 id="statCitasHoy" class="text-xl font-bold text-slate-900">0</h3>
+                </div>
+            </div>
+        </div>
 
-                <form onsubmit="savePublicAppointment(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre Completo *</label>
-                        <input type="text" id="pubNombre" required placeholder="Ej. Juan Pérez" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Edad *</label>
-                        <input type="number" id="pubEdad" required placeholder="Ej. 35" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Teléfono *</label>
-                        <input type="tel" id="pubTelefono" required placeholder="Ej. 55 1234 5678" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Fecha *</label>
-                            <input type="date" id="pubFecha" required onchange="checkBookedHours()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-semibold text-slate-600 mb-1">Hora *</label>
-                            <input type="time" id="pubHora" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Motivo</label>
-                        <input type="text" id="pubMotivo" placeholder="Ej. Uña encarnada..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
-                    </div>
-
-                    <div id="pubAlert" class="hidden text-xs p-3 rounded-xl border text-center font-medium"></div>
-
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl text-sm font-semibold transition-all shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2 cursor-pointer">
-                        <i class="fa-solid fa-check"></i> Confirmar Cita
-                    </button>
-                </form>
+        <!-- Buscador y Filtro (Imagen 3) -->
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="relative w-full md:w-96">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400"><i class="fa-solid fa-magnifying-glass text-xs"></i></span>
+                    <input type="text" id="searchInput" oninput="filterPatients()" placeholder="Buscar por nombre, teléfono o padecimiento..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-3.5 py-2.5 text-xs focus:outline-none focus:border-emerald-500">
+                </div>
+                <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                    <span class="text-xs text-slate-500 font-medium">Filtrar por:</span>
+                    <select id="filterPadecimiento" onchange="filterPatients()" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-emerald-500 text-slate-700">
+                        <option value="">Todos los padecimientos</option>
+                        <option value="Diabetes">Diabetes</option>
+                        <option value="Uña encarnada">Uña encarnada</option>
+                        <option value="Consulta General">Consulta General</option>
+                    </select>
+                </div>
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm space-y-4">
-                <h3 class="text-md font-bold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-clock text-amber-500"></i> Horarios Ocupados
-                </h3>
-                <div id="bookedHoursContainer" class="space-y-2">
-                    <div class="text-center py-10 text-slate-400 text-xs">Selecciona una fecha para ver horarios apartados.</div>
+            <!-- Contenedor de Listados -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-2">
+                <div class="space-y-3">
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-user-injured text-emerald-600"></i> Pacientes Registrados</h3>
+                    <div id="patientsContainer" class="space-y-3 max-h-[450px] overflow-y-auto pr-1">
+                        <div class="text-center py-10 text-xs text-slate-400">No hay pacientes registrados todavía.</div>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-calendar-days text-emerald-600"></i> Citas Programadas</h3>
+                    <div id="appointmentsContainer" class="space-y-3 max-h-[450px] overflow-y-auto pr-1">
+                        <div class="text-center py-10 text-xs text-slate-400">No hay citas registradas todavía.</div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
-
-    <!-- VISTA ADMINISTRATIVA PRIVADA (Oculta por defecto) -->
-    <main id="adminView" class="hidden max-w-6xl mx-auto px-4 py-8 w-full flex-grow space-y-6">
-        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm flex justify-between items-center">
-            <div>
-                <h2 class="text-xl font-bold text-slate-900">Panel de Control Clínico</h2>
-                <p class="text-xs text-slate-500">Bienvenido admin. Gestión de pacientes y citas activas.</p>
-            </div>
-            <button onclick="logoutAdmin()" class="bg-red-50 hover:bg-red-100 text-red-600 px-4 py-2 rounded-xl text-xs font-semibold border border-red-200 flex items-center gap-1.5 transition-all cursor-pointer">
-                <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
-            </button>
-        </div>
-
-        <!-- Contenedor donde se despliegan Pacientes y Citas en el Admin -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-users text-emerald-600"></i> Lista de Pacientes</h3>
-                <div id="adminPatientsList" class="space-y-3 text-xs text-slate-500">Cargando pacientes...</div>
-            </div>
-            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
-                <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2"><i class="fa-solid fa-calendar-check text-emerald-600"></i> Citas Agendadas</h3>
-                <div id="adminAppointmentsList" class="space-y-3 text-xs text-slate-500">Cargando citas...</div>
-            </div>
-        </div>
-    </main>
-
-    <!-- MODAL VENTANA EMERGENTE LOGIN -->
-    <div id="loginModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-        <div class="bg-white border border-slate-200 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-5 relative">
-            <button onclick="toggleLoginModal(false)" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-            <div class="text-center">
-                <div class="bg-emerald-50 text-emerald-600 w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-2 border border-emerald-100">
-                    <i class="fa-solid fa-user-shield text-xl"></i>
-                </div>
-                <h3 class="text-base font-bold text-slate-900">Acceso Administrativo</h3>
-                <p class="text-xs text-slate-500">Ingresa tus credenciales de la clínica</p>
-            </div>
-
-            <form onsubmit="handleLogin(event)" class="space-y-3">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Usuario</label>
-                    <input type="text" id="loginUser" required placeholder="admin" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:border-emerald-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Contraseña</label>
-                    <input type="password" id="loginPass" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:border-emerald-500">
-                </div>
-                <div class="flex items-center gap-2 text-xs text-slate-600">
-                    <input type="checkbox" id="rememberMe" class="rounded border-slate-300 text-emerald-600">
-                    <label for="rememberMe">Recordar mi sesión</label>
-                </div>
-                <div id="loginError" class="hidden text-xs text-red-600 bg-red-50 p-2.5 rounded-xl border border-red-200 text-center"></div>
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl text-xs font-semibold transition-all cursor-pointer">
-                    Iniciar Sesión
-                </button>
-            </form>
-        </div>
-    </div>
 
     <footer class="text-center py-4 text-xs text-slate-400 border-t border-slate-200 mt-8">
         Pie saludable © 2026 • Todos los derechos reservados
     </footer>
 
-    <!-- Lógica JavaScript -->
+    <!-- Lógica JavaScript del Panel Admin -->
     <script>
         const SUPABASE_URL = 'https://ajjiliervgekpgjkguuf.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_92ubysrRZJLz69DIwHBSkw_y-PE71KE';
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let citasDelDia = [];
+        let allPatients = [];
 
         window.onload = () => {
             if (localStorage.getItem('isLoggedIn') === 'true' || sessionStorage.getItem('isLoggedIn') === 'true') {
-                showAdminView();
+                document.getElementById('loginScreen').classList.add('hidden');
+                loadAppData();
             }
         };
-
-        function toggleLoginModal(show) {
-            document.getElementById('loginModal').classList.toggle('hidden', !show);
-            document.getElementById('loginError').classList.add('hidden');
-        }
 
         function handleLogin(e) {
             e.preventDefault();
@@ -195,95 +191,95 @@
                 if (remember) localStorage.setItem('isLoggedIn', 'true');
                 else sessionStorage.setItem('isLoggedIn', 'true');
                 
-                toggleLoginModal(false);
-                showAdminView();
+                document.getElementById('loginScreen').classList.add('hidden');
+                loadAppData();
             } else {
                 errDiv.innerText = "Usuario o contraseña incorrectos.";
                 errDiv.classList.remove('hidden');
             }
         }
 
-        function showAdminView() {
-            document.getElementById('publicView').classList.add('hidden');
-            document.getElementById('adminView').classList.remove('hidden');
-            document.getElementById('appSubtitle').innerText = "Panel Clínico Privado";
-            document.getElementById('headerActions').innerHTML = `
-                <button onclick="logoutAdmin()" class="text-xs font-semibold text-red-500 hover:text-red-700 flex items-center gap-1 cursor-pointer">
-                    <i class="fa-solid fa-power-off"></i> Salir
-                </button>`;
-            loadAdminData();
-        }
-
         function logoutAdmin() {
             localStorage.removeItem('isLoggedIn');
             sessionStorage.removeItem('isLoggedIn');
-            window.location.reload();
+            location.reload();
         }
 
-        async function checkBookedHours() {
-            const fecha = document.getElementById('pubFecha').value;
-            const container = document.getElementById('bookedHoursContainer');
-            if (!fecha) return;
+        async function loadAppData() {
+            try {
+                const { data: pacientes } = await _supabase.from('pacientes').select('*');
+                const { data: citas } = await _supabase.from('citas').select('*');
 
-            const { data } = await _supabase.from('citas').select('hora, status').eq('fecha', fecha);
-            citasDelDia = data || [];
+                allPatients = pacientes || [];
+                const citasData = citas || [];
 
-            if (citasDelDia.length === 0) {
-                container.innerHTML = `<div class="bg-emerald-50 border border-emerald-100 text-emerald-700 p-3 rounded-2xl text-xs text-center">¡Todos los horarios libres para esta fecha!</div>`;
+                // Estadísticas KPI
+                document.getElementById('statTotalPacientes').innerText = allPatients.length;
+                document.getElementById('statTotalCitas').innerText = citasData.filter(c => c.status === 'Programada').length;
+                
+                const diabeticos = allPatients.filter(p => JSON.stringify(p.padecimientos).toLowerCase().includes('diabet')).length;
+                document.getElementById('statDiabeticos').innerText = diabeticos;
+
+                const hoy = new Date().toISOString().split('T')[0];
+                const citasHoy = citasData.filter(c => c.fecha === hoy).length;
+                document.getElementById('statCitasHoy').innerText = citasHoy;
+
+                renderPatients(allPatients);
+
+                // Renderizar Citas
+                const cContainer = document.getElementById('appointmentsContainer');
+                if (citasData.length === 0) {
+                    cContainer.innerHTML = `<div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-center text-slate-400">No hay citas registradas todavía.</div>`;
+                } else {
+                    cContainer.innerHTML = '';
+                    citasData.forEach(c => {
+                        const badgeColor = c.status === 'Cancelada' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200';
+                        cContainer.innerHTML += `
+                            <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-800"><i class="fa-solid fa-calendar text-emerald-600 mr-1"></i> ${c.fecha} - ${c.hora} hrs</p>
+                                    <p class="text-xs text-slate-500 mt-1">Motivo: ${c.motivo}</p>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-xl text-xs font-medium border ${badgeColor}">${c.status}</span>
+                            </div>`;
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderPatients(patients) {
+            const pContainer = document.getElementById('patientsContainer');
+            if (patients.length === 0) {
+                pContainer.innerHTML = `<div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-center text-slate-400">No hay pacientes registrados todavía.</div>`;
                 return;
             }
 
-            container.innerHTML = '';
-            citasDelDia.forEach(c => {
-                container.innerHTML += `
-                    <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl flex justify-between items-center text-xs">
-                        <span class="font-bold text-slate-800"><i class="fa-solid fa-clock text-slate-400 mr-1"></i> ${c.hora} hrs</span>
-                        <span class="px-2 py-0.5 rounded font-medium border text-[10px] ${c.status === 'Cancelada' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200'}">${c.status}</span>
+            pContainer.innerHTML = '';
+            patients.forEach(p => {
+                pContainer.innerHTML += `
+                    <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">${p.nombre}</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">Edad: ${p.edad} años • Tel: ${p.telefono}</p>
+                            <p class="text-[11px] text-slate-400 mt-1">Obs: ${p.observaciones || 'Registrado en el sistema'}</p>
+                        </div>
+                        <span class="bg-emerald-50 text-emerald-700 border border-emerald-100 px-2.5 py-1 rounded-lg text-[10px] font-semibold">Paciente</span>
                     </div>`;
             });
         }
 
-        async function savePublicAppointment(e) {
-            e.preventDefault();
-            const nombre = document.getElementById('pubNombre').value.trim();
-            const edad = parseInt(document.getElementById('pubEdad').value);
-            const telefono = document.getElementById('pubTelefono').value.trim();
-            const fecha = document.getElementById('pubFecha').value;
-            const hora = document.getElementById('pubHora').value;
-            const motivo = document.getElementById('pubMotivo').value.trim() || 'Cita pública';
-            const alertDiv = document.getElementById('pubAlert');
+        function filterPatients() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const padecimientoFilter = document.getElementById('filterPadecimiento').value.toLowerCase();
 
-            try {
-                const pacId = 'pac_' + Date.now();
-                await _supabase.from('pacientes').insert([{ id: pacId, nombre, edad, telefono, padecimientos: ["Consulta General"] }]);
-                await _supabase.from('citas').insert([{ id: 'cit_' + Date.now(), paciente_id: pacId, fecha, hora, motivo, status: 'Programada' }]);
-
-                alertDiv.className = "text-xs p-3 rounded-xl border text-center font-medium bg-emerald-50 border-emerald-200 text-emerald-700";
-                alertDiv.innerHTML = `¡Cita agendada para el ${fecha} a las ${hora}!`;
-                alertDiv.classList.remove('hidden');
-                e.target.reset();
-            } catch (err) {
-                alertDiv.className = "text-xs p-3 rounded-xl border text-center font-medium bg-red-50 border-red-200 text-red-600";
-                alertDiv.innerText = "Error: " + err.message;
-                alertDiv.classList.remove('hidden');
-            }
-        }
-
-        async function loadAdminData() {
-            const { data: pacientes } = await _supabase.from('pacientes').select('*');
-            const { data: citas } = await _supabase.from('citas').select('*');
-
-            const pList = document.getElementById('adminPatientsList');
-            pList.innerHTML = pacientes && pacientes.length ? '' : 'No hay pacientes registrados.';
-            pacientes?.forEach(p => {
-                pList.innerHTML += `<div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl font-medium text-slate-800">👤 ${p.nombre} (${p.edad} años) - 📞 ${p.telefono}</div>`;
+            const filtered = allPatients.filter(p => {
+                const matchText = p.nombre.toLowerCase().includes(query) || p.telefono.toLowerCase().includes(query);
+                const matchPadecimiento = !padecimientoFilter || JSON.stringify(p.padecimientos).toLowerCase().includes(padecimientoFilter);
+                return matchText && matchPadecimiento;
             });
-
-            const cList = document.getElementById('adminAppointmentsList');
-            cList.innerHTML = citas && citas.length ? '' : 'No hay citas registradas.';
-            citas?.forEach(c => {
-                cList.innerHTML += `<div class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl flex justify-between"><span>📅 ${c.fecha} - ⏰ ${c.hora}</span> <span class="font-bold text-emerald-600">${c.status}</span></div>`;
-            });
+            renderPatients(filtered);
         }
     </script>
 </body>
