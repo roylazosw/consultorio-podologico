@@ -171,4 +171,365 @@
                 </div>
 
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-800">
-                    <button type="button" onclick="closeModal('appointmentModal')" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-800 text-slate-300 hover:bg-
+                    <button type="button" onclick="closeModal('appointmentModal')" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-800 text-slate-300 hover:bg-slate-700">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white shadow-lg shadow-teal-600/20">Agendar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: EXPEDIENTE DETALLADO ================= -->
+    <div id="detailModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 space-y-6 shadow-2xl my-8">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-file-medical text-teal-400"></i> Expediente Clínico del Paciente
+                </h3>
+                <button onclick="closeModal('detailModal')" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <div id="detailContent" class="space-y-6">
+                <!-- Inyección detallada -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT DE FUNCIONALIDAD -->
+    <script>
+        const padecimientosDisponibles = [
+            "Diabetes Mellitus (Pie Diabético)",
+            "Onicocriptosis (Uña encarnada)",
+            "Onicomicosis (Hongos en uñas)",
+            "Pie de Atleta",
+            "Callosidades / Tilomas",
+            "Hiperqueratosis",
+            "Verrugas Plantares",
+            "Pie Plano / Arco Vencido"
+        ];
+
+        let pacientes = JSON.parse(localStorage.getItem('podologia_pacientes')) || [];
+        let citas = JSON.parse(localStorage.getItem('podologia_citas')) || [];
+
+        // Inicializar la interfaz
+        window.onload = function() {
+            renderPadecimientosCheckboxes();
+            renderPatients();
+            renderAppointments();
+            updatePatientSelect();
+        };
+
+        function switchTab(tab) {
+            const btnPacientes = document.getElementById('btn-tab-pacientes');
+            const btnCitas = document.getElementById('btn-tab-citas');
+            const viewPacientes = document.getElementById('view-pacientes');
+            const viewCitas = document.getElementById('view-citas');
+
+            if (tab === 'pacientes') {
+                btnPacientes.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all bg-teal-600 text-white shadow";
+                btnCitas.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-400 hover:text-white";
+                viewPacientes.classList.remove('hidden');
+                viewCitas.classList.add('hidden');
+            } else {
+                btnCitas.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all bg-teal-600 text-white shadow";
+                btnPacientes.className = "px-4 py-2 rounded-lg text-sm font-medium transition-all text-slate-400 hover:text-white";
+                viewCitas.classList.remove('hidden');
+                viewPacientes.classList.add('hidden');
+            }
+        }
+
+        function renderPadecimientosCheckboxes(selected = []) {
+            const container = document.getElementById('padecimientosContainer');
+            container.innerHTML = '';
+            padecimientosDisponibles.forEach(pad => {
+                const isChecked = selected.includes(pad) ? 'checked' : '';
+                container.innerHTML += `
+                    <label class="flex items-center gap-2 bg-slate-950 border border-slate-800 px-3 py-1.5 rounded-xl text-xs cursor-pointer hover:border-teal-500/50">
+                        <input type="checkbox" name="padecimiento" value="${pad}" ${isChecked} class="rounded border-slate-700 bg-slate-900 text-teal-600 focus:ring-0">
+                        <span class="text-slate-300">${pad}</span>
+                    </label>
+                `;
+            });
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+            if(modalId === 'patientModal' && !document.getElementById('patientId').value) {
+                document.getElementById('patientForm').reset();
+                document.getElementById('patientModalTitle').innerHTML = '<i class="fa-solid fa-user-pen text-teal-400"></i> Registrar Nuevo Paciente';
+                renderPadecimientosCheckboxes();
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+            if(modalId === 'patientModal') {
+                document.getElementById('patientForm').reset();
+                document.getElementById('patientId').value = '';
+            }
+        }
+
+        function savePatient(e) {
+            e.preventDefault();
+            const id = document.getElementById('patientId').value || Date.now().toString();
+            const nombre = document.getElementById('nombre').value;
+            const edad = document.getElementById('edad').value;
+            const telefono = document.getElementById('telefono').value;
+            const observaciones = document.getElementById('observaciones').value;
+            
+            const checkboxes = document.querySelectorAll('input[name="padecimiento"]:checked');
+            const padecimientos = Array.from(checkboxes).map(cb => cb.value);
+
+            const fotoFile = document.getElementById('fotoFile').files[0];
+
+            if (fotoFile) {
+                const reader = new FileReader();
+                reader.onload = function(uploadEvent) {
+                    processPatientSave(id, nombre, edad, telefono, padecimientos, observaciones, uploadEvent.target.result);
+                };
+                reader.readAsDataURL(fotoFile);
+            } else {
+                const existing = pacientes.find(p => p.id === id);
+                const foto = existing ? existing.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
+                processPatientSave(id, nombre, edad, telefono, padecimientos, observaciones, foto);
+            }
+        }
+
+        function processPatientSave(id, nombre, edad, telefono, padecimientos, observaciones, foto) {
+            const patientData = { id, nombre, edad, telefono, padecimientos, observaciones, foto };
+            
+            const index = pacientes.findIndex(p => p.id === id);
+            if (index >= 0) {
+                pacientes[index] = patientData;
+            } else {
+                pacientes.push(patientData);
+            }
+
+            localStorage.setItem('podologia_pacientes', JSON.stringify(pacientes));
+            closeModal('patientModal');
+            renderPatients();
+            updatePatientSelect();
+        }
+
+        function renderPatients(list = pacientes) {
+            const grid = document.getElementById('patientsGrid');
+            grid.innerHTML = '';
+
+            if (list.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 text-sm">No hay pacientes registrados todavía.</div>`;
+                return;
+            }
+
+            list.forEach(p => {
+                const isDiabetico = p.padecimientos.some(pad => pad.includes('Diabetes'));
+                const badges = p.padecimientos.map(pad => `<span class="bg-slate-950 border border-slate-800 px-2.5 py-1 rounded-lg text-[11px] text-slate-300">${pad}</span>`).join('');
+
+                grid.innerHTML += `
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 hover:border-slate-700 transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="flex items-center gap-3">
+                                    <img src="${p.foto}" alt="Foto" class="w-12 h-12 rounded-full object-cover border border-slate-700">
+                                    <div>
+                                        <h4 class="font-bold text-white text-base">${p.nombre}</h4>
+                                        <p class="text-xs text-slate-400">${p.edad} años • <i class="fa-solid fa-phone text-[10px]"></i> ${p.telefono || 'Sin teléfono'}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            ${isDiabetico ? '<div class="mt-3 bg-red-500/10 border border-red-500/20 text-red-400 text-xs px-3 py-1.5 rounded-xl font-medium flex items-center gap-2"><i class="fa-solid fa-triangle-exclamation"></i> Paciente con Diabetes (Precaución)</div>' : ''}
+                            <div class="flex flex-wrap gap-1.5 mt-3">
+                                ${badges || '<span class="text-xs text-slate-500">Sin padecimientos marcados</span>'}
+                            </div>
+                        </div>
+                        <div class="flex gap-2 pt-3 border-t border-slate-800/80">
+                            <button onclick="viewDetail('${p.id}')" class="flex-1 bg-slate-800 hover:bg-slate-700 text-white py-2 rounded-xl text-xs font-semibold transition-all">Ver Expediente</button>
+                            <button onclick="editPatient('${p.id}')" class="bg-slate-800 hover:bg-slate-700 text-teal-400 px-3 py-2 rounded-xl text-xs transition-all"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deletePatient('${p.id}')" class="bg-slate-800 hover:bg-slate-700 text-red-400 px-3 py-2 rounded-xl text-xs transition-all"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function filterPatients() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = pacientes.filter(p => 
+                p.nombre.toLowerCase().includes(query) || 
+                p.padecimientos.some(pad => pad.toLowerCase().includes(query))
+            );
+            renderPatients(filtered);
+        }
+
+        function editPatient(id) {
+            const p = pacientes.find(item => item.id === id);
+            if(!p) return;
+            document.getElementById('patientId').value = p.id;
+            document.getElementById('nombre').value = p.nombre;
+            document.getElementById('edad').value = p.edad;
+            document.getElementById('telefono').value = p.telefono || '';
+            document.getElementById('observaciones').value = p.observaciones || '';
+            document.getElementById('patientModalTitle').innerHTML = '<i class="fa-solid fa-user-pen text-teal-400"></i> Editar Paciente';
+            renderPadecimientosCheckboxes(p.padecimientos);
+            openModal('patientModal');
+        }
+
+        function deletePatient(id) {
+            if(confirm('¿Estás seguro de eliminar este paciente y su historial?')) {
+                pacientes = pacientes.filter(p => p.id !== id);
+                citas = citas.filter(c => c.pacienteId !== id);
+                localStorage.setItem('podologia_pacientes', JSON.stringify(pacientes));
+                localStorage.setItem('podologia_citas', JSON.stringify(citas));
+                renderPatients();
+                renderAppointments();
+                updatePatientSelect();
+            }
+        }
+
+        function viewDetail(id) {
+            const p = pacientes.find(item => item.id === id);
+            if(!p) return;
+
+            const patientCitas = citas.filter(c => c.pacienteId === id);
+            const citasHtml = patientCitas.length > 0 ? patientCitas.map(c => `
+                <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex justify-between items-center text-xs">
+                    <div>
+                        <p class="font-semibold text-white"><i class="fa-regular fa-calendar mr-1.5 text-teal-400"></i>${c.fecha} a las ${c.hora}</p>
+                        <p class="text-slate-400 mt-0.5">${c.motivo || 'Sin motivo especificado'}</p>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-lg font-medium ${c.status === 'Completada' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : c.status === 'Cancelada' ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'}">${c.status}</span>
+                </div>
+            `).join('') : '<p class="text-xs text-slate-500">No hay citas registradas para este paciente.</p>';
+
+            const content = document.getElementById('detailContent');
+            content.innerHTML = `
+                <div class="flex items-center gap-4 border-b border-slate-800 pb-4">
+                    <img src="${p.foto}" class="w-16 h-16 rounded-2xl object-cover border border-slate-700">
+                    <div>
+                        <h4 class="text-lg font-bold text-white">${p.nombre}</h4>
+                        <p class="text-xs text-slate-400">${p.edad} años • Tel: ${p.telefono || 'No registrado'}</p>
+                    </div>
+                </div>
+                <div>
+                    <h5 class="text-xs font-semibold text-teal-400 uppercase tracking-wider mb-2">Padecimientos</h5>
+                    <div class="flex flex-wrap gap-1.5">
+                        ${p.padecimientos.map(pad => `<span class="bg-slate-950 border border-slate-800 px-3 py-1 rounded-xl text-xs text-slate-300">${pad}</span>`).join('') || 'Ninguno'}
+                    </div>
+                </div>
+                <div>
+                    <h5 class="text-xs font-semibold text-teal-400 uppercase tracking-wider mb-2">Observaciones Clínicas</h5>
+                    <p class="text-sm bg-slate-950 border border-slate-800 p-3.5 rounded-xl text-slate-300">${p.observaciones || 'Sin observaciones.'}</p>
+                </div>
+                <div>
+                    <h5 class="text-xs font-semibold text-teal-400 uppercase tracking-wider mb-2">Historial de Citas</h5>
+                    <div class="space-y-2 max-h-48 overflow-y-auto">
+                        ${citasHtml}
+                    </div>
+                </div>
+            `;
+            openModal('detailModal');
+        }
+
+        // FUNCIONES DE CITAS
+        function updatePatientSelect() {
+            const select = document.getElementById('citaPacienteId');
+            select.innerHTML = '<option value="">Selecciona un paciente</option>';
+            pacientes.forEach(p => {
+                select.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
+            });
+        }
+
+        function saveAppointment(e) {
+            e.preventDefault();
+            const pacienteId = document.getElementById('citaPacienteId').value;
+            const fecha = document.getElementById('citaFecha').value;
+            const hora = document.getElementById('citaHora').value;
+            const motivo = document.getElementById('citaMotivo').value;
+
+            const nuevaCita = {
+                id: Date.now().toString(),
+                pacienteId,
+                fecha,
+                hora,
+                motivo,
+                status: 'Programada'
+            };
+
+            citas.push(nuevaCita);
+            localStorage.setItem('podologia_citas', JSON.stringify(citas));
+            closeModal('appointmentModal');
+            document.getElementById('appointmentForm').reset();
+            renderAppointments();
+        }
+
+        function renderAppointments() {
+            const listContainer = document.getElementById('appointmentsList');
+            const statusFilter = document.getElementById('filterCitaStatus').value;
+            listContainer.innerHTML = '';
+
+            let filtered = citas;
+            if (statusFilter !== 'todos') {
+                filtered = citas.filter(c => c.status === statusFilter);
+            }
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 text-sm">No hay citas registradas.</div>`;
+                return;
+            }
+
+            // Ordenar por fecha y hora
+            filtered.sort((a,b) => new Date(a.fecha + ' ' + a.hora) - new Date(b.fecha + ' ' + b.hora));
+
+            filtered.forEach(c => {
+                const paciente = pacientes.find(p => p.id === c.pacienteId) || { nombre: 'Paciente desconocido', foto: '' };
+                const statusColor = c.status === 'Completada' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : c.status === 'Cancelada' ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+
+                listContainer.innerHTML += `
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start gap-2 mb-3">
+                                <span class="px-2.5 py-1 rounded-lg text-xs font-semibold border ${statusColor}">${c.status}</span>
+                                <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i>${c.hora}</span>
+                            </div>
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="bg-teal-500/10 p-2.5 rounded-xl border border-teal-500/20 text-teal-400">
+                                    <i class="fa-solid fa-user"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-sm">${paciente.nombre}</h4>
+                                    <p class="text-xs text-teal-400 font-medium">${c.fecha}</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-slate-300 bg-slate-950 p-3 rounded-xl border border-slate-800"><strong>Motivo:</strong> ${c.motivo || 'Consulta general'}</p>
+                        </div>
+                        <div class="flex gap-2 pt-3 border-t border-slate-800">
+                            <select onchange="updateCitaStatus('${c.id}', this.value)" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-2 py-1.5 text-xs text-slate-300 focus:outline-none">
+                                <option value="" disabled selected>Cambiar estado</option>
+                                <option value="Programada">Programada</option>
+                                <option value="Completada">Completada</option>
+                                <option value="Cancelada">Cancelada</option>
+                            </select>
+                            <button onclick="deleteCita('${c.id}')" class="bg-slate-800 hover:bg-slate-700 text-red-400 px-3 py-1.5 rounded-xl text-xs transition-all"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function updateCitaStatus(id, newStatus) {
+            const c = citas.find(item => item.id === id);
+            if (c) {
+                c.status = newStatus;
+                localStorage.setItem('podologia_citas', JSON.stringify(citas));
+                renderAppointments();
+            }
+        }
+
+        function deleteCita(id) {
+            if(confirm('¿Deseas eliminar esta cita?')) {
+                citas = citas.filter(c => c.id !== id);
+                localStorage.setItem('podologia_citas', JSON.stringify(citas));
+                renderAppointments();
+            }
+        }
+    </script>
+</body>
+</html>
