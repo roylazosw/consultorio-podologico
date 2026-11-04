@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -32,17 +34,14 @@
     <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
-                <!-- Logotipo exacto basado en tu imagen (Piesito morado y verde pistache) -->
+                <!-- Logotipo de los piecitos (Morado y Verde Pistache) -->
                 <div class="bg-emerald-50 p-2 rounded-2xl border border-emerald-100 shadow-sm flex items-center justify-center w-12 h-12">
                     <svg viewBox="0 0 512 512" class="w-8 h-8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Dedo gordo (Morado) -->
                         <path d="M110 90C90 90 75 110 80 145C85 175 115 195 130 180C145 165 140 110 125 95C120 90 115 90 110 90Z" fill="#a21caf"/>
-                        <!-- Dedos pequeños (Verde Pistache) -->
                         <ellipse cx="190" cy="85" rx="20" ry="35" transform="rotate(-10 190 85)" fill="#84cc16"/>
                         <ellipse cx="250" cy="85" rx="18" ry="32" transform="rotate(5 250 85)" fill="#84cc16"/>
                         <ellipse cx="305" cy="100" rx="16" ry="28" transform="rotate(20 305 100)" fill="#84cc16"/>
                         <ellipse cx="350" cy="130" rx="14" ry="24" transform="rotate(35 350 130)" fill="#84cc16"/>
-                        <!-- Planta y talón del pie (S curva Morada y Verde) -->
                         <path d="M125 155C125 155 190 220 250 280C310 340 340 375 320 405C305 425 270 425 240 395C210 365 155 305 125 275C115 265 105 245 115 215C125 185 135 165 125 155Z" fill="#a21caf"/>
                         <path d="M225 385C200 395 180 390 170 375C155 355 175 335 205 325C235 315 275 330 290 355C305 380 285 415 240 435C220 444 195 440 180 425" stroke="#84cc16" stroke-width="20" stroke-linecap="round"/>
                     </svg>
@@ -69,7 +68,6 @@
 
         <!-- ================= VISTA PACIENTES ================= -->
         <div id="view-pacientes" class="space-y-6">
-            <!-- Barra de Herramientas -->
             <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                 <div class="relative w-full md:w-96">
                     <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-slate-400"></i>
@@ -80,7 +78,6 @@
                 </button>
             </div>
 
-            <!-- Grid de Pacientes -->
             <div id="patientsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 <!-- Se inyecta dinámicamente -->
             </div>
@@ -102,7 +99,6 @@
                 </button>
             </div>
 
-            <!-- Lista de Citas -->
             <div id="appointmentsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 <!-- Se inyecta dinámicamente -->
             </div>
@@ -147,9 +143,7 @@
 
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-2">Padecimientos Podológicos Frecuentes</label>
-                    <div id="padecimientosContainer" class="flex flex-wrap gap-2">
-                        <!-- Checkboxes generados por JS -->
-                    </div>
+                    <div id="padecimientosContainer" class="flex flex-wrap gap-2"></div>
                 </div>
 
                 <div>
@@ -178,9 +172,7 @@
             <form id="appointmentForm" onsubmit="saveAppointment(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Seleccionar Paciente *</label>
-                    <select id="citaPacienteId" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
-                        <!-- Opciones de pacientes -->
-                    </select>
+                    <select id="citaPacienteId" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900"></select>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -217,14 +209,19 @@
                 <button onclick="closeModal('detailModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             
-            <div id="detailContent" class="space-y-6">
-                <!-- Inyección detallada -->
-            </div>
+            <div id="detailContent" class="space-y-6"></div>
         </div>
     </div>
 
-    <!-- SCRIPT DE FUNCIONALIDAD -->
+    <!-- SCRIPT CON CONEXIÓN A SUPABASE -->
     <script>
+        // Configuración de Supabase
+        const SUPABASE_URL = 'https://ajjiliervgekpgjkguuf.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_92ubysrrZJZ69DiWHbSKw_y-PE7...'; // Tu Publishable Key configurada
+        
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         const padecimientosDisponibles = [
             "Diabetes Mellitus (Pie Diabético)",
             "Onicocriptosis (Uña encarnada)",
@@ -236,15 +233,33 @@
             "Pie Plano / Arco Vencido"
         ];
 
-        let pacientes = JSON.parse(localStorage.getItem('piesaludable_pacientes')) || [];
-        let citas = JSON.parse(localStorage.getItem('piesaludable_citas')) || [];
+        let pacientes = [];
+        let citas = [];
 
-        window.onload = function() {
+        window.onload = async function() {
             renderPadecimientosCheckboxes();
-            renderPatients();
-            renderAppointments();
-            updatePatientSelect();
+            await loadDataFromCloud();
         };
+
+        async function loadDataFromCloud() {
+            try {
+                // Cargar pacientes desde Supabase
+                const { data: pacientesData, error: errPac } = await _supabase.from('pacientes').select('*');
+                if (errPac) console.error('Error cargando pacientes:', errPac);
+                else pacientes = pacientesData || [];
+
+                // Cargar citas desde Supabase
+                const { data: citasData, error: errCit } = await _supabase.from('citas').select('*');
+                if (errCit) console.error('Error cargando citas:', errCit);
+                else citas = citasData || [];
+
+                renderPatients();
+                renderAppointments();
+                updatePatientSelect();
+            } catch (e) {
+                console.error('Error de conexión con Supabase:', e);
+            }
+        }
 
         function switchTab(tab) {
             const btnPacientes = document.getElementById('btn-tab-pacientes');
@@ -296,11 +311,11 @@
             }
         }
 
-        function savePatient(e) {
+        async function savePatient(e) {
             e.preventDefault();
-            const id = document.getElementById('patientId').value || Date.now().toString();
+            const id = document.getElementById('patientId').value || 'pac_' + Date.now();
             const nombre = document.getElementById('nombre').value;
-            const edad = document.getElementById('edad').value;
+            const edad = parseInt(document.getElementById('edad').value);
             const telefono = document.getElementById('telefono').value;
             const observaciones = document.getElementById('observaciones').value;
             
@@ -311,31 +326,29 @@
 
             if (fotoFile) {
                 const reader = new FileReader();
-                reader.onload = function(uploadEvent) {
-                    processPatientSave(id, nombre, edad, telefono, padecimientos, observaciones, uploadEvent.target.result);
+                reader.onload = async function(uploadEvent) {
+                    await processPatientSave(id, nombre, edad, telefono, padecimientos, observaciones, uploadEvent.target.result);
                 };
                 reader.readAsDataURL(fotoFile);
             } else {
                 const existing = pacientes.find(p => p.id === id);
                 const foto = existing ? existing.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
-                processPatientSave(id, nombre, edad, telefono, padecimientos, observaciones, foto);
+                await processPatientSave(id, nombre, edad, telefono, padecimientos, observaciones, foto);
             }
         }
 
-        function processPatientSave(id, nombre, edad, telefono, padecimientos, observaciones, foto) {
+        async function processPatientSave(id, nombre, edad, telefono, padecimientos, observaciones, foto) {
             const patientData = { id, nombre, edad, telefono, padecimientos, observaciones, foto };
             
-            const index = pacientes.findIndex(p => p.id === id);
-            if (index >= 0) {
-                pacientes[index] = patientData;
-            } else {
-                pacientes.push(patientData);
+            const { error } = await _supabase.from('pacientes').upsert([patientData]);
+            if (error) {
+                console.error('Error al guardar en Supabase:', error);
+                alert('Hubo un error al guardar en la nube.');
+                return;
             }
 
-            localStorage.setItem('piesaludable_pacientes', JSON.stringify(pacientes));
+            await loadDataFromCloud();
             closeModal('patientModal');
-            renderPatients();
-            updatePatientSelect();
         }
 
         function renderPatients(list = pacientes) {
@@ -348,8 +361,8 @@
             }
 
             list.forEach(p => {
-                const isDiabetico = p.padecimientos.some(pad => pad.includes('Diabetes'));
-                const badges = p.padecimientos.map(pad => `<span class="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-lg text-[11px] text-slate-600">${pad}</span>`).join('');
+                const isDiabetico = p.padecimientos && p.padecimientos.some(pad => pad.includes('Diabetes'));
+                const badges = p.padecimientos ? p.padecimientos.map(pad => `<span class="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-lg text-[11px] text-slate-600">${pad}</span>`).join('') : '';
 
                 grid.innerHTML += `
                     <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 hover:shadow-md transition-all flex flex-col justify-between">
@@ -382,7 +395,7 @@
             const query = document.getElementById('searchInput').value.toLowerCase();
             const filtered = pacientes.filter(p => 
                 p.nombre.toLowerCase().includes(query) || 
-                p.padecimientos.some(pad => pad.toLowerCase().includes(query))
+                (p.padecimientos && p.padecimientos.some(pad => pad.toLowerCase().includes(query)))
             );
             renderPatients(filtered);
         }
@@ -396,19 +409,19 @@
             document.getElementById('telefono').value = p.telefono || '';
             document.getElementById('observaciones').value = p.observaciones || '';
             document.getElementById('patientModalTitle').innerHTML = '<i class="fa-solid fa-user-pen text-emerald-600"></i> Editar Paciente';
-            renderPadecimientosCheckboxes(p.padecimientos);
+            renderPadecimientosCheckboxes(p.padecimientos || []);
             openModal('patientModal');
         }
 
-        function deletePatient(id) {
+        async function deletePatient(id) {
             if(confirm('¿Estás seguro de eliminar este paciente y su historial?')) {
-                pacientes = pacientes.filter(p => p.id !== id);
-                citas = citas.filter(c => c.pacienteId !== id);
-                localStorage.setItem('piesaludable_pacientes', JSON.stringify(pacientes));
-                localStorage.setItem('piesaludable_citas', JSON.stringify(citas));
-                renderPatients();
-                renderAppointments();
-                updatePatientSelect();
+                const { error } = await _supabase.from('pacientes').delete().eq('id', id);
+                if (error) {
+                    console.error('Error al eliminar:', error);
+                    alert('No se pudo eliminar el paciente.');
+                    return;
+                }
+                await loadDataFromCloud();
             }
         }
 
@@ -416,7 +429,7 @@
             const p = pacientes.find(item => item.id === id);
             if(!p) return;
 
-            const patientCitas = citas.filter(c => c.pacienteId === id);
+            const patientCitas = citas.filter(c => c.paciente_id === id);
             const citasHtml = patientCitas.length > 0 ? patientCitas.map(c => `
                 <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl flex justify-between items-center text-xs">
                     <div>
@@ -439,7 +452,7 @@
                 <div>
                     <h5 class="text-xs font-semibold text-emerald-600 uppercase tracking-wider mb-2">Padecimientos</h5>
                     <div class="flex flex-wrap gap-1.5">
-                        ${p.padecimientos.map(pad => `<span class="bg-slate-100 border border-slate-200 px-3 py-1 rounded-xl text-xs text-slate-700">${pad}</span>`).join('') || 'Ninguno'}
+                        ${p.padecimientos ? p.padecimientos.map(pad => `<span class="bg-slate-100 border border-slate-200 px-3 py-1 rounded-xl text-xs text-slate-700">${pad}</span>`).join('') : 'Ninguno'}
                     </div>
                 </div>
                 <div>
@@ -465,27 +478,32 @@
             });
         }
 
-        function saveAppointment(e) {
+        async function saveAppointment(e) {
             e.preventDefault();
-            const pacienteId = document.getElementById('citaPacienteId').value;
+            const paciente_id = document.getElementById('citaPacienteId').value;
             const fecha = document.getElementById('citaFecha').value;
             const hora = document.getElementById('citaHora').value;
             const motivo = document.getElementById('citaMotivo').value;
 
             const nuevaCita = {
-                id: Date.now().toString(),
-                pacienteId,
+                id: 'cit_' + Date.now(),
+                paciente_id,
                 fecha,
                 hora,
                 motivo,
                 status: 'Programada'
             };
 
-            citas.push(nuevaCita);
-            localStorage.setItem('piesaludable_citas', JSON.stringify(citas));
+            const { error } = await _supabase.from('citas').insert([nuevaCita]);
+            if (error) {
+                console.error('Error al agendar cita:', error);
+                alert('No se pudo guardar la cita en la nube.');
+                return;
+            }
+
+            await loadDataFromCloud();
             closeModal('appointmentModal');
             document.getElementById('appointmentForm').reset();
-            renderAppointments();
         }
 
         function renderAppointments() {
@@ -506,7 +524,7 @@
             filtered.sort((a,b) => new Date(a.fecha + ' ' + a.hora) - new Date(b.fecha + ' ' + b.hora));
 
             filtered.forEach(c => {
-                const paciente = pacientes.find(p => p.id === c.pacienteId) || { nombre: 'Paciente desconocido', foto: '' };
+                const paciente = pacientes.find(p => p.id === c.paciente_id) || { nombre: 'Paciente desconocido', foto: '' };
                 const statusColor = c.status === 'Completada' ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : c.status === 'Cancelada' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-amber-100 text-amber-700 border-amber-200';
 
                 listContainer.innerHTML += `
@@ -541,20 +559,23 @@
             });
         }
 
-        function updateCitaStatus(id, newStatus) {
-            const c = citas.find(item => item.id === id);
-            if (c) {
-                c.status = newStatus;
-                localStorage.setItem('piesaludable_citas', JSON.stringify(citas));
-                renderAppointments();
+        async function updateCitaStatus(id, newStatus) {
+            const { error } = await _supabase.from('citas').update({ status: newStatus }).eq('id', id);
+            if (error) {
+                console.error('Error al actualizar estado:', error);
+                return;
             }
+            await loadDataFromCloud();
         }
 
-        function deleteCita(id) {
+        async function deleteCita(id) {
             if(confirm('¿Deseas eliminar esta cita?')) {
-                citas = citas.filter(c => c.id !== id);
-                localStorage.setItem('piesaludable_citas', JSON.stringify(citas));
-                renderAppointments();
+                const { error } = await _supabase.from('citas').delete().eq('id', id);
+                if (error) {
+                    console.error('Error al eliminar cita:', error);
+                    return;
+                }
+                await loadDataFromCloud();
             }
         }
     </script>
