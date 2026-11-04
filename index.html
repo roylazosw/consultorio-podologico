@@ -13,7 +13,7 @@
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen font-sans flex flex-col justify-between">
 
-    <!-- Pantalla de Login (Se oculta al iniciar sesión) -->
+    <!-- Pantalla de Login (Protección Admin) -->
     <div id="loginScreen" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white border border-slate-200 rounded-3xl max-w-sm w-full p-6 shadow-2xl space-y-5">
             <div class="text-center">
@@ -67,9 +67,9 @@
             </div>
 
             <div class="flex items-center gap-3">
-                <!-- Enlace rápido hacia el Portal Público de Citas -->
+                <!-- Botón que lleva al Portal de Citas Público -->
                 <a href="citas.html" target="_blank" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all border border-emerald-200 flex items-center gap-1.5 shadow-sm">
-                    <i class="fa-solid fa-globe"></i> Ver Portal de Citas
+                    <i class="fa-solid fa-globe"></i> Ver Portal de Citas Público
                 </a>
                 <button onclick="logoutAdmin()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all border border-slate-200 flex items-center gap-1.5 shadow-sm cursor-pointer">
                     <i class="fa-solid fa-right-from-bracket text-red-500"></i> Salir
@@ -78,7 +78,7 @@
         </div>
     </header>
 
-    <!-- Contenido del Panel de Administración -->
+    <!-- Contenido del Panel Principal -->
     <main class="max-w-7xl mx-auto px-4 py-8 w-full flex-grow space-y-6">
         
         <!-- Tarjetas de Estadísticas (KPIs) -->
@@ -99,16 +99,19 @@
             </div>
         </div>
 
-        <!-- Sección Principal de Gestión -->
+        <!-- Buscador y Acciones -->
         <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h2 class="text-lg font-bold text-slate-900">Expedientes de Pacientes y Citas</h2>
-                    <p class="text-xs text-slate-500">Administra la información clínica sincronizada con Supabase.</p>
+                    <p class="text-xs text-slate-500">Panel administrativo sincronizado con Supabase.</p>
                 </div>
-                <button onclick="loadAppData()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all border border-slate-200 flex items-center gap-1.5 cursor-pointer">
-                    <i class="fa-solid fa-rotate"></i> Actualizar Datos
-                </button>
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <input type="text" id="searchInput" oninput="filterPatients()" placeholder="Buscar paciente por nombre..." class="bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-emerald-500 w-full sm:w-64">
+                    <button onclick="loadAppData()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all border border-slate-200 flex items-center gap-1.5 cursor-pointer whitespace-nowrap">
+                        <i class="fa-solid fa-rotate"></i> Actualizar
+                    </button>
+                </div>
             </div>
 
             <!-- Listados de Pacientes y Citas -->
@@ -134,12 +137,14 @@
         Pie saludable © 2026 • Todos los derechos reservados
     </footer>
 
-    <!-- Lógica de Autenticación y Carga de Datos Admin -->
+    <!-- Lógica de Administración -->
     <script>
         const SUPABASE_URL = 'https://ajjiliervgekpgjkguuf.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_92ubysrRZJLz69DIwHBSkw_y-PE71KE';
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let allPatients = [];
 
         window.onload = () => {
             if (localStorage.getItem('isLoggedIn') === 'true' || sessionStorage.getItem('isLoggedIn') === 'true') {
@@ -178,27 +183,12 @@
                 const { data: pacientes } = await _supabase.from('pacientes').select('*');
                 const { data: citas } = await _supabase.from('citas').select('*');
 
-                document.getElementById('statTotalPacientes').innerText = pacientes ? pacientes.length : 0;
+                allPatients = pacientes || [];
+
+                document.getElementById('statTotalPacientes').innerText = allPatients.length;
                 document.getElementById('statTotalCitas').innerText = citas ? citas.length : 0;
 
-                // Renderizar Pacientes
-                const pContainer = document.getElementById('patientsContainer');
-                if (!pacientes || pacientes.length === 0) {
-                    pContainer.innerHTML = `<div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-center text-slate-400">No hay pacientes registrados.</div>`;
-                } else {
-                    pContainer.innerHTML = '';
-                    pacientes.forEach(p => {
-                        pContainer.innerHTML += `
-                            <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex justify-between items-start">
-                                <div>
-                                    <h4 class="font-bold text-slate-900 text-sm">${p.nombre}</h4>
-                                    <p class="text-xs text-slate-500 mt-0.5">Edad: ${p.edad} años • Tel: ${p.telefono}</p>
-                                    <p class="text-[11px] text-slate-400 mt-1">Obs: ${p.observaciones || 'Sin observaciones'}</p>
-                                </div>
-                                <span class="bg-emerald-50 text-emerald-700 border border-emerald-100 px-2.5 py-1 rounded-lg text-[10px] font-semibold">Paciente</span>
-                            </div>`;
-                    });
-                }
+                renderPatients(allPatients);
 
                 // Renderizar Citas
                 const cContainer = document.getElementById('appointmentsContainer');
@@ -221,6 +211,33 @@
             } catch (err) {
                 console.error(err);
             }
+        }
+
+        function renderPatients(patients) {
+            const pContainer = document.getElementById('patientsContainer');
+            if (patients.length === 0) {
+                pContainer.innerHTML = `<div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-center text-slate-400">No se encontraron pacientes.</div>`;
+                return;
+            }
+
+            pContainer.innerHTML = '';
+            patients.forEach(p => {
+                pContainer.innerHTML += `
+                    <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-sm">${p.nombre}</h4>
+                            <p class="text-xs text-slate-500 mt-0.5">Edad: ${p.edad} años • Tel: ${p.telefono}</p>
+                            <p class="text-[11px] text-slate-400 mt-1">Obs: ${p.observaciones || 'Registrado en el sistema'}</p>
+                        </div>
+                        <span class="bg-emerald-50 text-emerald-700 border border-emerald-100 px-2.5 py-1 rounded-lg text-[10px] font-semibold">Paciente</span>
+                    </div>`;
+            });
+        }
+
+        function filterPatients() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allPatients.filter(p => p.nombre.toLowerCase().includes(query));
+            renderPatients(filtered);
         }
     </script>
 </body>
