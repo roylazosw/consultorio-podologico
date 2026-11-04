@@ -67,9 +67,9 @@
             </div>
 
             <div class="flex items-center gap-3">
-                <!-- Botón que lleva al Portal de Citas Público -->
-                <a href="citas.html" target="_blank" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all border border-emerald-200 flex items-center gap-1.5 shadow-sm">
-                    <i class="fa-solid fa-globe"></i> Ver Portal de Citas Público
+                <!-- Botón hacia el portal público de citas -->
+                <a href="citas.html" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all border border-emerald-200 flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-globe"></i> Portal de Citas
                 </a>
                 <button onclick="logoutAdmin()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all border border-slate-200 flex items-center gap-1.5 shadow-sm cursor-pointer">
                     <i class="fa-solid fa-right-from-bracket text-red-500"></i> Salir
@@ -99,12 +99,12 @@
             </div>
         </div>
 
-        <!-- Buscador y Acciones -->
+        <!-- Buscador y Tabla de Expedientes -->
         <div class="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm space-y-6">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
                     <h2 class="text-lg font-bold text-slate-900">Expedientes de Pacientes y Citas</h2>
-                    <p class="text-xs text-slate-500">Panel administrativo sincronizado con Supabase.</p>
+                    <p class="text-xs text-slate-500">Administra los registros sincronizados en tiempo real con Supabase.</p>
                 </div>
                 <div class="flex items-center gap-3 w-full sm:w-auto">
                     <input type="text" id="searchInput" oninput="filterPatients()" placeholder="Buscar paciente por nombre..." class="bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-emerald-500 w-full sm:w-64">
@@ -114,7 +114,7 @@
                 </div>
             </div>
 
-            <!-- Listados de Pacientes y Citas -->
+            <!-- Listados -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="space-y-3">
                     <h3 class="font-bold text-slate-800 text-sm flex items-center gap-2"><i class="fa-solid fa-user-injured text-emerald-600"></i> Pacientes Registrados</h3>
@@ -190,7 +190,6 @@
 
                 renderPatients(allPatients);
 
-                // Renderizar Citas
                 const cContainer = document.getElementById('appointmentsContainer');
                 if (!citas || citas.length === 0) {
                     cContainer.innerHTML = `<div class="p-4 bg-slate-50 border border-slate-200 rounded-2xl text-xs text-center text-slate-400">No hay citas registradas.</div>`;
