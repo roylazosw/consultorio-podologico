@@ -66,6 +66,14 @@
                     </div>
                 </div>
 
+                <!-- Opción Recordar Contraseña -->
+                <div class="flex items-center justify-between text-xs">
+                    <label class="flex items-center gap-2 cursor-pointer text-slate-600">
+                        <input type="checkbox" id="rememberMe" class="rounded border-slate-300 text-emerald-600 focus:ring-0">
+                        <span>Recordar contraseña</span>
+                    </label>
+                </div>
+
                 <div id="loginError" class="hidden text-xs text-red-600 bg-red-50 border border-red-200 p-3 rounded-xl text-center font-medium">
                     Usuario o contraseña incorrectos.
                 </div>
@@ -100,7 +108,6 @@
                     </div>
                 </div>
                 
-                <!-- Botones de Pestañas, Acciones y Logout -->
                 <div class="flex flex-wrap items-center gap-2">
                     <div class="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200 gap-1">
                         <button onclick="switchTab('pacientes')" id="btn-tab-pacientes" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow">
@@ -305,7 +312,7 @@
         </div>
     </div>
 
-    <!-- Script Supabase, Login y Lógica -->
+    <!-- Script de Autenticación con "Recordar Sesión" -->
     <script>
         const SUPABASE_URL = 'https://ajjiliervgekpgjkguuf.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_92ubysrRZJLz69DIwHBSkw_y-PE71KE';
@@ -331,9 +338,8 @@
             checkAuth();
         };
 
-        // Lógica de Autenticación
         function checkAuth() {
-            const isAuthenticated = localStorage.getItem('pieSaludableAuth') === 'true';
+            const isAuthenticated = localStorage.getItem('pieSaludableAuth') === 'true' || sessionStorage.getItem('pieSaludableAuth') === 'true';
             if (isAuthenticated) {
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('appContent').classList.remove('hidden');
@@ -349,10 +355,15 @@
             e.preventDefault();
             const user = document.getElementById('loginUsername').value;
             const pass = document.getElementById('loginPassword').value;
+            const remember = document.getElementById('rememberMe').checked;
             const errDiv = document.getElementById('loginError');
 
             if (user === 'admin' && pass === 'pie123') {
-                localStorage.setItem('pieSaludableAuth', 'true');
+                if (remember) {
+                    localStorage.setItem('pieSaludableAuth', 'true');
+                } else {
+                    sessionStorage.setItem('pieSaludableAuth', 'true');
+                }
                 errDiv.classList.add('hidden');
                 checkAuth();
             } else {
@@ -363,6 +374,7 @@
         function handleLogout() {
             if(confirm('¿Deseas cerrar sesión?')) {
                 localStorage.removeItem('pieSaludableAuth');
+                sessionStorage.removeItem('pieSaludableAuth');
                 checkAuth();
             }
         }
