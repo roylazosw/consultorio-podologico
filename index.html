@@ -204,10 +204,10 @@
                         <span class="text-xs text-slate-500 font-medium whitespace-nowrap">Filtrar por:</span>
                         <select id="filterPadecimientosSelect" onchange="filterPatients()" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-teal-500 w-full md:w-auto">
                             <option value="todos">Todos los padecimientos</option>
-                            <option value="Diabetes">Diabetes Mellitus</option>
-                            <option value="Onicocriptosis">Onicocriptosis (Uña encarnada)</option>
-                            <option value="Onicomicosis">Onicomicosis (Hongos)</option>
-                            <option value="Pie de Atleta">Pie de Atleta</option>
+                            <option value="Diabetes">Diabetes</option>
+                            <option value="Hipertensión">Hipertensión</option>
+                            <option value="Onicomicosis">Onicomicosis</option>
+                            <option value="Pie plano">Pie plano</option>
                         </select>
                     </div>
                 </div>
@@ -234,128 +234,140 @@
         </main>
     </div>
 
-    <!-- MODAL NUEVO / EDITAR PACIENTE -->
-    <div id="patientModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full p-6 space-y-6 shadow-xl my-8">
+    <!-- MODAL NUEVO / EDITAR PACIENTE (HISTORIA CLÍNICA) -->
+    <div id="patientModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white border border-slate-200 rounded-3xl max-w-3xl w-full p-6 md:p-8 space-y-6 shadow-2xl my-8">
             <div class="flex justify-between items-center border-b border-slate-100 pb-4">
                 <h3 id="patientModalTitle" class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-user-pen text-teal-600"></i> Registrar Historia Clínica Podológica
+                    <i class="fa-solid fa-file-medical text-teal-600 text-xl"></i> Historia Clínica Podológica
                 </h3>
-                <button onclick="closeModal('patientModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <button onclick="closeModal('patientModal')" class="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-all cursor-pointer"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
             
-            <form id="patientForm" onsubmit="savePatient(event)" class="space-y-5">
+            <form id="patientForm" onsubmit="savePatient(event)" class="space-y-6">
                 <input type="hidden" id="editPatientId">
                 
-                <!-- SECCIÓN: DATOS DEL PACIENTE -->
-                <div>
-                    <h4 class="text-xs font-bold text-teal-700 uppercase tracking-wider mb-2"><i class="fa-solid fa-id-card mr-1"></i> Datos del Paciente</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <!-- SECCIÓN 1: DATOS DEL PACIENTE -->
+                <div class="bg-teal-50/40 p-4 rounded-2xl border border-teal-100 space-y-4">
+                    <h4 class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-id-card"></i> Datos del Paciente
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="md:col-span-2">
-                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nombre Completo *</label>
-                            <input type="text" id="nombre" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Nombre Completo *</label>
+                            <input type="text" id="nombre" required placeholder="Nombre del paciente" class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900 font-medium">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Edad *</label>
-                            <input type="number" id="edad" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Edad *</label>
+                            <input type="number" id="edad" required placeholder="Años" class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900 font-medium">
                         </div>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Teléfono</label>
-                            <input type="tel" id="telefono" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Teléfono</label>
+                            <input type="tel" id="telefono" placeholder="10 dígitos" class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900 font-medium">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Ocupación</label>
-                            <input type="text" id="ocupacion" placeholder="Ej. Comerciante, Docente..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Ocupación</label>
+                            <input type="text" id="ocupacion" placeholder="Ej. Comerciante, Docente..." class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900 font-medium">
                         </div>
                     </div>
-                    <div class="mt-3">
-                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Dirección</label>
-                        <input type="text" id="direccion" placeholder="Calle, número, colonia, ciudad..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Dirección</label>
+                        <input type="text" id="direccion" placeholder="Calle, número, colonia, ciudad..." class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900 font-medium">
                     </div>
                 </div>
 
-                <!-- SECCIÓN: SIGNOS VITALES -->
-                <div class="border-t border-slate-100 pt-4">
-                    <h4 class="text-xs font-bold text-teal-700 uppercase tracking-wider mb-2"><i class="fa-solid fa-heart-pulse mr-1"></i> Signos Vitales</h4>
+                <!-- SECCIÓN 2: SIGNOS VITALES -->
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                    <h4 class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-heart-pulse"></i> Signos Vitales
+                    </h4>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         <div>
-                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">TA (mmHg)</label>
-                            <input type="text" id="signoTA" placeholder="120/80" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-teal-500">
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">TA (mmHg)</label>
+                            <input type="text" id="signoTA" placeholder="120/80" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500 text-slate-900">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">FC (lpm)</label>
-                            <input type="text" id="signoFC" placeholder="75" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-teal-500">
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">FC (lpm)</label>
+                            <input type="text" id="signoFC" placeholder="75" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500 text-slate-900">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">FR (rpm)</label>
-                            <input type="text" id="signoFR" placeholder="18" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-teal-500">
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">FR (rpm)</label>
+                            <input type="text" id="signoFR" placeholder="18" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500 text-slate-900">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">Temp (°C)</label>
-                            <input type="text" id="signoTemp" placeholder="36.5" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-teal-500">
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Temp (°C)</label>
+                            <input type="text" id="signoTemp" placeholder="36.5" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500 text-slate-900">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">Glucosa (mg/dl)</label>
-                            <input type="text" id="signoGlucosa" placeholder="95" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-teal-500">
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Glucosa (mg/dl)</label>
+                            <input type="text" id="signoGlucosa" placeholder="95" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500 text-slate-900">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">Peso (kg)</label>
-                            <input type="text" id="signoPeso" placeholder="70" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-teal-500">
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Peso (kg)</label>
+                            <input type="text" id="signoPeso" placeholder="70" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500 text-slate-900">
                         </div>
                         <div>
-                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">Talla (cm)</label>
-                            <input type="text" id="signoTalla" placeholder="170" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-teal-500">
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Talla (cm)</label>
+                            <input type="text" id="signoTalla" placeholder="170" class="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500 text-slate-900">
                         </div>
                     </div>
                 </div>
 
-                <!-- SECCIÓN: ANTECEDENTES HEREDOFAMILIARES -->
-                <div class="border-t border-slate-100 pt-4">
-                    <h4 class="text-xs font-bold text-teal-700 uppercase tracking-wider mb-2"><i class="fa-solid fa-users-line mr-1"></i> Antecedentes Heredofamiliares</h4>
+                <!-- SECCIÓN 3: ANTECEDENTES HEREDOFAMILIARES -->
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
+                    <h4 class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-users-line"></i> Antecedentes Heredofamiliares
+                    </h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Mamá</label>
-                            <input type="text" id="antMama" placeholder="Enfermedades crónicas..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Mamá</label>
+                            <input type="text" id="antMama" placeholder="Enfermedades o antecedentes..." class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-teal-500 text-slate-900">
                         </div>
                         <div>
-                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Papá</label>
-                            <input type="text" id="antPapa" placeholder="Enfermedades crónicas..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500">
+                            <label class="block text-xs font-semibold text-slate-600 mb-1">Papá</label>
+                            <input type="text" id="antPapa" placeholder="Enfermedades o antecedentes..." class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-teal-500 text-slate-900">
                         </div>
                     </div>
                 </div>
 
-                <!-- SECCIÓN: ANTECEDENTES PATOLÓGICOS Y VALORACIÓN -->
-                <div class="border-t border-slate-100 pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <h4 class="text-xs font-bold text-teal-700 uppercase tracking-wider mb-2"><i class="fa-solid fa-notes-medical mr-1"></i> Antecedentes Patológicos</h4>
-                        <div id="patologicosContainer" class="space-y-1.5 bg-slate-50 p-3 rounded-2xl border border-slate-100"></div>
+                <!-- SECCIÓN 4: PATOLÓGICOS Y VALORACIÓN PODOLÓGICA -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2.5">
+                        <h4 class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-notes-medical"></i> Antecedentes Patológicos
+                        </h4>
+                        <div id="patologicosContainer" class="grid grid-cols-1 gap-2 pt-1"></div>
                     </div>
-                    <div>
-                        <h4 class="text-xs font-bold text-teal-700 uppercase tracking-wider mb-2"><i class="fa-solid fa-shoe-prints mr-1"></i> Valoración Podológica</h4>
-                        <div id="valoracionContainer" class="space-y-1.5 bg-slate-50 p-3 rounded-2xl border border-slate-100"></div>
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2.5">
+                        <h4 class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-shoe-prints"></i> Valoración Podológica
+                        </h4>
+                        <div id="valoracionContainer" class="grid grid-cols-1 gap-2 pt-1"></div>
                     </div>
                 </div>
 
                 <!-- FOTOGRAFÍA Y OBSERVACIONES -->
-                <div class="border-t border-slate-100 pt-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Fotografía del Paciente</label>
-                        <div class="flex items-center gap-3">
-                            <img id="previewFoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150" class="w-12 h-12 rounded-full object-cover border border-slate-200 shrink-0 shadow-sm">
-                            <input type="file" id="fotoFile" accept="image/*" onchange="compressAndPreviewImage(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-600 hover:file:bg-teal-100 cursor-pointer">
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-2">Fotografía del Paciente</label>
+                            <div class="flex items-center gap-3">
+                                <img id="previewFoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150" class="w-14 h-14 rounded-full object-cover border-2 border-teal-500/30 shrink-0 shadow-sm">
+                                <input type="file" id="fotoFile" accept="image/*" onchange="compressAndPreviewImage(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer">
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Observaciones / Alergias / Notas</label>
-                        <textarea id="observaciones" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500 text-slate-900"></textarea>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Observaciones / Alergias / Notas</label>
+                            <textarea id="observaciones" rows="3" placeholder="Notas adicionales o plan de tratamiento..." class="w-full bg-white border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-teal-500 text-slate-900"></textarea>
+                        </div>
                     </div>
                 </div>
 
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
-                    <button type="button" onclick="closeModal('patientModal')" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">Cancelar</button>
-                    <button type="submit" id="btnSavePatient" class="px-5 py-2 rounded-xl text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white shadow-md shadow-teal-600/20 cursor-pointer">Guardar Historia Clínica</button>
+                    <button type="button" onclick="closeModal('patientModal')" class="px-5 py-2.5 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer transition-all">Cancelar</button>
+                    <button type="submit" id="btnSavePatient" class="px-6 py-2.5 rounded-xl text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white shadow-md shadow-teal-600/20 cursor-pointer transition-all">Guardar Historia Clínica</button>
                 </div>
             </form>
         </div>
@@ -546,9 +558,9 @@
             listaPatologicos.forEach(item => {
                 const isChecked = selectedPat.includes(item) ? 'checked' : '';
                 containerPat.innerHTML += `
-                    <label class="flex items-center gap-2 text-xs cursor-pointer text-slate-700">
+                    <label class="flex items-center gap-2.5 text-xs cursor-pointer text-slate-700 bg-white p-2 rounded-xl border border-slate-200 hover:border-teal-500">
                         <input type="checkbox" name="patologico" value="${item}" ${isChecked} class="rounded border-slate-300 text-teal-600 focus:ring-0">
-                        <span>${item}</span>
+                        <span class="font-medium">${item}</span>
                     </label>
                 `;
             });
@@ -558,9 +570,9 @@
             listaValoracion.forEach(item => {
                 const isChecked = selectedVal.includes(item) ? 'checked' : '';
                 containerVal.innerHTML += `
-                    <label class="flex items-center gap-2 text-xs cursor-pointer text-slate-700">
+                    <label class="flex items-center gap-2.5 text-xs cursor-pointer text-slate-700 bg-white p-2 rounded-xl border border-slate-200 hover:border-teal-500">
                         <input type="checkbox" name="valoracion" value="${item}" ${isChecked} class="rounded border-slate-300 text-teal-600 focus:ring-0">
-                        <span>${item}</span>
+                        <span class="font-medium">${item}</span>
                     </label>
                 `;
             });
@@ -613,7 +625,6 @@
             reader.readAsDataURL(file);
         }
 
-        // Empaquetador y desempaquetador inteligente para almacenar todo en observaciones sin tocar columnas de Supabase
         function parseObservaciones(obsString) {
             let data = { ocupacion: "", direccion: "", ta: "", fc: "", fr: "", temp: "", glucosa: "", peso: "", talla: "", mama: "", papa: "", patologicos: [], valoracion: [], notas: obsString || "" };
             if (!obsString) return data;
@@ -625,7 +636,6 @@
                 }
             } catch (e) {}
 
-            // Compatibilidad con versión anterior de texto plano
             let notas = obsString;
             if (notas.includes("[OCUPACION:")) {
                 const parts = notas.split("[OCUPACION:");
@@ -650,7 +660,7 @@
             if (id) {
                 const p = pacientes.find(item => item.id === id);
                 if (!p) return;
-                document.getElementById('patientModalTitle').innerHTML = `<i class="fa-solid fa-user-pen text-teal-600"></i> Editar Historia Clínica`;
+                document.getElementById('patientModalTitle').innerHTML = `<i class="fa-solid fa-user-pen text-teal-600 text-xl"></i> Editar Historia Clínica`;
                 document.getElementById('btnSavePatient').innerText = 'Guardar Cambios';
                 document.getElementById('editPatientId').value = p.id;
                 document.getElementById('nombre').value = p.nombre || '';
@@ -671,7 +681,6 @@
                 document.getElementById('antPapa').value = parsed.papa || '';
                 document.getElementById('observaciones').value = parsed.notas || '';
                 
-                // Compatibilidad con padecimientos antiguos
                 let patList = parsed.patologicos || [];
                 if (p.padecimientos && patList.length === 0) patList = p.padecimientos;
 
@@ -681,7 +690,7 @@
 
                 renderCheckboxes(patList, parsed.valoracion || []);
             } else {
-                document.getElementById('patientModalTitle').innerHTML = `<i class="fa-solid fa-user-plus text-teal-600"></i> Registrar Historia Clínica Podológica`;
+                document.getElementById('patientModalTitle').innerHTML = `<i class="fa-solid fa-file-medical text-teal-600 text-xl"></i> Registrar Historia Clínica Podológica`;
                 document.getElementById('btnSavePatient').innerText = 'Guardar Historia Clínica';
                 document.getElementById('patientForm').reset();
                 document.getElementById('editPatientId').value = '';
@@ -759,7 +768,7 @@
                 nombre, 
                 edad, 
                 telefono, 
-                padecimientos: patologicos, // Mantenemos compatibilidad con filtros previos
+                padecimientos: patologicos,
                 observaciones: JSON.stringify(clinicalData), 
                 foto: currentPhotoBase64 
             };
