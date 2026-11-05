@@ -264,8 +264,8 @@
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Fotografía del Paciente</label>
                         <div class="flex items-center gap-3">
-                            <img id="previewFoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150" class="w-10 h-10 rounded-full object-cover border border-slate-200 shrink-0">
-                            <input type="file" id="fotoFile" accept="image/*" onchange="previewImage(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-600 hover:file:bg-teal-100 cursor-pointer">
+                            <img id="previewFoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150" class="w-12 h-12 rounded-full object-cover border border-slate-200 shrink-0">
+                            <input type="file" id="fotoFile" accept="image/*" onchange="compressAndPreviewImage(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-600 hover:file:bg-teal-100 cursor-pointer">
                         </div>
                     </div>
                 </div>
@@ -467,16 +467,45 @@
             document.getElementById(modalId).classList.add('hidden');
         }
 
-        function previewImage(event) {
+        // Función optimizada para comprimir la foto y evitar errores de tamaño en Supabase
+        function compressAndPreviewImage(event) {
             const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    currentPhotoBase64 = e.target.result;
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 300;
+                    const MAX_HEIGHT = 300;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Convertir a formato comprimido JPEG Base64
+                    currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
                     document.getElementById('previewFoto').src = currentPhotoBase64;
                 };
-                reader.readAsDataURL(file);
-            }
+            };
+            reader.readAsDataURL(file);
         }
 
         function openPatientModal(id = null) {
@@ -491,7 +520,7 @@
                 document.getElementById('telefono').value = p.telefono || '';
                 document.getElementById('observaciones').value = p.observaciones || '';
                 
-                currentPhotoBase64 = p.foto || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
+                currentPhotoBase64 = p.foto && p.foto.startsWith('data:image') ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
                 document.getElementById('previewFoto').src = currentPhotoBase64;
                 document.getElementById('fotoFile').value = '';
 
@@ -672,12 +701,14 @@
 
             list.forEach(p => {
                 const badges = p.padecimientos ? p.padecimientos.map(pad => `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2.5 py-0.5 rounded-lg text-[10px] font-semibold">${pad}</span>`).join('') : '';
+                const fotoPaciente = p.foto && p.foto.startsWith('data:image') ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
+
                 grid.innerHTML += `
                     <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 flex flex-col justify-between">
                         <div class="space-y-3">
                             <div class="flex justify-between items-start">
                                 <div class="flex items-center gap-3">
-                                    <img src="${p.foto || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150'}" class="w-12 h-12 rounded-full object-cover border border-slate-200">
+                                    <img src="${fotoPaciente}" class="w-12 h-12 rounded-full object-cover border border-slate-200">
                                     <div>
                                         <h4 class="font-bold text-slate-900 text-sm">${p.nombre}</h4>
                                         <p class="text-xs text-slate-500">Edad: ${p.edad} años • Tel: ${p.telefono || 'No registrado'}</p>
@@ -776,7 +807,7 @@
 
         function filterPatients() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const padecimientoFilter = document.getElementById('filterPadecimientosSelect', '').value;
+            const padecimientoFilter = document.getElementById('filterPadecimientosSelect').value;
 
             const filtered = pacientes.filter(p => {
                 const matchText = p.nombre.toLowerCase().includes(query) || (p.telefono && p.telefono.includes(query));
