@@ -412,9 +412,15 @@
             document.getElementById('statCitasPendientes').innerText = citas.filter(c => c.status === 'Programada').length;
             document.getElementById('statPacientesDiabeticos').innerText = pacientes.filter(p => p.padecimientos && p.padecimientos.some(pad => pad.toLowerCase().includes('diabetes'))).length;
             
-            const todayStr = new Date().toISOString().split('T')[0];
-            // Muestra exclusivamente el número total de citas para el día actual
-            document.getElementById('statCitasHoy').innerText = citas.filter(c => c.fecha === todayStr).length;
+            // Corrección: Obtener la fecha local exacta de México (YYYY-MM-DD) sin desfase de zona horaria UTC
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const todayStr = `${year}-${month}-${day}`;
+
+            // Cuenta únicamente las citas programadas para el día de hoy real
+            document.getElementById('statCitasHoy').innerText = citas.filter(c => c.fecha === todayStr && c.status === 'Programada').length;
         }
 
         function switchTab(tab) {
