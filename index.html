@@ -1432,7 +1432,7 @@
             }
         }
 
-        // FUNCIONES DE RECORDATORIO WHATSAPP Y CORREO
+        // FUNCIÓN DE RECORDATORIO WHATSAPP
         function enviarWhatsApp(nombrePaciente, fecha, hora, motivo, telefono) {
             if (!telefono) {
                 alert('Este paciente no tiene un número de teléfono registrado.');
@@ -1446,14 +1446,6 @@
             const mensaje = `Hola *${nombrePaciente}*, le saludamos de *Pie saludable*. Le recordamos que tiene una cita programada para el día *${fecha}* a las *${hora} hrs*. Motivo: ${motivo}. ¡Le esperamos!`;
             const url = `https://wa.me/${telClean}?text=${encodeURIComponent(mensaje)}`;
             window.open(url, '_blank');
-        }
-
-        function enviarCorreo(nombrePaciente, fecha, hora, motivo) {
-            const asunto = encodeURIComponent("Recordatorio de Cita - Pie saludable");
-            const cuerpo = encodeURIComponent(`Estimado/a ${nombrePaciente},\n\nLe recordamos que tiene una cita pendiente en nuestro consultorio podológico Pie saludable para el día ${fecha} a las ${hora} hrs.\n\nMotivo: ${motivo}\n\nPor favor llegue con 5 minutos de anticipación. ¡Quedamos a sus órdenes!`);
-            
-            const mailtoUrl = `mailto:?subject=${asunto}&body=${cuerpo}`;
-            window.open(mailtoUrl, '_blank');
         }
 
         function renderPatients(list = pacientes) {
@@ -1571,13 +1563,10 @@
                         </div>
                         
                         <div class="space-y-2 pt-2 border-t border-slate-100">
-                            <!-- Botones de Recordatorio WhatsApp y Correo -->
-                            <div class="flex items-center gap-2">
-                                <button onclick="enviarWhatsApp('${nombrePaciente}', '${c.fecha}', '${c.hora}', '${motivoTexto}', '${telefonoPaciente}')" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 py-1.5 px-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer shadow-sm">
-                                    <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
-                                </button>
-                                <button onclick="enviarCorreo('${nombrePaciente}', '${c.fecha}', '${c.hora}', '${motivoTexto}')" class="flex-1 bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 py-1.5 px-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer shadow-sm">
-                                    <i class="fa-solid fa-envelope text-sm"></i> Correo
+                            <!-- Botón de Recordatorio WhatsApp -->
+                            <div>
+                                <button onclick="enviarWhatsApp('${nombrePaciente}', '${c.fecha}', '${c.hora}', '${motivoTexto}', '${telefonoPaciente}')" class="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm">
+                                    <i class="fa-brands fa-whatsapp text-sm"></i> Enviar Recordatorio por WhatsApp
                                 </button>
                             </div>
 
