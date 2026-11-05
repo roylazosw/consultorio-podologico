@@ -414,17 +414,26 @@
         async function loadDataFromCloud() {
             try {
                 const { data: pacientesData, error: errPac } = await _supabase.from('pacientes').select('*');
-                if (!errPac) pacientes = pacientesData || [];
+                if (errPac) {
+                    console.error('Error cargando pacientes:', errPac);
+                } else {
+                    pacientes = pacientesData || [];
+                    console.log('Pacientes cargados desde Supabase:', pacientes);
+                }
 
-                const { data: citasData, error: errCit } = await _supabase.from('citas').select('id, paciente_id, fecha, hora, motivo, status');
-                if (!errCit) citas = citasData || [];
+                const { data: citasData, error: errCit } = await _supabase.from('citas').select('*');
+                if (errCit) {
+                    console.error('Error cargando citas:', errCit);
+                } else {
+                    citas = citasData || [];
+                }
 
                 updateStats();
                 renderPatients();
                 renderAppointments();
                 updatePatientSelect();
             } catch (e) {
-                console.error('Error al cargar datos:', e);
+                console.error('Excepción general al cargar datos:', e);
             }
         }
 
@@ -493,8 +502,8 @@
                 img.src = e.target.result;
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 300;
-                    const MAX_HEIGHT = 300;
+                    const MAX_WIDTH = 250;
+                    const MAX_HEIGHT = 250;
                     let width = img.width;
                     let height = img.height;
 
@@ -515,7 +524,7 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
+                    currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
                     document.getElementById('previewFoto').src = currentPhotoBase64;
                 };
             };
@@ -536,7 +545,7 @@
                 document.getElementById('direccion').value = p.direccion || '';
                 document.getElementById('observaciones').value = p.observaciones || '';
                 
-                currentPhotoBase64 = (p.foto && p.foto.length > 50) ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
+                currentPhotoBase64 = (p.foto && p.foto.length > 20) ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
                 document.getElementById('previewFoto').src = currentPhotoBase64;
                 document.getElementById('fotoFile').value = '';
 
@@ -610,18 +619,21 @@
                 foto: currentPhotoBase64 
             };
             
+            console.log("Datos a enviar a Supabase:", patientData);
+
             let error;
             if (editId) {
-                const { err } = await _supabase.from('pacientes').update(patientData).eq('id', editId);
-                error = err;
+                const res = await _supabase.from('pacientes').update(patientData).eq('id', editId);
+                error = res.error;
             } else {
                 patientData.id = 'pac_' + Date.now();
-                const { err } = await _supabase.from('pacientes').insert([patientData]);
-                error = err;
+                const res = await _supabase.from('pacientes').insert([patientData]);
+                error = res.error;
             }
 
             if (error) {
-                alert('Error al guardar: ' + error.message);
+                console.error("Error devuelto por Supabase:", error);
+                alert('Error al guardar en Supabase: ' + error.message);
                 return;
             }
 
@@ -631,7 +643,7 @@
         }
 
         async function deletePatient(id) {
-            if (confirm('¿Estás seguro de eliminar este paciente? Se eliminarán también sus registros.')) {
+            if (confirm('¿Estás seguro de eliminar este paciente?')) {
                 const { error } = await _supabase.from('pacientes').delete().eq('id', id);
                 if (error) {
                     alert('Error al eliminar: ' + error.message);
@@ -657,13 +669,13 @@
 
             let error;
             if (editId) {
-                const { err } = await _supabase.from('citas').update(citaData).eq('id', editId);
-                error = err;
+                const res = await _supabase.from('citas').update(citaData).eq('id', editId);
+                error = res.error;
             } else {
                 citaData.id = 'cit_' + Date.now();
                 citaData.status = 'Programada';
-                const { err } = await _supabase.from('citas').insert([citaData]);
-                error = err;
+                const res = await _supabase.from('citas').insert([citaData]);
+                error = res.error;
             }
 
             if (error) {
@@ -721,7 +733,7 @@
 
             list.forEach(p => {
                 const badges = p.padecimientos ? p.padecimientos.map(pad => `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2.5 py-0.5 rounded-lg text-[10px] font-semibold">${pad}</span>`).join('') : '';
-                const fotoPaciente = (p.foto && p.foto.length > 50) ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
+                const fotoPaciente = (p.foto && p.foto.length > 20) ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
 
                 grid.innerHTML += `
                     <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 flex flex-col justify-between">
