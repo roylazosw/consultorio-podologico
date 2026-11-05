@@ -234,11 +234,10 @@
         </main>
     </div>
 
-    <!-- MODAL NUEVO / EDITAR PACIENTE (HISTORIA CLÍNICA CON CONSENTIMIENTO Y FIRMA) -->
+    <!-- MODAL NUEVO / EDITAR PACIENTE -->
     <div id="patientModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl my-auto overflow-hidden">
             
-            <!-- Cabecera fija del Modal -->
             <div class="flex justify-between items-center border-b border-slate-100 px-6 py-4 bg-white shrink-0">
                 <h3 id="patientModalTitle" class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
                     <i class="fa-solid fa-file-medical text-teal-600 text-xl"></i> Historia Clínica Podológica
@@ -246,12 +245,10 @@
                 <button onclick="closeModal('patientModal')" class="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-all cursor-pointer"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
             
-            <!-- Cuerpo con Scroll Interno -->
             <div class="p-5 sm:p-6 overflow-y-auto flex-1 space-y-5">
                 <form id="patientForm" onsubmit="savePatient(event)" class="space-y-5">
                     <input type="hidden" id="editPatientId">
                     
-                    <!-- SECCIÓN 1: DATOS DEL PACIENTE -->
                     <div class="bg-teal-50/70 p-4 sm:p-5 rounded-2xl border border-teal-200 space-y-3.5 shadow-sm">
                         <h4 class="text-xs font-bold text-teal-900 uppercase tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-id-card"></i> Datos del Paciente
@@ -285,7 +282,6 @@
                         </div>
                     </div>
 
-                    <!-- SECCIÓN 2: SIGNOS VITALES -->
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
                         <h4 class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-heart-pulse"></i> Signos Vitales
@@ -322,7 +318,6 @@
                         </div>
                     </div>
 
-                    <!-- SECCIÓN 3: ANTECEDENTES HEREDOFAMILIARES -->
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
                         <h4 class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-users-line"></i> Antecedentes Heredofamiliares
@@ -339,7 +334,6 @@
                         </div>
                     </div>
 
-                    <!-- SECCIÓN 4: PATOLÓGICOS Y VALORACIÓN PODOLÓGICA -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2.5">
                             <h4 class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-1.5">
@@ -355,11 +349,10 @@
                         </div>
                     </div>
 
-                    <!-- FOTOGRAFÍA Y OBSERVACIONES -->
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-4">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                             <div>
-                                <label class="block text-xs font-semibold text-slate-700 mb-2">Fotografía del Paciente</label>
+                                <label class="block text-xs font-semibold text-slate-700 mb-2">Fotografía de Perfil</label>
                                 <div class="flex items-center gap-3">
                                     <img id="previewFoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150" class="w-14 h-14 rounded-full object-cover border-2 border-teal-500/30 shrink-0 shadow-sm">
                                     <input type="file" id="fotoFile" accept="image/*" onchange="compressAndPreviewImage(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100 cursor-pointer">
@@ -372,7 +365,7 @@
                         </div>
                     </div>
 
-                    <!-- SECCIÓN 5: CONSENTIMIENTO INFORMADO Y FIRMA -->
+                    <!-- CONSENTIMIENTO INFORMADO Y FIRMA -->
                     <div class="bg-teal-900 text-white p-5 rounded-2xl space-y-4 shadow-md">
                         <h4 class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 text-teal-300">
                             <i class="fa-solid fa-signature"></i> Consentimiento Informado
@@ -394,7 +387,6 @@
                 </form>
             </div>
 
-            <!-- Pie fijo del Modal con Botones -->
             <div class="flex justify-end gap-3 px-6 py-4 bg-slate-50 border-t border-slate-100 shrink-0">
                 <button type="button" onclick="closeModal('patientModal')" class="px-5 py-2.5 rounded-xl text-sm font-medium bg-slate-200 text-slate-700 hover:bg-slate-300 cursor-pointer transition-all">Cancelar</button>
                 <button type="button" onclick="document.getElementById('patientForm').requestSubmit()" id="btnSavePatient" class="px-6 py-2.5 rounded-xl text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white shadow-md shadow-teal-600/20 cursor-pointer transition-all">Guardar Historia Clínica</button>
@@ -402,12 +394,12 @@
         </div>
     </div>
 
-    <!-- MODAL DETALLE / VER HISTORIAL CLÍNICO -->
+    <!-- MODAL DETALLE / VER HISTORIAL CLÍNICO Y FOTOS CLÍNICAS -->
     <div id="viewHistoryModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl my-auto overflow-hidden">
             <div class="flex justify-between items-center border-b border-slate-100 px-6 py-4 bg-teal-50/50 shrink-0">
                 <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-notes-medical text-teal-600 text-xl"></i> Historial Clínico del Paciente
+                    <i class="fa-solid fa-notes-medical text-teal-600 text-xl"></i> Historial Clínico y Fotografías del Paciente
                 </h3>
                 <button onclick="closeModal('viewHistoryModal')" class="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-all cursor-pointer"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
@@ -504,6 +496,7 @@
         
         // Variables para el pad de firma
         let canvas, ctx, isDrawing = false, hasSignature = false, currentSignatureBase64 = '';
+        let activePatientForPhotos = null;
 
         window.onload = function() {
             checkAuth();
@@ -515,7 +508,6 @@
             if (!canvas) return;
             ctx = canvas.getContext('2d');
 
-            // Ajustar resolución del canvas para pantallas retina / móviles
             const rect = canvas.getBoundingClientRect();
             canvas.width = rect.width * window.devicePixelRatio;
             canvas.height = rect.height * window.devicePixelRatio;
@@ -526,13 +518,11 @@
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
 
-            // Eventos de Mouse
             canvas.onmousedown = (e) => startDrawing(e.offsetX, e.offsetY);
             canvas.onmousemove = (e) => draw(e.offsetX, e.offsetY);
             canvas.onmouseup = stopDrawing;
             canvas.onmouseleave = stopDrawing;
 
-            // Eventos de Touch (Móviles / Tablets)
             canvas.ontouchstart = (e) => {
                 e.preventDefault();
                 const touch = e.touches[0];
@@ -766,7 +756,7 @@
         }
 
         function parseObservaciones(obsString) {
-            let data = { ocupacion: "", direccion: "", ta: "", fc: "", fr: "", temp: "", glucosa: "", peso: "", talla: "", mama: "", papa: "", patologicos: [], valoracion: [], firma: "", notas: obsString || "" };
+            let data = { ocupacion: "", direccion: "", ta: "", fc: "", fr: "", temp: "", glucosa: "", peso: "", talla: "", mama: "", papa: "", patologicos: [], valoracion: [], firma: "", fotosClinicas: [], notas: obsString || "" };
             if (!obsString) return data;
 
             try {
@@ -846,6 +836,7 @@
         }
 
         function viewPatientHistory(id) {
+            activePatientForPhotos = id;
             const p = pacientes.find(item => item.id === id);
             if (!p) return;
             const parsed = parseObservaciones(p.observaciones);
@@ -855,6 +846,21 @@
             const badgesVal = parsed.valoracion && parsed.valoracion.length > 0 ? parsed.valoracion.map(item => `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2.5 py-1 rounded-lg text-xs font-semibold">${item}</span>`).join('') : '<span class="text-slate-400 text-xs">Ninguna registrada</span>';
 
             const firmaHTML = parsed.firma ? `<img src="${parsed.firma}" class="h-24 max-w-xs object-contain border border-slate-300 rounded-xl bg-white p-1 shadow-sm">` : `<span class="text-xs text-slate-400 italic">Sin firma registrada</span>`;
+
+            let fotosHTML = '';
+            if (parsed.fotosClinicas && parsed.fotosClinicas.length > 0) {
+                parsed.fotosClinicas.forEach((fObj, idx) => {
+                    fotosHTML += `
+                        <div class="relative group bg-white border border-slate-200 rounded-xl p-2 shadow-sm space-y-1">
+                            <img src="${fObj.url}" class="w-full h-32 object-cover rounded-lg border border-slate-100">
+                            <p class="text-[10px] text-slate-500 text-center font-medium">${fObj.fecha || 'Sin fecha'}</p>
+                            <button onclick="deleteClinicalPhoto('${p.id}', ${idx})" class="absolute top-3 right-3 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs shadow hover:bg-red-700 cursor-pointer" title="Eliminar foto"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    `;
+                });
+            } else {
+                fotosHTML = `<div class="col-span-full text-center py-6 text-slate-400 text-xs italic bg-white rounded-xl border border-slate-200">No hay fotografías clínicas de pies o lesiones registradas todavía.</div>`;
+            }
 
             const container = document.getElementById('historyContentModal');
             container.innerHTML = `
@@ -869,6 +875,22 @@
 
                 <div class="space-y-1 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200">
                     <p><strong class="text-slate-700">Dirección:</strong> ${parsed.direccion || 'No especificada'}</p>
+                </div>
+
+                <!-- FOTOGRAFÍAS CLÍNICAS (PIES / LESIONES) -->
+                <div class="bg-teal-50/60 p-4 rounded-2xl border border-teal-200 space-y-3">
+                    <div class="flex justify-between items-center">
+                        <h5 class="text-xs font-bold text-teal-900 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-camera"></i> Fotografías Clínicas (Pies / Lesiones)
+                        </h5>
+                        <label class="bg-teal-600 hover:bg-teal-500 text-white px-3 py-1.5 rounded-xl text-xs font-semibold shadow transition-all cursor-pointer flex items-center gap-1.5">
+                            <i class="fa-solid fa-plus"></i> Agregar Foto
+                            <input type="file" accept="image/*" onchange="addClinicalPhoto(event)" class="hidden">
+                        </label>
+                    </div>
+                    <div id="gridFotosClinicas" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        ${fotosHTML}
+                    </div>
                 </div>
 
                 <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
@@ -917,6 +939,86 @@
             openModal('viewHistoryModal');
         }
 
+        async function addClinicalPhoto(event) {
+            const file = event.target.files[0];
+            if (!file || !activePatientForPhotos) return;
+
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = async function() {
+                    const canvasImg = document.createElement('canvas');
+                    const MAX_WIDTH = 500;
+                    const MAX_HEIGHT = 500;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+
+                    canvasImg.width = width;
+                    canvasImg.height = height;
+                    const ctxImg = canvasImg.getContext('2d');
+                    ctxImg.drawImage(img, 0, 0, width, height);
+
+                    const compressedBase64 = canvasImg.toDataURL('image/jpeg', 0.75);
+                    const now = new Date();
+                    const fechaStr = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth()+1).toString().padStart(2, '0')}/${now.getFullYear()}`;
+
+                    const p = pacientes.find(item => item.id === activePatientForPhotos);
+                    if (!p) return;
+
+                    const parsed = parseObservaciones(p.observaciones);
+                    if (!parsed.fotosClinicas) parsed.fotosClinicas = [];
+                    parsed.fotosClinicas.push({ url: compressedBase64, fecha: fechaStr });
+
+                    const updatedObservaciones = JSON.stringify(parsed);
+
+                    const { error } = await _supabase.from('pacientes').update({ observaciones: updatedObservaciones }).eq('id', p.id);
+                    if (error) {
+                        alert('Error al guardar la foto clínica: ' + error.message);
+                        return;
+                    }
+
+                    await loadDataFromCloud();
+                    viewPatientHistory(p.id);
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function deleteClinicalPhoto(patientId, photoIndex) {
+            if (!confirm('¿Deseas eliminar esta fotografía clínica?')) return;
+
+            const p = pacientes.find(item => item.id === patientId);
+            if (!p) return;
+
+            const parsed = parseObservaciones(p.observaciones);
+            if (parsed.fotosClinicas && parsed.fotosClinicas[photoIndex]) {
+                parsed.fotosClinicas.splice(photoIndex, 1);
+            }
+
+            const updatedObservaciones = JSON.stringify(parsed);
+            const { error } = await _supabase.from('pacientes').update({ observaciones: updatedObservaciones }).eq('id', p.id);
+            if (error) {
+                alert('Error al eliminar la foto: ' + error.message);
+                return;
+            }
+
+            await loadDataFromCloud();
+            viewPatientHistory(p.id);
+        }
+
         function openAppointmentModal(id = null) {
             updatePatientSelect();
             if (id) {
@@ -961,6 +1063,15 @@
             const valCheckboxes = document.querySelectorAll('input[name="valoracion"]:checked');
             const valoracion = Array.from(valCheckboxes).map(cb => cb.value);
 
+            let existingFotos = [];
+            if (editId) {
+                const existingP = pacientes.find(item => item.id === editId);
+                if (existingP) {
+                    const oldParsed = parseObservaciones(existingP.observaciones);
+                    if (oldParsed.fotosClinicas) existingFotos = oldParsed.fotosClinicas;
+                }
+            }
+
             const clinicalData = {
                 ocupacion: document.getElementById('ocupacion').value.trim(),
                 direccion: document.getElementById('direccion').value.trim(),
@@ -976,6 +1087,7 @@
                 patologicos: patologicos,
                 valoracion: valoracion,
                 firma: currentSignatureBase64,
+                fotosClinicas: existingFotos,
                 notas: document.getElementById('observaciones').value.trim()
             };
 
@@ -1132,7 +1244,6 @@
                             ${(badgesPat || badgesVal) ? `<div class="space-y-1"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Historial y Valoración:</p><div class="flex flex-wrap gap-1">${badgesPat} ${badgesVal}</div></div>` : ''}
                         </div>
                         
-                        <!-- BOTÓN VER HISTORIAL CLÍNICO -->
                         <div class="pt-2 border-t border-slate-100">
                             <button onclick="viewPatientHistory('${p.id}')" class="w-full bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm">
                                 <i class="fa-solid fa-notes-medical"></i> Ver Historial Clínico
