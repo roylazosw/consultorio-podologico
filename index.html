@@ -134,7 +134,7 @@
                             <i class="fa-solid fa-calendar-days mr-1.5"></i>Agenda de Citas
                         </button>
                     </div>
-                    <button onclick="openModal('appointmentModal')" class="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-md shadow-teal-600/20 flex items-center gap-2 cursor-pointer">
+                    <button onclick="openAppointmentModal()" class="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-md shadow-teal-600/20 flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-calendar-plus"></i> Agendar Cita
                     </button>
                     <button onclick="openModal('patientModal')" class="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-md shadow-teal-600/20 flex items-center gap-2 cursor-pointer">
@@ -282,16 +282,17 @@
         </div>
     </div>
 
-    <!-- MODAL AGENDAR CITA CON CONSULTORIO -->
+    <!-- MODAL AGENDAR / EDITAR CITA -->
     <div id="appointmentModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 space-y-6 shadow-xl">
             <div class="flex justify-between items-center border-b border-slate-100 pb-4">
-                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                <h3 id="appointmentModalTitle" class="text-lg font-bold text-slate-900 flex items-center gap-2">
                     <i class="fa-solid fa-calendar-check text-teal-600"></i> Agendar Nueva Cita
                 </h3>
                 <button onclick="closeModal('appointmentModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form id="appointmentForm" onsubmit="saveAppointment(event)" class="space-y-4">
+                <input type="hidden" id="editAppointmentId">
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Seleccionar Paciente *</label>
                     <select id="citaPacienteId" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900"></select>
@@ -319,7 +320,7 @@
                 </div>
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
                     <button type="button" onclick="closeModal('appointmentModal')" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">Cancelar</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white shadow-md shadow-teal-600/20 cursor-pointer">Agendar</button>
+                    <button type="submit" id="btnSaveAppointment" class="px-5 py-2 rounded-xl text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white shadow-md shadow-teal-600/20 cursor-pointer">Agendar</button>
                 </div>
             </form>
         </div>
@@ -412,14 +413,12 @@
             document.getElementById('statCitasPendientes').innerText = citas.filter(c => c.status === 'Programada').length;
             document.getElementById('statPacientesDiabeticos').innerText = pacientes.filter(p => p.padecimientos && p.padecimientos.some(pad => pad.toLowerCase().includes('diabetes'))).length;
             
-            // Corrección: Obtener la fecha local exacta de México (YYYY-MM-DD) sin desfase de zona horaria UTC
             const now = new Date();
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const day = String(now.getDate()).padStart(2, '0');
             const todayStr = `${year}-${month}-${day}`;
 
-            // Cuenta únicamente las citas programadas para el día de hoy real
             document.getElementById('statCitasHoy').innerText = citas.filter(c => c.fecha === todayStr && c.status === 'Programada').length;
         }
 
@@ -464,6 +463,40 @@
             document.getElementById(modalId).classList.add('hidden');
         }
 
+        function openAppointmentModal(id = null) {
+            updatePatientSelect();
+            if (id) {
+                // Modo Edición
+                const cita = citas.find(c => c.id === id);
+                if (!cita) return;
+
+                document.getElementById('appointmentModalTitle').innerHTML = `<i class="fa-solid fa-calendar-pen text-teal-600"></i> Editar Cita`;
+                document.getElementById('btnSaveAppointment').innerText = 'Guardar Cambios';
+                document.getElementById('editAppointmentId').value = cita.id;
+                document.getElementById('citaPacienteId').value = cita.paciente_id;
+                document.getElementById('citaFecha').value = cita.fecha;
+                document.getElementById('citaHora').value = cita.hora;
+
+                // Extraer consultorio y motivo
+                let motivoLimpio = cita.motivo || '';
+                if (motivoLimpio.startsWith('[Metepec]')) {
+                    document.getElementById('citaConsultorio').value = 'Metepec';
+                    motivoLimpio = motivoLimpio.replace('[Metepec]', '').trim();
+                } else if (motivoLimpio.startsWith('[Toluca]')) {
+                    document.getElementById('citaConsultorio').value = 'Toluca';
+                    motivoLimpio = motivoLimpio.replace('[Toluca]', '').trim();
+                }
+                document.getElementById('citaMotivo').value = motivoLimpio;
+            } else {
+                // Modo Nuevo
+                document.getElementById('appointmentModalTitle').innerHTML = `<i class="fa-solid fa-calendar-check text-teal-600"></i> Agendar Nueva Cita`;
+                document.getElementById('btnSaveAppointment').innerText = 'Agendar';
+                document.getElementById('appointmentForm').reset();
+                document.getElementById('editAppointmentId').value = '';
+            }
+            openModal('appointmentModal');
+        }
+
         async function savePatient(e) {
             e.preventDefault();
             const id = 'pac_' + Date.now();
@@ -492,29 +525,49 @@
 
         async function saveAppointment(e) {
             e.preventDefault();
+            const editId = document.getElementById('editAppointmentId').value;
             const consultorio = document.getElementById('citaConsultorio').value;
             const motivoInput = document.getElementById('citaMotivo').value || 'Consulta podológica';
-            
             const motivoFinal = `[${consultorio}] ${motivoInput}`;
 
             const citaData = {
-                id: 'cit_' + Date.now(),
                 paciente_id: document.getElementById('citaPacienteId').value,
                 fecha: document.getElementById('citaFecha').value,
                 hora: document.getElementById('citaHora').value,
-                motivo: motivoFinal,
-                status: 'Programada'
+                motivo: motivoFinal
             };
 
-            const { error } = await _supabase.from('citas').insert([citaData]);
+            let error;
+            if (editId) {
+                // Actualizar cita existente en Supabase
+                const { err } = await _supabase.from('citas').update(citaData).eq('id', editId);
+                error = err;
+            } else {
+                // Insertar nueva cita
+                citaData.id = 'cit_' + Date.now();
+                citaData.status = 'Programada';
+                const { err } = await _supabase.from('citas').insert([citaData]);
+                error = err;
+            }
+
             if (error) {
-                alert('Error al agendar: ' + error.message);
+                alert('Error al guardar la cita: ' + error.message);
                 return;
             }
 
             await loadDataFromCloud();
             closeModal('appointmentModal');
             document.getElementById('appointmentForm').reset();
+        }
+
+        async function toggleCitaStatus(id, currentStatus) {
+            const newStatus = currentStatus === 'Programada' ? 'Cancelada' : 'Programada';
+            const { error } = await _supabase.from('citas').update({ status: newStatus }).eq('id', id);
+            if (error) {
+                alert('Error al actualizar estado: ' + error.message);
+                return;
+            }
+            await loadDataFromCloud();
         }
 
         function renderPatients(list = pacientes) {
@@ -571,16 +624,29 @@
                     motivoTexto = motivoTexto.replace('[Toluca]', '').trim();
                 }
 
+                const btnCancelText = c.status === 'Programada' ? 'Cancelar' : 'Activar';
+                const btnCancelColor = c.status === 'Programada' ? 'text-red-500 hover:bg-red-50' : 'text-emerald-600 hover:bg-emerald-50';
+
                 listContainer.innerHTML += `
-                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-2">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold text-teal-600"><i class="fa-solid fa-calendar mr-1"></i> ${c.fecha} - ${c.hora} hrs</span>
-                            ${consultorioHTML}
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-bold text-teal-600"><i class="fa-solid fa-calendar mr-1"></i> ${c.fecha} - ${c.hora} hrs</span>
+                                ${consultorioHTML}
+                            </div>
+                            <h4 class="font-bold text-slate-900 text-sm">${nombrePaciente}</h4>
+                            <div class="flex justify-between items-center pt-1">
+                                <p class="text-xs text-slate-500">Motivo: ${motivoTexto}</p>
+                                <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-semibold border ${badgeColor}">${c.status}</span>
+                            </div>
                         </div>
-                        <h4 class="font-bold text-slate-900 text-sm">${nombrePaciente}</h4>
-                        <div class="flex justify-between items-center pt-1">
-                            <p class="text-xs text-slate-500">Motivo: ${motivoTexto}</p>
-                            <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-semibold border ${badgeColor}">${c.status}</span>
+                        <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+                            <button onclick="openAppointmentModal('${c.id}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all cursor-pointer">
+                                <i class="fa-solid fa-pen-to-square mr-1"></i> Editar
+                            </button>
+                            <button onclick="toggleCitaStatus('${c.id}', '${c.status}')" class="px-3 py-1.5 rounded-xl text-xs font-semibold border border-slate-200 ${btnCancelColor} transition-all cursor-pointer">
+                                ${btnCancelText}
+                            </button>
                         </div>
                     </div>
                 `;
