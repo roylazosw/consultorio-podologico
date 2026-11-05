@@ -848,8 +848,6 @@
 
             const firmaHTML = parsed.firma ? `<img src="${parsed.firma}" class="h-24 max-w-xs object-contain border border-slate-300 rounded-xl bg-white p-1 shadow-sm">` : `<span class="text-xs text-slate-400 italic">Sin firma registrada</span>`;
 
-            renderCarouselHTML(p);
-
             const container = document.getElementById('historyContentModal');
             container.innerHTML = `
                 <div class="flex items-center gap-4 bg-teal-50/60 p-4 rounded-2xl border border-teal-100">
@@ -925,6 +923,7 @@
                     <div class="pt-1">${firmaHTML}</div>
                 </div>
             `;
+            renderCarouselHTML(p);
             openModal('viewHistoryModal');
         }
 
@@ -996,8 +995,8 @@
                 img.src = e.target.result;
                 img.onload = async function() {
                     const canvasImg = document.createElement('canvas');
-                    const MAX_WIDTH = 600;
-                    const MAX_HEIGHT = 600;
+                    const MAX_WIDTH = 450;
+                    const MAX_HEIGHT = 450;
                     let width = img.width;
                     let height = img.height;
 
@@ -1018,7 +1017,7 @@
                     const ctxImg = canvasImg.getContext('2d');
                     ctxImg.drawImage(img, 0, 0, width, height);
 
-                    const compressedBase64 = canvasImg.toDataURL('image/jpeg', 0.8);
+                    const compressedBase64 = canvasImg.toDataURL('image/jpeg', 0.65);
                     const now = new Date();
                     const fechaStr = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth()+1).toString().padStart(2, '0')}/${now.getFullYear()}`;
 
@@ -1039,7 +1038,10 @@
                     }
 
                     await loadDataFromCloud();
-                    viewPatientHistory(p.id);
+                    
+                    // Actualizar el paciente local y refrescar carrusel
+                    const updatedPatient = pacientes.find(item => item.id === activePatientForPhotos);
+                    if (updatedPatient) renderCarouselHTML(updatedPatient);
                 };
             };
             reader.readAsDataURL(file);
@@ -1068,7 +1070,8 @@
             }
 
             await loadDataFromCloud();
-            viewPatientHistory(p.id);
+            const updatedPatient = pacientes.find(item => item.id === patientId);
+            if (updatedPatient) renderCarouselHTML(updatedPatient);
         }
 
         function openAppointmentModal(id = null) {
