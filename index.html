@@ -596,13 +596,29 @@
             document.getElementById('appointmentForm').reset();
         }
 
-        async function updateCitaStatus(id, newStatus) {
+        async function updateCitaStatus(id, newStatus, selectElement) {
+            // Actualizar color visualmente de inmediato
+            applyStatusColor(selectElement, newStatus);
+
             const { error } = await _supabase.from('citas').update({ status: newStatus }).eq('id', id);
             if (error) {
                 alert('Error al actualizar estado: ' + error.message);
                 return;
             }
             await loadDataFromCloud();
+        }
+
+        function applyStatusColor(selectElement, status) {
+            // Remover clases de color previas
+            selectElement.className = "bg-slate-50 border rounded-xl px-3 py-1.5 text-xs font-semibold focus:outline-none transition-all cursor-pointer ";
+            
+            if (status === 'Programada') {
+                selectElement.classList.add('bg-amber-50', 'text-amber-700', 'border-amber-200');
+            } else if (status === 'Completada') {
+                selectElement.classList.add('bg-emerald-50', 'text-emerald-700', 'border-emerald-200');
+            } else if (status === 'Cancelada') {
+                selectElement.classList.add('bg-red-50', 'text-red-700', 'border-red-200');
+            }
         }
 
         async function deleteAppointment(id) {
@@ -667,7 +683,7 @@
                 return;
             }
 
-            filtered.forEach(c => {
+            filtered.forEach((c, index) => {
                 const paciente = pacientes.find(p => p.id === c.paciente_id);
                 const nombrePaciente = paciente ? paciente.nombre : 'Paciente general';
                 
@@ -680,6 +696,8 @@
                     consultorioHTML = `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2 py-0.5 rounded-md text-[10px] font-bold"><i class="fa-solid fa-location-dot mr-1"></i>Toluca</span>`;
                     motivoTexto = motivoTexto.replace('[Toluca]', '').trim();
                 }
+
+                const selectId = `statusSelect_${index}`;
 
                 listContainer.innerHTML += `
                     <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 flex flex-col justify-between">
@@ -703,7 +721,7 @@
                         </div>
                         <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
                             <span class="text-[11px] font-semibold text-slate-500">Estado:</span>
-                            <select onchange="updateCitaStatus('${c.id}', this.value)" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-teal-500 text-slate-700">
+                            <select id="${selectId}" onchange="updateCitaStatus('${c.id}', this.value, this)" class="bg-slate-50 border rounded-xl px-3 py-1.5 text-xs font-semibold focus:outline-none transition-all cursor-pointer">
                                 <option value="Programada" ${c.status === 'Programada' ? 'selected' : ''}>Programada</option>
                                 <option value="Completada" ${c.status === 'Completada' ? 'selected' : ''}>Completada</option>
                                 <option value="Cancelada" ${c.status === 'Cancelada' ? 'selected' : ''}>Cancelada</option>
@@ -711,6 +729,12 @@
                         </div>
                     </div>
                 `;
+            });
+
+            // Aplicar el color correspondiente a cada selector tras renderizarlos
+            filtered.forEach((c, index) => {
+                const sel = document.getElementById(`statusSelect_${index}`);
+                if (sel) applyStatusColor(sel, c.status);
             });
         }
 
