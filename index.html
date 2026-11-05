@@ -397,6 +397,17 @@
         </div>
     </div>
 
+    <!-- MODAL PARA AMPLIAR FOTO CLÍNICA A PANTALLA COMPLETA -->
+    <div id="imageZoomModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[60] hidden flex flex-col items-center justify-center p-4">
+        <button onclick="closeZoomModal()" class="absolute top-5 right-5 text-white bg-teal-800/80 hover:bg-teal-700 w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-xl transition-all cursor-pointer border border-teal-600">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="max-w-4xl max-h-[85vh] flex flex-col items-center justify-center space-y-3">
+            <img id="zoomedImageElement" src="" class="max-w-full max-h-[75vh] object-contain rounded-2xl shadow-2xl border-2 border-teal-600/50">
+            <p id="zoomedImageDate" class="text-teal-300 text-xs font-semibold tracking-wide"></p>
+        </div>
+    </div>
+
     <!-- MODAL NUEVO / EDITAR CITA -->
     <div id="appointmentModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 space-y-6 shadow-xl">
@@ -880,7 +891,7 @@
                     <p class="text-xs text-slate-700 bg-white p-3 rounded-xl border border-slate-200">${parsed.notas || 'Sin observaciones registradas.'}</p>
                 </div>
 
-                <!-- FOTOGRAFÍAS CLÍNICAS (ARRIBA DEL CONSENTIMIENTO INFORMADO) -->
+                <!-- FOTOGRAFÍAS CLÍNICAS (CON ZOOM AL HACER CLIC) -->
                 <div class="bg-teal-900 text-white p-4 sm:p-5 rounded-2xl space-y-3 shadow-md">
                     <div class="flex flex-col sm:flex-row justify-between items-center gap-3">
                         <h5 class="text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 text-teal-300">
@@ -897,7 +908,7 @@
                     </div>
                 </div>
 
-                <!-- CONSENTIMIENTO INFORMADO Y FIRMA (ABAJO DE LAS FOTOGRAFÍAS CLÍNICAS) -->
+                <!-- CONSENTIMIENTO INFORMADO Y FIRMA -->
                 <div class="bg-teal-50/70 p-4 rounded-2xl border border-teal-200 space-y-2">
                     <h5 class="text-xs font-bold text-teal-900 uppercase tracking-wider"><i class="fa-solid fa-signature mr-1"></i> Consentimiento Informado y Firma</h5>
                     <p class="text-[11px] text-teal-800 leading-relaxed">El paciente autoriza la realización de la valoración podológica preventiva, comprendiendo los riesgos y aceptando voluntariamente.</p>
@@ -930,9 +941,13 @@
             const fotoActual = fotos[currentCarouselIndex];
 
             container.innerHTML = `
-                <div class="relative w-full flex items-center justify-center">
-                    <img src="${fotoActual.url}" class="max-h-72 w-auto object-contain rounded-xl shadow-lg border border-teal-700">
+                <div class="relative w-full flex items-center justify-center group">
+                    <img src="${fotoActual.url}" onclick="openZoomModal('${fotoActual.url}', '${fotoActual.fecha || 'N/D'}')" class="max-h-72 w-auto object-contain rounded-xl shadow-lg border border-teal-700 cursor-zoom-in hover:opacity-95 transition-all" title="Haz clic para ver más grande">
                     
+                    <div class="absolute bottom-2 right-2 bg-teal-900/90 text-teal-200 px-2.5 py-1 rounded-lg text-[10px] font-bold pointer-events-none shadow flex items-center gap-1">
+                        <i class="fa-solid fa-magnifying-glass-plus"></i> Clic para ampliar
+                    </div>
+
                     ${fotos.length > 1 ? `
                         <button onclick="prevCarouselPhoto('${p.id}')" class="absolute left-2 bg-teal-900/80 hover:bg-teal-800 text-white w-9 h-9 rounded-full flex items-center justify-center shadow transition-all cursor-pointer border border-teal-600"><i class="fa-solid fa-chevron-left"></i></button>
                         <button onclick="nextCarouselPhoto('${p.id}')" class="absolute right-2 bg-teal-900/80 hover:bg-teal-800 text-white w-9 h-9 rounded-full flex items-center justify-center shadow transition-all cursor-pointer border border-teal-600"><i class="fa-solid fa-chevron-right"></i></button>
@@ -944,6 +959,16 @@
                     <button onclick="deleteClinicalPhoto('${p.id}', ${currentCarouselIndex})" class="bg-red-600/90 hover:bg-red-600 text-white px-3 py-1.5 rounded-xl text-xs font-semibold shadow transition-all cursor-pointer flex items-center gap-1.5"><i class="fa-solid fa-trash"></i> Eliminar foto</button>
                 </div>
             `;
+        }
+
+        function openZoomModal(url, fecha) {
+            document.getElementById('zoomedImageElement').src = url;
+            document.getElementById('zoomedImageDate').innerText = `Fecha de registro: ${fecha}`;
+            document.getElementById('imageZoomModal').classList.remove('hidden');
+        }
+
+        function closeZoomModal() {
+            document.getElementById('imageZoomModal').classList.add('hidden');
         }
 
         function prevCarouselPhoto(patientId) {
@@ -976,8 +1001,8 @@
                 img.src = e.target.result;
                 img.onload = async function() {
                     const canvasImg = document.createElement('canvas');
-                    const MAX_WIDTH = 450;
-                    const MAX_HEIGHT = 450;
+                    const MAX_WIDTH = 600;
+                    const MAX_HEIGHT = 600;
                     let width = img.width;
                     let height = img.height;
 
@@ -998,7 +1023,7 @@
                     const ctxImg = canvasImg.getContext('2d');
                     ctxImg.drawImage(img, 0, 0, width, height);
 
-                    const compressedBase64 = canvasImg.toDataURL('image/jpeg', 0.65);
+                    const compressedBase64 = canvasImg.toDataURL('image/jpeg', 0.75);
                     const now = new Date();
                     const fechaStr = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth()+1).toString().padStart(2, '0')}/${now.getFullYear()}`;
 
