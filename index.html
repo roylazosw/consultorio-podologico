@@ -277,7 +277,7 @@
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Fotografía del Paciente</label>
                         <div class="flex items-center gap-3">
-                            <img id="previewFoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150" class="w-12 h-12 rounded-full object-cover border border-slate-200 shrink-0">
+                            <img id="previewFoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150" class="w-12 h-12 rounded-full object-cover border border-slate-200 shrink-0 shadow-sm">
                             <input type="file" id="fotoFile" accept="image/*" onchange="compressAndPreviewImage(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-600 hover:file:bg-teal-100 cursor-pointer">
                         </div>
                     </div>
@@ -536,7 +536,7 @@
                 document.getElementById('direccion').value = p.direccion || '';
                 document.getElementById('observaciones').value = p.observaciones || '';
                 
-                currentPhotoBase64 = p.foto && p.foto.startsWith('data:image') ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
+                currentPhotoBase64 = (p.foto && p.foto.length > 50) ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
                 document.getElementById('previewFoto').src = currentPhotoBase64;
                 document.getElementById('fotoFile').value = '';
 
@@ -721,14 +721,14 @@
 
             list.forEach(p => {
                 const badges = p.padecimientos ? p.padecimientos.map(pad => `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2.5 py-0.5 rounded-lg text-[10px] font-semibold">${pad}</span>`).join('') : '';
-                const fotoPaciente = p.foto && p.foto.startsWith('data:image') ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
+                const fotoPaciente = (p.foto && p.foto.length > 50) ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
 
                 grid.innerHTML += `
                     <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 flex flex-col justify-between">
                         <div class="space-y-3">
                             <div class="flex justify-between items-start">
                                 <div class="flex items-center gap-3">
-                                    <img src="${fotoPaciente}" class="w-12 h-12 rounded-full object-cover border border-slate-200">
+                                    <img src="${fotoPaciente}" class="w-12 h-12 rounded-full object-cover border border-slate-200 shadow-sm">
                                     <div>
                                         <h4 class="font-bold text-slate-900 text-sm">${p.nombre}</h4>
                                         <p class="text-xs text-slate-500">Edad: ${p.edad} años • Tel: ${p.telefono || 'No registrado'}</p>
