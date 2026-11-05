@@ -356,7 +356,7 @@
                         </div>
                     </div>
 
-                    <!-- NUEVO APARTADO: ALERGIAS CON OPCIÓN OTRO -->
+                    <!-- APARTADO DE ALERGIAS -->
                     <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
                         <h4 class="text-xs font-bold text-teal-800 uppercase tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-triangle-exclamation"></i> Alergias
@@ -384,7 +384,7 @@
                         </div>
                     </div>
 
-                    <!-- CONSENTIMIENTO Y FIRMA DIGITAL EN EL MODAL DE REGISTRO -->
+                    <!-- CONSENTIMIENTO Y FIRMA DIGITAL -->
                     <div class="bg-teal-50/70 p-4 rounded-2xl border border-teal-200 space-y-3">
                         <h4 class="text-xs font-bold text-teal-900 uppercase tracking-wider flex items-center gap-1.5">
                             <i class="fa-solid fa-signature"></i> Consentimiento Informado y Firma
@@ -788,7 +788,6 @@
             const containerAlergias = document.getElementById('alergiasContainer');
             containerAlergias.innerHTML = '';
             
-            // Verificamos si hay alguna alergia guardada que no sea de la lista predeterminada (para el campo "Otro")
             let hasCustomAlergia = false;
             let customAlergiaText = '';
             selectedAlergias.forEach(a => {
@@ -813,7 +812,6 @@
             if (hasCustomAlergia) {
                 otroWrapper.classList.remove('hidden');
                 otroInput.value = customAlergiaText;
-                // Marcar el checkbox de "Otro" por si acaso
                 const checkboxes = document.querySelectorAll('input[name="alergia"]');
                 checkboxes.forEach(cb => { if(cb.value === 'Otro') cb.checked = true; });
             } else {
@@ -1034,7 +1032,6 @@
                     </div>
                 </div>
 
-                <!-- ALERGIAS EN VISTA HISTORIAL -->
                 <div class="bg-amber-50/50 p-3.5 rounded-2xl border border-amber-200 space-y-2">
                     <h5 class="text-xs font-bold text-amber-900 uppercase tracking-wider"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Alergias</h5>
                     <div class="flex flex-wrap gap-1.5">${badgesAlergias}</div>
@@ -1435,6 +1432,30 @@
             }
         }
 
+        // FUNCIONES DE RECORDATORIO WHATSAPP Y CORREO
+        function enviarWhatsApp(nombrePaciente, fecha, hora, motivo, telefono) {
+            if (!telefono) {
+                alert('Este paciente no tiene un número de teléfono registrado.');
+                return;
+            }
+            let telClean = telefono.replace(/\D/g, '');
+            if (telClean.length === 10) {
+                telClean = '52' + telClean;
+            }
+
+            const mensaje = `Hola *${nombrePaciente}*, le saludamos de *Pie saludable*. Le recordamos que tiene una cita programada para el día *${fecha}* a las *${hora} hrs*. Motivo: ${motivo}. ¡Le esperamos!`;
+            const url = `https://wa.me/${telClean}?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
+        }
+
+        function enviarCorreo(nombrePaciente, fecha, hora, motivo) {
+            const asunto = encodeURIComponent("Recordatorio de Cita - Pie saludable");
+            const cuerpo = encodeURIComponent(`Estimado/a ${nombrePaciente},\n\nLe recordamos que tiene una cita pendiente en nuestro consultorio podológico Pie saludable para el día ${fecha} a las ${hora} hrs.\n\nMotivo: ${motivo}\n\nPor favor llegue con 5 minutos de anticipación. ¡Quedamos a sus órdenes!`);
+            
+            const mailtoUrl = `mailto:?subject=${asunto}&body=${cuerpo}`;
+            window.open(mailtoUrl, '_blank');
+        }
+
         function renderPatients(list = pacientes) {
             const grid = document.getElementById('patientsGrid');
             grid.innerHTML = '';
@@ -1514,6 +1535,7 @@
             filtered.forEach((c, index) => {
                 const paciente = pacientes.find(p => p.id === c.paciente_id);
                 const nombrePaciente = paciente ? paciente.nombre : 'Paciente general';
+                const telefonoPaciente = paciente ? paciente.telefono : '';
                 
                 let consultorioHTML = '';
                 let motivoTexto = c.motivo || '';
@@ -1547,13 +1569,26 @@
                             </div>
                             <p class="text-xs text-slate-500">Motivo: ${motivoTexto}</p>
                         </div>
-                        <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
-                            <span class="text-[11px] font-semibold text-slate-500">Estado:</span>
-                            <select id="${selectId}" onchange="updateCitaStatus('${c.id}', this.value, this)" class="bg-slate-50 border rounded-xl px-3 py-1.5 text-xs font-semibold focus:outline-none transition-all cursor-pointer">
-                                <option value="Programada" ${c.status === 'Programada' ? 'selected' : ''}>Programada</option>
-                                <option value="Completada" ${c.status === 'Completada' ? 'selected' : ''}>Completada</option>
-                                <option value="Cancelada" ${c.status === 'Cancelada' ? 'selected' : ''}>Cancelada</option>
-                            </select>
+                        
+                        <div class="space-y-2 pt-2 border-t border-slate-100">
+                            <!-- Botones de Recordatorio WhatsApp y Correo -->
+                            <div class="flex items-center gap-2">
+                                <button onclick="enviarWhatsApp('${nombrePaciente}', '${c.fecha}', '${c.hora}', '${motivoTexto}', '${telefonoPaciente}')" class="flex-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 py-1.5 px-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer shadow-sm">
+                                    <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp
+                                </button>
+                                <button onclick="enviarCorreo('${nombrePaciente}', '${c.fecha}', '${c.hora}', '${motivoTexto}')" class="flex-1 bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 py-1.5 px-2.5 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer shadow-sm">
+                                    <i class="fa-solid fa-envelope text-sm"></i> Correo
+                                </button>
+                            </div>
+
+                            <div class="flex items-center justify-between pt-1">
+                                <span class="text-[11px] font-semibold text-slate-500">Estado:</span>
+                                <select id="${selectId}" onchange="updateCitaStatus('${c.id}', this.value, this)" class="bg-slate-50 border rounded-xl px-3 py-1.5 text-xs font-semibold focus:outline-none transition-all cursor-pointer">
+                                    <option value="Programada" ${c.status === 'Programada' ? 'selected' : ''}>Programada</option>
+                                    <option value="Completada" ${c.status === 'Completada' ? 'selected' : ''}>Completada</option>
+                                    <option value="Cancelada" ${c.status === 'Cancelada' ? 'selected' : ''}>Cancelada</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 `;
