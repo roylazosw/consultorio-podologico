@@ -54,7 +54,7 @@
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Usuario</label>
                     <div class="relative">
                         <i class="fa-solid fa-user absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
-                        <input type="text" id="loginUsername" required placeholder="Ingresa tu usuario" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
+                        <input type="text" id="loginUsername" required placeholder="admin" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
                     </div>
                 </div>
 
@@ -66,7 +66,6 @@
                     </div>
                 </div>
 
-                <!-- Opción Recordar Contraseña -->
                 <div class="flex items-center justify-between text-xs">
                     <label class="flex items-center gap-2 cursor-pointer text-slate-600">
                         <input type="checkbox" id="rememberMe" class="rounded border-slate-300 text-emerald-600 focus:ring-0">
@@ -78,7 +77,7 @@
                     Usuario o contraseña incorrectos.
                 </div>
 
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl text-sm font-semibold transition-all shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2">
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl text-sm font-semibold transition-all shadow-md shadow-emerald-600/20 flex items-center justify-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                 </button>
             </form>
@@ -104,26 +103,26 @@
                     </div>
                     <div>
                         <h1 class="text-xl font-bold text-slate-900 tracking-wide">Pie saludable</h1>
-                        <p class="text-xs text-emerald-600 font-semibold uppercase tracking-wider">Gestión Podológica Clínica</p>
+                        <p class="text-xs text-emerald-600 font-semibold uppercase tracking-wider">GESTIÓN PODOLÓGICA CLÍNICA</p>
                     </div>
                 </div>
                 
                 <div class="flex flex-wrap items-center gap-2">
-                    <div class="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200 gap-1">
-                        <button onclick="switchTab('pacientes')" id="btn-tab-pacientes" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow">
+                    <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200 gap-1">
+                        <button onclick="switchTab('pacientes')" id="btn-tab-pacientes" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow cursor-pointer">
                             <i class="fa-solid fa-users mr-1.5"></i>Pacientes
                         </button>
-                        <button onclick="switchTab('citas')" id="btn-tab-citas" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900">
+                        <button onclick="switchTab('citas')" id="btn-tab-citas" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900 cursor-pointer">
                             <i class="fa-solid fa-calendar-days mr-1.5"></i>Agenda de Citas
                         </button>
                     </div>
-                    <button onclick="openModal('appointmentModal')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-md shadow-emerald-600/20 flex items-center gap-2">
+                    <button onclick="openModal('appointmentModal')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-md shadow-emerald-600/20 flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-calendar-plus"></i> Agendar Cita
                     </button>
-                    <button onclick="openModal('patientModal')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-md shadow-emerald-600/20 flex items-center gap-2">
+                    <button onclick="openModal('patientModal')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-md shadow-emerald-600/20 flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-user-plus"></i> Nuevo Paciente
                     </button>
-                    <button onclick="handleLogout()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all border border-slate-200 flex items-center gap-1.5" title="Cerrar Sesión">
+                    <button onclick="handleLogout()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all border border-slate-200 flex items-center gap-1.5 cursor-pointer" title="Cerrar Sesión">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </div>
@@ -140,7 +139,7 @@
                         <i class="fa-solid fa-users"></i>
                     </div>
                     <div>
-                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Total Pacientes</p>
+                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">TOTAL PACIENTES</p>
                         <h3 id="statTotalPacientes" class="text-2xl font-bold text-slate-900">0</h3>
                     </div>
                 </div>
@@ -150,7 +149,7 @@
                         <i class="fa-solid fa-clock"></i>
                     </div>
                     <div>
-                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Citas Pendientes</p>
+                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">CITAS PENDIENTES</p>
                         <h3 id="statCitasPendientes" class="text-2xl font-bold text-slate-900">0</h3>
                     </div>
                 </div>
@@ -160,7 +159,7 @@
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
                     <div>
-                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Pacientes Diabéticos</p>
+                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">PACIENTES DIABÉTICOS</p>
                         <h3 id="statPacientesDiabeticos" class="text-2xl font-bold text-slate-900">0</h3>
                     </div>
                 </div>
@@ -170,7 +169,7 @@
                         <i class="fa-solid fa-calendar-day"></i>
                     </div>
                     <div>
-                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Citas de Hoy</p>
+                        <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">CITAS DE HOY</p>
                         <h3 id="statCitasHoy" class="text-2xl font-bold text-slate-900">0</h3>
                     </div>
                 </div>
@@ -258,8 +257,8 @@
                     <textarea id="observaciones" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900"></textarea>
                 </div>
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
-                    <button type="button" onclick="closeModal('patientModal')" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200">Cancelar</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/20">Guardar Paciente</button>
+                    <button type="button" onclick="closeModal('patientModal')" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/20 cursor-pointer">Guardar Paciente</button>
                 </div>
             </form>
         </div>
@@ -293,26 +292,14 @@
                     <input type="text" id="citaMotivo" placeholder="Ej. Corte clínico, revisión pie diabético..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-emerald-500 text-slate-900">
                 </div>
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
-                    <button type="button" onclick="closeModal('appointmentModal')" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200">Cancelar</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/20">Agendar</button>
+                    <button type="button" onclick="closeModal('appointmentModal')" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/20 cursor-pointer">Agendar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="detailModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full p-6 space-y-6 shadow-xl my-8">
-            <div class="flex justify-between items-center border-b border-slate-100 pb-4">
-                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-file-medical text-emerald-600"></i> Expediente Clínico del Paciente
-                </h3>
-                <button onclick="closeModal('detailModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <div id="detailContent" class="space-y-6"></div>
-        </div>
-    </div>
-
-    <!-- Script de Autenticación con "Recordar Sesión" -->
+    <!-- Script de Lógica del Sistema -->
     <script>
         const SUPABASE_URL = 'https://ajjiliervgekpgjkguuf.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_92ubysrRZJLz69DIwHBSkw_y-PE71KE';
@@ -326,9 +313,7 @@
             "Onicomicosis (Hongos en uñas)",
             "Pie de Atleta",
             "Callosidades / Tilomas",
-            "Hiperqueratosis",
-            "Verrugas Plantares",
-            "Pie Plano / Arco Vencido"
+            "Hiperqueratosis"
         ];
 
         let pacientes = [];
@@ -392,22 +377,17 @@
                 renderAppointments();
                 updatePatientSelect();
             } catch (e) {
-                console.error('Excepción de conexión:', e);
+                console.error('Error al cargar datos:', e);
             }
         }
 
         function updateStats() {
-            const totalPacientes = pacientes.length;
-            const citasPendientes = citas.filter(c => c.status === 'Programada').length;
-            const diabeticos = pacientes.filter(p => p.padecimientos && p.padecimientos.some(pad => pad.includes('Diabetes'))).length;
+            document.getElementById('statTotalPacientes').innerText = pacientes.length;
+            document.getElementById('statCitasPendientes').innerText = citas.filter(c => c.status === 'Programada').length;
+            document.getElementById('statPacientesDiabeticos').innerText = pacientes.filter(p => p.padecimientos && p.padecimientos.some(pad => pad.toLowerCase().includes('diabetes'))).length;
             
             const todayStr = new Date().toISOString().split('T')[0];
-            const citasHoy = citas.filter(c => c.fecha === todayStr).length;
-
-            document.getElementById('statTotalPacientes').innerText = totalPacientes;
-            document.getElementById('statCitasPendientes').innerText = citasPendientes;
-            document.getElementById('statPacientesDiabeticos').innerText = diabeticos;
-            document.getElementById('statCitasHoy').innerText = citasHoy;
+            document.getElementById('statCitasHoy').innerText = citas.filter(c => c.fecha === todayStr).length;
         }
 
         function switchTab(tab) {
@@ -417,13 +397,13 @@
             const viewCitas = document.getElementById('view-citas');
 
             if (tab === 'pacientes') {
-                btnPacientes.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow";
-                btnCitas.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900";
+                btnPacientes.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow cursor-pointer";
+                btnCitas.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900 cursor-pointer";
                 viewPacientes.classList.remove('hidden');
                 viewCitas.classList.add('hidden');
             } else {
-                btnCitas.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow";
-                btnPacientes.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900";
+                btnCitas.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-emerald-600 text-white shadow cursor-pointer";
+                btnPacientes.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900 cursor-pointer";
                 viewCitas.classList.remove('hidden');
                 viewPacientes.classList.add('hidden');
             }
@@ -445,24 +425,15 @@
 
         function openModal(modalId) {
             document.getElementById(modalId).classList.remove('hidden');
-            if(modalId === 'patientModal' && !document.getElementById('patientId').value) {
-                document.getElementById('patientForm').reset();
-                document.getElementById('patientModalTitle').innerHTML = '<i class="fa-solid fa-user-pen text-emerald-600"></i> Registrar Nuevo Paciente';
-                renderPadecimientosCheckboxes();
-            }
         }
 
         function closeModal(modalId) {
             document.getElementById(modalId).classList.add('hidden');
-            if(modalId === 'patientModal') {
-                document.getElementById('patientForm').reset();
-                document.getElementById('patientId').value = '';
-            }
         }
 
         async function savePatient(e) {
             e.preventDefault();
-            const id = document.getElementById('patientId').value || 'pac_' + Date.now();
+            const id = 'pac_' + Date.now();
             const nombre = document.getElementById('nombre').value;
             const edad = parseInt(document.getElementById('edad').value);
             const telefono = document.getElementById('telefono').value;
@@ -471,32 +442,41 @@
             const checkboxes = document.querySelectorAll('input[name="padecimiento"]:checked');
             const padecimientos = Array.from(checkboxes).map(cb => cb.value);
 
-            const fotoFile = document.getElementById('fotoFile').files[0];
+            const foto = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
 
-            if (fotoFile) {
-                const reader = new FileReader();
-                reader.onload = async function(uploadEvent) {
-                    await processPatientSave(id, nombre, edad, telefono, padecimientos, observaciones, uploadEvent.target.result);
-                };
-                reader.readAsDataURL(fotoFile);
-            } else {
-                const existing = pacientes.find(p => p.id === id);
-                const foto = existing ? existing.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
-                await processPatientSave(id, nombre, edad, telefono, padecimientos, observaciones, foto);
-            }
-        }
-
-        async function processPatientSave(id, nombre, edad, telefono, padecimientos, observaciones, foto) {
             const patientData = { id, nombre, edad, telefono, padecimientos, observaciones, foto };
             
-            const { error } = await _supabase.from('pacientes').upsert([patientData]);
+            const { error } = await _supabase.from('pacientes').insert([patientData]);
             if (error) {
-                alert('Error al guardar en Supabase: ' + error.message);
+                alert('Error al guardar: ' + error.message);
                 return;
             }
 
             await loadDataFromCloud();
             closeModal('patientModal');
+            document.getElementById('patientForm').reset();
+        }
+
+        async function saveAppointment(e) {
+            e.preventDefault();
+            const citaData = {
+                id: 'cit_' + Date.now(),
+                paciente_id: document.getElementById('citaPacienteId').value,
+                fecha: document.getElementById('citaFecha').value,
+                hora: document.getElementById('citaHora').value,
+                motivo: document.getElementById('citaMotivo').value || 'Consulta podológica',
+                status: 'Programada'
+            };
+
+            const { error } = await _supabase.from('citas').insert([citaData]);
+            if (error) {
+                alert('Error al agendar: ' + error.message);
+                return;
+            }
+
+            await loadDataFromCloud();
+            closeModal('appointmentModal');
+            document.getElementById('appointmentForm').reset();
         }
 
         function renderPatients(list = pacientes) {
@@ -509,39 +489,58 @@
             }
 
             list.forEach(p => {
-                const isDiabetico = p.padecimientos && p.padecimientos.some(pad => pad.includes('Diabetes'));
-                const badges = p.padecimientos ? p.padecimientos.map(pad => `<span class="bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-lg text-[11px] text-slate-600">${pad}</span>`).join('') : '';
-
+                const badges = p.padecimientos ? p.padecimientos.map(pad => `<span class="bg-emerald-50 text-emerald-700 border border-emerald-100 px-2.5 py-0.5 rounded-lg text-[10px] font-semibold">${pad}</span>`).join('') : '';
                 grid.innerHTML += `
-                    <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 hover:shadow-md transition-all flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-start justify-between gap-3">
-                                <div class="flex items-center gap-3">
-                                    <img src="${p.foto}" alt="Foto" class="w-12 h-12 rounded-full object-cover border border-slate-200">
-                                    <div>
-                                        <h4 class="font-bold text-slate-900 text-base flex items-center gap-1.5">
-                                            ${p.nombre} 
-                                            ${isDiabetico ? '<i class="fa-solid fa-triangle-exclamation text-red-500 text-xs" title="Paciente con Diabetes"></i>' : ''}
-                                        </h4>
-                                        <p class="text-xs text-slate-500">${p.edad} años • <i class="fa-solid fa-phone text-[10px]"></i> ${p.telefono || 'Sin teléfono'}</p>
-                                    </div>
-                                </div>
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 flex flex-col justify-between">
+                        <div class="flex items-center gap-3">
+                            <img src="${p.foto}" class="w-12 h-12 rounded-full object-cover border border-slate-200">
+                            <div>
+                                <h4 class="font-bold text-slate-900 text-sm">${p.nombre}</h4>
+                                <p class="text-xs text-slate-500">Edad: ${p.edad} años • Tel: ${p.telefono || 'No registrado'}</p>
                             </div>
-                            <div class="mt-4">
-                                <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Padecimientos:</p>
-                                <div class="flex flex-wrap gap-1.5">
-                                    ${badges || '<span class="text-xs text-slate-400">Sin padecimientos marcados</span>'}
-                                </div>
-                            </div>
-                            ${p.observaciones ? `<div class="mt-3 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-200"><strong>Observación:</strong> ${p.observaciones}</div>` : ''}
                         </div>
-                        <div class="flex gap-2 pt-3 border-t border-slate-100">
-                            <button onclick="viewDetail('${p.id}')" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 py-2 rounded-xl text-xs font-semibold transition-all">Ver Expediente</button>
-                            <button onclick="editPatient('${p.id}')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-600 px-3 py-2 rounded-xl text-xs transition-all"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deletePatient('${p.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-2 rounded-xl text-xs transition-all"><i class="fa-solid fa-trash"></i></button>
-                        </div>
+                        <div class="flex flex-wrap gap-1.5">${badges}</div>
+                        <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">${p.observaciones || 'Sin observaciones'}</p>
                     </div>
                 `;
+            });
+        }
+
+        function renderAppointments() {
+            const listContainer = document.getElementById('appointmentsList');
+            const statusFilter = document.getElementById('filterCitaStatus').value;
+            
+            const filtered = citas.filter(c => statusFilter === 'todos' || c.status === statusFilter);
+            listContainer.innerHTML = '';
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 text-sm">No hay citas registradas.</div>`;
+                return;
+            }
+
+            filtered.forEach(c => {
+                const paciente = pacientes.find(p => p.id === c.paciente_id);
+                const nombrePaciente = paciente ? paciente.nombre : 'Paciente general';
+                const badgeColor = c.status === 'Cancelada' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200';
+
+                listContainer.innerHTML += `
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-emerald-600"><i class="fa-solid fa-calendar mr-1"></i> ${c.fecha} - ${c.hora} hrs</span>
+                            <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-semibold border ${badgeColor}">${c.status}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-sm">${nombrePaciente}</h4>
+                        <p class="text-xs text-slate-500">Motivo: ${c.motivo}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function updatePatientSelect() {
+            const select = document.getElementById('citaPacienteId');
+            select.innerHTML = '<option value="">Selecciona un paciente</option>';
+            pacientes.forEach(p => {
+                select.innerHTML += `<option value="${p.id}">${p.nombre} (${p.telefono || 'Sin tel'})</option>`;
             });
         }
 
@@ -550,192 +549,11 @@
             const padecimientoFilter = document.getElementById('filterPadecimientosSelect').value;
 
             const filtered = pacientes.filter(p => {
-                const matchQuery = p.nombre.toLowerCase().includes(query) || 
-                                   (p.telefono && p.telefono.includes(query)) || 
-                                   (p.padecimientos && p.padecimientos.some(pad => pad.toLowerCase().includes(query)));
-                
-                const matchPadecimiento = padecimientoFilter === 'todos' || 
-                                         (p.padecimientos && p.padecimientos.some(pad => pad.includes(padecimientoFilter)));
-
-                return matchQuery && matchPadecimiento;
+                const matchText = p.nombre.toLowerCase().includes(query) || (p.telefono && p.telefono.includes(query));
+                const matchPad = padecimientoFilter === 'todos' || (p.padecimientos && p.padecimientos.some(pad => pad.includes(padecimientoFilter)));
+                return matchText && matchPad;
             });
             renderPatients(filtered);
-        }
-
-        function editPatient(id) {
-            const p = pacientes.find(item => item.id === id);
-            if(!p) return;
-            document.getElementById('patientId').value = p.id;
-            document.getElementById('nombre').value = p.nombre;
-            document.getElementById('edad').value = p.edad;
-            document.getElementById('telefono').value = p.telefono || '';
-            document.getElementById('observaciones').value = p.observaciones || '';
-            document.getElementById('patientModalTitle').innerHTML = '<i class="fa-solid fa-user-pen text-emerald-600"></i> Editar Paciente';
-            renderPadecimientosCheckboxes(p.padecimientos || []);
-            openModal('patientModal');
-        }
-
-        async function deletePatient(id) {
-            if(confirm('¿Estás seguro de eliminar este paciente y su historial?')) {
-                const { error } = await _supabase.from('pacientes').delete().eq('id', id);
-                if (error) {
-                    alert('Error al eliminar: ' + error.message);
-                    return;
-                }
-                await loadDataFromCloud();
-            }
-        }
-
-        function viewDetail(id) {
-            const p = pacientes.find(item => item.id === id);
-            if(!p) return;
-
-            const patientCitas = citas.filter(c => c.paciente_id === id);
-            const citasHtml = patientCitas.length > 0 ? patientCitas.map(c => `
-                <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl flex justify-between items-center text-xs">
-                    <div>
-                        <p class="font-semibold text-slate-800"><i class="fa-regular fa-calendar mr-1.5 text-emerald-600"></i>${c.fecha} a las ${c.hora}</p>
-                        <p class="text-slate-500 mt-0.5">${c.motivo || 'Sin motivo especificado'}</p>
-                    </div>
-                    <span class="px-2.5 py-1 rounded-lg font-medium ${c.status === 'Completada' ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' : c.status === 'Cancelada' ? 'bg-red-100 text-red-700 border border-red-200' : 'bg-amber-100 text-amber-700 border border-amber-200'}">${c.status}</span>
-                </div>
-            `).join('') : '<p class="text-xs text-slate-400">No hay citas registradas para este paciente.</p>';
-
-            const content = document.getElementById('detailContent');
-            content.innerHTML = `
-                <div class="flex items-center gap-4 border-b border-slate-100 pb-4">
-                    <img src="${p.foto}" class="w-16 h-16 rounded-2xl object-cover border border-slate-200">
-                    <div>
-                        <h4 class="text-lg font-bold text-slate-900">${p.nombre}</h4>
-                        <p class="text-xs text-slate-500">${p.edad} años • Tel: ${p.telefono || 'No registrado'}</p>
-                    </div>
-                </div>
-                <div>
-                    <h5 class="text-xs font-semibold text-emerald-600 uppercase tracking-wider mb-2">Padecimientos</h5>
-                    <div class="flex flex-wrap gap-1.5">
-                        ${p.padecimientos ? p.padecimientos.map(pad => `<span class="bg-slate-100 border border-slate-200 px-3 py-1 rounded-xl text-xs text-slate-700">${pad}</span>`).join('') : 'Ninguno'}
-                    </div>
-                </div>
-                <div>
-                    <h5 class="text-xs font-semibold text-emerald-600 uppercase tracking-wider mb-2">Observaciones Clínicas</h5>
-                    <p class="text-sm bg-slate-50 border border-slate-200 p-3.5 rounded-xl text-slate-700">${p.observaciones || 'Sin observaciones.'}</p>
-                </div>
-                <div>
-                    <h5 class="text-xs font-semibold text-emerald-600 uppercase tracking-wider mb-2">Historial de Citas</h5>
-                    <div class="space-y-2 max-h-48 overflow-y-auto">
-                        ${citasHtml}
-                    </div>
-                </div>
-            `;
-            openModal('detailModal');
-        }
-
-        function updatePatientSelect() {
-            const select = document.getElementById('citaPacienteId');
-            select.innerHTML = '<option value="">Selecciona un paciente</option>';
-            pacientes.forEach(p => {
-                select.innerHTML += `<option value="${p.id}">${p.nombre}</option>`;
-            });
-        }
-
-        async function saveAppointment(e) {
-            e.preventDefault();
-            const paciente_id = document.getElementById('citaPacienteId').value;
-            const fecha = document.getElementById('citaFecha').value;
-            const hora = document.getElementById('citaHora').value;
-            const motivo = document.getElementById('citaMotivo').value;
-
-            const nuevaCita = {
-                id: 'cit_' + Date.now(),
-                paciente_id,
-                fecha,
-                hora,
-                motivo,
-                status: 'Programada'
-            };
-
-            const { error } = await _supabase.from('citas').insert([nuevaCita]);
-            if (error) {
-                alert('Error al agendar cita: ' + error.message);
-                return;
-            }
-
-            await loadDataFromCloud();
-            closeModal('appointmentModal');
-            document.getElementById('appointmentForm').reset();
-        }
-
-        function renderAppointments() {
-            const listContainer = document.getElementById('appointmentsList');
-            const statusFilter = document.getElementById('filterCitaStatus').value;
-            listContainer.innerHTML = '';
-
-            let filtered = citas;
-            if (statusFilter !== 'todos') {
-                filtered = citas.filter(c => c.status === statusFilter);
-            }
-
-            if (filtered.length === 0) {
-                listContainer.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 text-sm">No hay citas registradas.</div>`;
-                return;
-            }
-
-            filtered.sort((a,b) => new Date(a.fecha + ' ' + a.hora) - new Date(b.fecha + ' ' + b.hora));
-
-            filtered.forEach(c => {
-                const paciente = pacientes.find(p => p.id === c.paciente_id) || { nombre: 'Paciente desconocido', foto: '' };
-                const statusColor = c.status === 'Completada' ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : c.status === 'Cancelada' ? 'bg-red-100 text-red-700 border-red-200' : 'bg-amber-100 text-amber-700 border-amber-200';
-
-                listContainer.innerHTML += `
-                    <div class="bg-white border border-slate-200 rounded-2xl p-5 space-y-4 flex flex-col justify-between shadow-sm">
-                        <div>
-                            <div class="flex justify-between items-start gap-2 mb-3">
-                                <span class="px-2.5 py-1 rounded-lg text-xs font-semibold border ${statusColor}">${c.status}</span>
-                                <span class="text-xs text-slate-500"><i class="fa-regular fa-clock mr-1"></i>${c.hora}</span>
-                            </div>
-                            <div class="flex items-center gap-3 mb-3">
-                                <div class="bg-emerald-100 p-2.5 rounded-xl border border-emerald-200 text-emerald-600">
-                                    <i class="fa-solid fa-user"></i>
-                                </div>
-                                <div>
-                                    <h4 class="font-bold text-slate-900 text-sm">${paciente.nombre}</h4>
-                                    <p class="text-xs text-emerald-600 font-medium">${c.fecha}</p>
-                                </div>
-                            </div>
-                            <p class="text-xs text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-200"><strong>Motivo:</strong> ${c.motivo || 'Consulta general'}</p>
-                        </div>
-                        <div class="flex gap-2 pt-3 border-t border-slate-100">
-                            <select onchange="updateCitaStatus('${c.id}', this.value)" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-2 py-1.5 text-xs text-slate-700 focus:outline-none">
-                                <option value="" disabled selected>Cambiar estado</option>
-                                <option value="Programada">Programada</option>
-                                <option value="Completada">Completada</option>
-                                <option value="Cancelada">Cancelada</option>
-                            </select>
-                            <button onclick="deleteCita('${c.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-xl text-xs transition-all"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        async function updateCitaStatus(id, newStatus) {
-            const { error } = await _supabase.from('citas').update({ status: newStatus }).eq('id', id);
-            if (error) {
-                alert('Error al actualizar estado: ' + error.message);
-                return;
-            }
-            await loadDataFromCloud();
-        }
-
-        async function deleteCita(id) {
-            if(confirm('¿Deseas eliminar esta cita?')) {
-                const { error } = await _supabase.from('citas').delete().eq('id', id);
-                if (error) {
-                    alert('Error al eliminar cita: ' + error.message);
-                    return;
-                }
-                await loadDataFromCloud();
-            }
         }
     </script>
 </body>
