@@ -263,7 +263,10 @@
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Fotografía del Paciente</label>
-                        <input type="file" id="fotoFile" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-600 hover:file:bg-teal-100 cursor-pointer">
+                        <div class="flex items-center gap-3">
+                            <img id="previewFoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150" class="w-10 h-10 rounded-full object-cover border border-slate-200 shrink-0">
+                            <input type="file" id="fotoFile" accept="image/*" onchange="previewImage(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-600 hover:file:bg-teal-100 cursor-pointer">
+                        </div>
                     </div>
                 </div>
                 <div>
@@ -345,6 +348,7 @@
 
         let pacientes = [];
         let citas = [];
+        let currentPhotoBase64 = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
 
         window.onload = function() {
             checkAuth();
@@ -463,6 +467,18 @@
             document.getElementById(modalId).classList.add('hidden');
         }
 
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentPhotoBase64 = e.target.result;
+                    document.getElementById('previewFoto').src = currentPhotoBase64;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
         function openPatientModal(id = null) {
             if (id) {
                 const p = pacientes.find(item => item.id === id);
@@ -474,12 +490,21 @@
                 document.getElementById('edad').value = p.edad || '';
                 document.getElementById('telefono').value = p.telefono || '';
                 document.getElementById('observaciones').value = p.observaciones || '';
+                
+                currentPhotoBase64 = p.foto || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
+                document.getElementById('previewFoto').src = currentPhotoBase64;
+                document.getElementById('fotoFile').value = '';
+
                 renderPadecimientosCheckboxes(p.padecimientos || []);
             } else {
                 document.getElementById('patientModalTitle').innerHTML = `<i class="fa-solid fa-user-plus text-teal-600"></i> Registrar Nuevo Paciente`;
                 document.getElementById('btnSavePatient').innerText = 'Guardar Paciente';
                 document.getElementById('patientForm').reset();
                 document.getElementById('editPatientId').value = '';
+                
+                currentPhotoBase64 = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
+                document.getElementById('previewFoto').src = currentPhotoBase64;
+                
                 renderPadecimientosCheckboxes([]);
             }
             openModal('patientModal');
@@ -526,9 +551,15 @@
             
             const checkboxes = document.querySelectorAll('input[name="padecimiento"]:checked');
             const padecimientos = Array.from(checkboxes).map(cb => cb.value);
-            const foto = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
 
-            const patientData = { nombre, edad, telefono, padecimientos, observaciones, foto };
+            const patientData = { 
+                nombre, 
+                edad, 
+                telefono, 
+                padecimientos, 
+                observaciones, 
+                foto: currentPhotoBase64 
+            };
             
             let error;
             if (editId) {
@@ -597,7 +628,6 @@
         }
 
         async function updateCitaStatus(id, newStatus, selectElement) {
-            // Actualizar color visualmente de inmediato
             applyStatusColor(selectElement, newStatus);
 
             const { error } = await _supabase.from('citas').update({ status: newStatus }).eq('id', id);
@@ -609,7 +639,6 @@
         }
 
         function applyStatusColor(selectElement, status) {
-            // Remover clases de color previas
             selectElement.className = "bg-slate-50 border rounded-xl px-3 py-1.5 text-xs font-semibold focus:outline-none transition-all cursor-pointer ";
             
             if (status === 'Programada') {
@@ -648,7 +677,7 @@
                         <div class="space-y-3">
                             <div class="flex justify-between items-start">
                                 <div class="flex items-center gap-3">
-                                    <img src="${p.foto}" class="w-12 h-12 rounded-full object-cover border border-slate-200">
+                                    <img src="${p.foto || 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150'}" class="w-12 h-12 rounded-full object-cover border border-slate-200">
                                     <div>
                                         <h4 class="font-bold text-slate-900 text-sm">${p.nombre}</h4>
                                         <p class="text-xs text-slate-500">Edad: ${p.edad} años • Tel: ${p.telefono || 'No registrado'}</p>
@@ -731,7 +760,6 @@
                 `;
             });
 
-            // Aplicar el color correspondiente a cada selector tras renderizarlos
             filtered.forEach((c, index) => {
                 const sel = document.getElementById(`statusSelect_${index}`);
                 if (sel) applyStatusColor(sel, c.status);
@@ -748,7 +776,7 @@
 
         function filterPatients() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const padecimientoFilter = document.getElementById('filterPadecimientosSelect').value;
+            const padecimientoFilter = document.getElementById('filterPadecimientosSelect', '').value;
 
             const filtered = pacientes.filter(p => {
                 const matchText = p.nombre.toLowerCase().includes(query) || (p.telefono && p.telefono.includes(query));
