@@ -15,12 +15,12 @@
             theme: {
                 extend: {
                     colors: {
-                        aqua: {
+                        tealbrand: {
                             50: '#f0fdfa',
                             100: '#ccfbf1',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            700: '#0f766e',
+                            500: '#009699',
+                            600: '#007f82',
+                            700: '#006668',
                         }
                     }
                 }
@@ -34,20 +34,23 @@
     <div id="loginScreen" class="fixed inset-0 bg-slate-100 z-50 flex items-center justify-center p-4">
         <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-8 space-y-6 shadow-xl">
             <div class="text-center space-y-3">
-                <!-- Nuevo Logotipo Aqua -->
-                <div class="bg-teal-50 p-2.5 rounded-2xl border border-teal-100 shadow-sm inline-flex items-center justify-center w-16 h-16">
-                    <svg viewBox="0 0 512 512" class="w-10 h-10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M140 180C110 240 100 310 130 360C150 390 190 410 230 395C260 385 280 350 280 320C280 270 250 220 230 180C210 140 210 90 240 70C260 55 300 60 315 90C330 120 320 170 300 210" stroke="#0d9488" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
-                        <circle cx="280" cy="70" r="18" fill="#14b8a6"/>
-                        <circle cx="345" cy="100" r="16" fill="#14b8a6"/>
-                        <circle cx="390" cy="150" r="14" fill="#14b8a6"/>
-                        <circle cx="410" cy="210" r="12" fill="#14b8a6"/>
-                        <path d="M60 270C80 240 130 230 160 260C190 290 190 350 150 380C130 395 90 395 70 370C50 345 40 300 60 270Z" fill="#14b8a6" opacity="0.8"/>
-                        <path d="M60 270L160 365" stroke="white" stroke-width="8" stroke-linecap="round"/>
+                <!-- Logotipo Exacto a la Imagen -->
+                <div class="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm inline-flex items-center justify-center w-16 h-16">
+                    <svg viewBox="0 0 200 240" class="w-12 h-12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Hoja en el arco del pie -->
+                        <path d="M 75 100 C 40 100 20 120 20 150 C 20 175 45 190 75 170 C 75 140 75 120 75 100 Z" fill="#69c8cd" stroke="#009699" stroke-width="6" stroke-linejoin="round"/>
+                        <path d="M 25 150 Q 50 145 75 140" stroke="#009699" stroke-width="5" stroke-linecap="round"/>
+                        <!-- Contorno del Pie -->
+                        <path d="M 105 55 C 150 65 150 130 115 175 C 90 205 90 220 120 220 C 150 220 160 170 160 110 C 160 65 130 45 105 55 Z" stroke="#009699" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <!-- Dedos -->
+                        <ellipse cx="90" cy="35" rx="13" ry="17" fill="#69c8cd" stroke="#009699" stroke-width="6"/>
+                        <ellipse cx="123" cy="30" rx="10" ry="14" fill="#69c8cd" stroke="#009699" stroke-width="5"/>
+                        <ellipse cx="150" cy="40" rx="8" ry="11" fill="#69c8cd" stroke="#009699" stroke-width="5"/>
+                        <ellipse cx="170" cy="60" rx="7" ry="9" fill="#69c8cd" stroke="#009699" stroke-width="5"/>
                     </svg>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-900">Pie saludable</h2>
-                <p class="text-xs text-teal-600 font-semibold uppercase tracking-wider">Acceso al Sistema Podológico</p>
+                <p class="text-xs text-[#009699] font-semibold uppercase tracking-wider">Acceso al Sistema Podológico</p>
             </div>
 
             <form onsubmit="handleLogin(event)" class="space-y-4">
@@ -55,7 +58,7 @@
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Usuario</label>
                     <div class="relative">
                         <i class="fa-solid fa-user absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
-                        <input type="text" id="loginUsername" required placeholder="admin" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                        <input type="text" id="loginUsername" required placeholder="admin" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-[#009699] text-slate-900">
                     </div>
                 </div>
 
@@ -63,13 +66,13 @@
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Contraseña</label>
                     <div class="relative">
                         <i class="fa-solid fa-lock absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
-                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                        <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:border-[#009699] text-slate-900">
                     </div>
                 </div>
 
                 <div class="flex items-center justify-between text-xs">
                     <label class="flex items-center gap-2 cursor-pointer text-slate-600">
-                        <input type="checkbox" id="rememberMe" class="rounded border-slate-300 text-teal-600 focus:ring-0">
+                        <input type="checkbox" id="rememberMe" class="rounded border-slate-300 text-[#009699] focus:ring-0">
                         <span>Recordar contraseña</span>
                     </label>
                 </div>
@@ -78,7 +81,7 @@
                     Usuario o contraseña incorrectos.
                 </div>
 
-                <button type="submit" class="w-full bg-teal-600 hover:bg-teal-500 text-white py-3 rounded-xl text-sm font-semibold transition-all shadow-md shadow-teal-600/20 flex items-center justify-center gap-2 cursor-pointer">
+                <button type="submit" class="w-full bg-[#009699] hover:bg-[#007f82] text-white py-3 rounded-xl text-sm font-semibold transition-all shadow-md shadow-teal-600/20 flex items-center justify-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                 </button>
             </form>
@@ -91,37 +94,36 @@
         <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
             <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="flex items-center gap-3">
-                    <!-- Nuevo Logotipo Aqua en Cabecera -->
-                    <div class="bg-teal-50 p-2 rounded-2xl border border-teal-100 shadow-sm flex items-center justify-center w-12 h-12">
-                        <svg viewBox="0 0 512 512" class="w-7 h-7" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M140 180C110 240 100 310 130 360C150 390 190 410 230 395C260 385 280 350 280 320C280 270 250 220 230 180C210 140 210 90 240 70C260 55 300 60 315 90C330 120 320 170 300 210" stroke="#0d9488" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
-                            <circle cx="280" cy="70" r="18" fill="#14b8a6"/>
-                            <circle cx="345" cy="100" r="16" fill="#14b8a6"/>
-                            <circle cx="390" cy="150" r="14" fill="#14b8a6"/>
-                            <circle cx="410" cy="210" r="12" fill="#14b8a6"/>
-                            <path d="M60 270C80 240 130 230 160 260C190 290 190 350 150 380C130 395 90 395 70 370C50 345 40 300 60 270Z" fill="#14b8a6" opacity="0.8"/>
-                            <path d="M60 270L160 365" stroke="white" stroke-width="8" stroke-linecap="round"/>
+                    <div class="bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-center w-12 h-12">
+                        <svg viewBox="0 0 200 240" class="w-9 h-9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M 75 100 C 40 100 20 120 20 150 C 20 175 45 190 75 170 C 75 140 75 120 75 100 Z" fill="#69c8cd" stroke="#009699" stroke-width="6" stroke-linejoin="round"/>
+                            <path d="M 25 150 Q 50 145 75 140" stroke="#009699" stroke-width="5" stroke-linecap="round"/>
+                            <path d="M 105 55 C 150 65 150 130 115 175 C 90 205 90 220 120 220 C 150 220 160 170 160 110 C 160 65 130 45 105 55 Z" stroke="#009699" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            <ellipse cx="90" cy="35" rx="13" ry="17" fill="#69c8cd" stroke="#009699" stroke-width="6"/>
+                            <ellipse cx="123" cy="30" rx="10" ry="14" fill="#69c8cd" stroke="#009699" stroke-width="5"/>
+                            <ellipse cx="150" cy="40" rx="8" ry="11" fill="#69c8cd" stroke="#009699" stroke-width="5"/>
+                            <ellipse cx="170" cy="60" rx="7" ry="9" fill="#69c8cd" stroke="#009699" stroke-width="5"/>
                         </svg>
                     </div>
                     <div>
                         <h1 class="text-xl font-bold text-slate-900 tracking-wide">Pie saludable</h1>
-                        <p class="text-xs text-teal-600 font-semibold uppercase tracking-wider">GESTIÓN PODOLÓGICA CLÍNICA</p>
+                        <p class="text-xs text-[#009699] font-semibold uppercase tracking-wider">GESTIÓN PODOLÓGICA CLÍNICA</p>
                     </div>
                 </div>
                 
                 <div class="flex flex-wrap items-center gap-2">
                     <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200 gap-1">
-                        <button onclick="switchTab('pacientes')" id="btn-tab-pacientes" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-teal-600 text-white shadow cursor-pointer">
+                        <button onclick="switchTab('pacientes')" id="btn-tab-pacientes" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-[#009699] text-white shadow cursor-pointer">
                             <i class="fa-solid fa-users mr-1.5"></i>Pacientes
                         </button>
                         <button onclick="switchTab('citas')" id="btn-tab-citas" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900 cursor-pointer">
                             <i class="fa-solid fa-calendar-days mr-1.5"></i>Agenda de Citas
                         </button>
                     </div>
-                    <button onclick="openModal('appointmentModal')" class="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-md shadow-teal-600/20 flex items-center gap-2 cursor-pointer">
+                    <button onclick="openModal('appointmentModal')" class="bg-[#009699] hover:bg-[#007f82] text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-md flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-calendar-plus"></i> Agendar Cita
                     </button>
-                    <button onclick="openModal('patientModal')" class="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-md shadow-teal-600/20 flex items-center gap-2 cursor-pointer">
+                    <button onclick="openModal('patientModal')" class="bg-[#009699] hover:bg-[#007f82] text-white px-4 py-2.5 rounded-xl text-xs font-semibold transition-all shadow-md flex items-center gap-2 cursor-pointer">
                         <i class="fa-solid fa-user-plus"></i> Nuevo Paciente
                     </button>
                     <button onclick="handleLogout()" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all border border-slate-200 flex items-center gap-1.5 cursor-pointer" title="Cerrar Sesión">
@@ -137,7 +139,7 @@
             <!-- Tarjetas de Estadísticas (KPIs) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex items-center gap-4">
-                    <div class="bg-teal-50 text-teal-600 p-3 rounded-xl border border-teal-100 text-lg">
+                    <div class="bg-teal-50 text-[#009699] p-3 rounded-xl border border-teal-100 text-lg">
                         <i class="fa-solid fa-users"></i>
                     </div>
                     <div>
@@ -167,7 +169,7 @@
                 </div>
 
                 <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex items-center gap-4">
-                    <div class="bg-teal-50 text-teal-600 p-3 rounded-xl border border-teal-100 text-lg">
+                    <div class="bg-teal-50 text-[#009699] p-3 rounded-xl border border-teal-100 text-lg">
                         <i class="fa-solid fa-calendar-day"></i>
                     </div>
                     <div>
@@ -182,11 +184,11 @@
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                     <div class="relative w-full md:w-96">
                         <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-slate-400"></i>
-                        <input type="text" id="searchInput" oninput="filterPatients()" placeholder="Buscar por nombre, teléfono o padecimiento..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900 placeholder-slate-400">
+                        <input type="text" id="searchInput" oninput="filterPatients()" placeholder="Buscar por nombre, teléfono o padecimiento..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-[#009699] text-slate-900 placeholder-slate-400">
                     </div>
                     <div class="flex items-center gap-2 w-full md:w-auto">
                         <span class="text-xs text-slate-500 font-medium whitespace-nowrap">Filtrar por:</span>
-                        <select id="filterPadecimientosSelect" onchange="filterPatients()" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-teal-500 w-full md:w-auto">
+                        <select id="filterPadecimientosSelect" onchange="filterPatients()" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-[#009699] w-full md:w-auto">
                             <option value="todos">Todos los padecimientos</option>
                             <option value="Diabetes">Diabetes Mellitus</option>
                             <option value="Onicocriptosis">Onicocriptosis (Uña encarnada)</option>
@@ -203,7 +205,7 @@
             <div id="view-citas" class="space-y-6 hidden">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                     <div class="flex items-center gap-3 w-full md:w-auto">
-                        <select id="filterCitaStatus" onchange="renderAppointments()" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-teal-500">
+                        <select id="filterCitaStatus" onchange="renderAppointments()" class="bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-700 focus:outline-none focus:border-[#009699]">
                             <option value="todos">Todas las citas</option>
                             <option value="Programada">Programadas</option>
                             <option value="Completada">Completadas</option>
@@ -223,7 +225,7 @@
         <div class="bg-white border border-slate-200 rounded-3xl max-w-xl w-full p-6 space-y-6 shadow-xl my-8">
             <div class="flex justify-between items-center border-b border-slate-100 pb-4">
                 <h3 id="patientModalTitle" class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-user-pen text-teal-600"></i> Registrar Nuevo Paciente
+                    <i class="fa-solid fa-user-pen text-[#009699]"></i> Registrar Nuevo Paciente
                 </h3>
                 <button onclick="closeModal('patientModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
@@ -233,21 +235,21 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre Completo *</label>
-                        <input type="text" id="nombre" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                        <input type="text" id="nombre" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-[#009699] text-slate-900">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Edad *</label>
-                        <input type="number" id="edad" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                        <input type="number" id="edad" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-[#009699] text-slate-900">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Teléfono</label>
-                        <input type="tel" id="telefono" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                        <input type="tel" id="telefono" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-[#009699] text-slate-900">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Fotografía del Paciente</label>
-                        <input type="file" id="fotoFile" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-600 hover:file:bg-teal-100 cursor-pointer">
+                        <input type="file" id="fotoFile" accept="image/*" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-[#009699] hover:file:bg-teal-100 cursor-pointer">
                     </div>
                 </div>
                 <div>
@@ -256,11 +258,11 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Observaciones / Alergias / Medicamentos</label>
-                    <textarea id="observaciones" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900"></textarea>
+                    <textarea id="observaciones" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-[#009699] text-slate-900"></textarea>
                 </div>
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
                     <button type="button" onclick="closeModal('patientModal')" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">Cancelar</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white shadow-md shadow-teal-600/20 cursor-pointer">Guardar Paciente</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-[#009699] hover:bg-[#007f82] text-white shadow-md cursor-pointer">Guardar Paciente</button>
                 </div>
             </form>
         </div>
@@ -271,18 +273,18 @@
         <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 space-y-6 shadow-xl">
             <div class="flex justify-between items-center border-b border-slate-100 pb-4">
                 <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-calendar-check text-teal-600"></i> Agendar Nueva Cita
+                    <i class="fa-solid fa-calendar-check text-[#009699]"></i> Agendar Nueva Cita
                 </h3>
                 <button onclick="closeModal('appointmentModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form id="appointmentForm" onsubmit="saveAppointment(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Seleccionar Paciente *</label>
-                    <select id="citaPacienteId" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900"></select>
+                    <select id="citaPacienteId" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-[#009699] text-slate-900"></select>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Consultorio / Sucursal *</label>
-                    <select id="citaConsultorio" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                    <select id="citaConsultorio" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-[#009699] text-slate-900">
                         <option value="Metepec">Metepec</option>
                         <option value="Toluca">Toluca</option>
                     </select>
@@ -290,20 +292,20 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Fecha *</label>
-                        <input type="date" id="citaFecha" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                        <input type="date" id="citaFecha" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-[#009699] text-slate-900">
                     </div>
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Hora *</label>
-                        <input type="time" id="citaHora" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                        <input type="time" id="citaHora" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-[#009699] text-slate-900">
                     </div>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Motivo de la Cita / Tratamiento</label>
-                    <input type="text" id="citaMotivo" placeholder="Ej. Corte clínico, revisión pie diabético..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                    <input type="text" id="citaMotivo" placeholder="Ej. Corte clínico, revisión pie diabético..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-[#009699] text-slate-900">
                 </div>
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
                     <button type="button" onclick="closeModal('appointmentModal')" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">Cancelar</button>
-                    <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white shadow-md shadow-teal-600/20 cursor-pointer">Agendar</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-[#009699] hover:bg-[#007f82] text-white shadow-md cursor-pointer">Agendar</button>
                 </div>
             </form>
         </div>
@@ -407,12 +409,12 @@
             const viewCitas = document.getElementById('view-citas');
 
             if (tab === 'pacientes') {
-                btnPacientes.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-teal-600 text-white shadow cursor-pointer";
+                btnPacientes.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-[#009699] text-white shadow cursor-pointer";
                 btnCitas.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900 cursor-pointer";
                 viewPacientes.classList.remove('hidden');
                 viewCitas.classList.add('hidden');
             } else {
-                btnCitas.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-teal-600 text-white shadow cursor-pointer";
+                btnCitas.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all bg-[#009699] text-white shadow cursor-pointer";
                 btnPacientes.className = "px-3.5 py-2 rounded-lg text-xs font-semibold transition-all text-slate-600 hover:text-slate-900 cursor-pointer";
                 viewCitas.classList.remove('hidden');
                 viewPacientes.classList.add('hidden');
@@ -426,7 +428,7 @@
                 const isChecked = selected.includes(pad) ? 'checked' : '';
                 container.innerHTML += `
                     <label class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-xs cursor-pointer hover:border-teal-500/50">
-                        <input type="checkbox" name="padecimiento" value="${pad}" ${isChecked} class="rounded border-slate-300 bg-white text-teal-600 focus:ring-0">
+                        <input type="checkbox" name="padecimiento" value="${pad}" ${isChecked} class="rounded border-slate-300 bg-white text-[#009699] focus:ring-0">
                         <span class="text-slate-700">${pad}</span>
                     </label>
                 `;
@@ -500,7 +502,7 @@
             }
 
             list.forEach(p => {
-                const badges = p.padecimientos ? p.padecimientos.map(pad => `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2.5 py-0.5 rounded-lg text-[10px] font-semibold">${pad}</span>`).join('') : '';
+                const badges = p.padecimientos ? p.padecimientos.map(pad => `<span class="bg-teal-50 text-[#009699] border border-teal-100 px-2.5 py-0.5 rounded-lg text-[10px] font-semibold">${pad}</span>`).join('') : '';
                 grid.innerHTML += `
                     <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 flex flex-col justify-between">
                         <div class="flex items-center gap-3">
@@ -533,12 +535,12 @@
                 const paciente = pacientes.find(p => p.id === c.paciente_id);
                 const nombrePaciente = paciente ? paciente.nombre : 'Paciente general';
                 const badgeColor = c.status === 'Cancelada' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200';
-                const consultorioBadge = c.consultorio ? `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2 py-0.5 rounded-md text-[10px] font-bold"><i class="fa-solid fa-location-dot mr-1"></i>${c.consultorio}</span>` : '';
+                const consultorioBadge = c.consultorio ? `<span class="bg-teal-50 text-[#009699] border border-teal-100 px-2 py-0.5 rounded-md text-[10px] font-bold"><i class="fa-solid fa-location-dot mr-1"></i>${c.consultorio}</span>` : '';
 
                 listContainer.innerHTML += `
                     <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-2">
                         <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold text-teal-600"><i class="fa-solid fa-calendar mr-1"></i> ${c.fecha} - ${c.hora} hrs</span>
+                            <span class="text-xs font-bold text-[#009699]"><i class="fa-solid fa-calendar mr-1"></i> ${c.fecha} - ${c.hora} hrs</span>
                             ${consultorioBadge}
                         </div>
                         <h4 class="font-bold text-slate-900 text-sm">${nombrePaciente}</h4>
