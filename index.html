@@ -162,7 +162,8 @@
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                <!-- Tarjeta Citas Pendientes (Clic para filtrar) -->
+                <div onclick="filterCitasPendientesDirectly()" class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex items-center gap-4 cursor-pointer hover:border-amber-500 transition-all">
                     <div class="bg-amber-50 text-amber-600 p-3 rounded-xl border border-amber-100 text-lg">
                         <i class="fa-solid fa-clock"></i>
                     </div>
@@ -172,10 +173,10 @@
                     </div>
                 </div>
 
-                <!-- CAMBIO: Tarjeta de Tratamientos Onicomicosis (Haz clic para filtrar) -->
+                <!-- Tarjeta Tratamientos Onicomicosis (Clic para filtrar) -->
                 <div onclick="filterOnicomicosisDirectly()" class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex items-center gap-4 cursor-pointer hover:border-teal-500 transition-all">
                     <div class="bg-teal-50 text-teal-600 p-3 rounded-xl border border-teal-100 text-lg">
-                        <i class="fa-solid fa-[#00000] fa-bacteria"></i>
+                        <i class="fa-solid fa-bacteria"></i>
                     </div>
                     <div>
                         <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">TRATAMIENTO ONICOMICOSIS</p>
@@ -183,7 +184,8 @@
                     </div>
                 </div>
 
-                <div class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex items-center gap-4">
+                <!-- Tarjeta Citas de Hoy (Clic para filtrar) -->
+                <div onclick="filterCitasHoyDirectly()" class="bg-white border border-slate-200 p-4 rounded-2xl shadow-sm flex items-center gap-4 cursor-pointer hover:border-teal-500 transition-all">
                     <div class="bg-teal-50 text-teal-600 p-3 rounded-xl border border-teal-100 text-lg">
                         <i class="fa-solid fa-calendar-day"></i>
                     </div>
@@ -226,6 +228,10 @@
                             <option value="Completada">Completadas</option>
                             <option value="Cancelada">Canceladas</option>
                         </select>
+                        <div id="citasDateFilterBadge" class="hidden items-center gap-2 bg-teal-50 border border-teal-200 text-teal-800 text-xs px-3 py-2 rounded-xl font-medium">
+                            <span id="citasDateBadgeText"></span>
+                            <button onclick="clearDateFilter()" class="hover:text-red-600 font-bold ml-1 cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
                     </div>
                 </div>
 
@@ -489,6 +495,7 @@
         let canvas, ctx, isDrawing = false, hasSignature = false, currentSignatureBase64 = '';
         let activePatientForPhotos = null;
         let currentCarouselIndex = 0;
+        let activeDateFilter = null; // Filtro temporal para fechas de citas
 
         window.onload = function() {
             checkAuth();
@@ -639,7 +646,6 @@
             document.getElementById('statTotalPacientes').innerText = pacientes.length;
             document.getElementById('statCitasPendientes').innerText = citas.filter(c => c.status === 'Programada').length;
             
-            // LÓGICA PARA TRATAMIENTO DE ONICOMICOSIS
             document.getElementById('statOnicomicosis').innerText = pacientes.filter(p => {
                 const parsed = parseObservaciones(p.observaciones);
                 const hasOnicoInVal = parsed.valoracion && parsed.valoracion.some(item => item.toLowerCase().includes('onicomicosis'));
@@ -656,6 +662,7 @@
             document.getElementById('statCitasHoy').innerText = citas.filter(c => c.fecha === todayStr && c.status === 'Programada').length;
         }
 
+        // ACCESOS DIRECTOS DESDE LAS TARJETAS (KPIs)
         function filterOnicomicosisDirectly() {
             switchTab('pacientes');
             const selectFilter = document.getElementById('filterPadecimientosSelect');
@@ -663,6 +670,39 @@
                 selectFilter.value = 'Onicomicosis';
                 filterPatients();
             }
+        }
+
+        function filterCitasPendientesDirectly() {
+            switchTab('citas');
+            activeDateFilter = null;
+            document.getElementById('citasDateFilterBadge').classList.add('hidden');
+            const statusSelect = document.getElementById('filterCitaStatus');
+            if (statusSelect) {
+                statusSelect.value = 'Programada';
+                renderAppointments();
+            }
+        }
+
+        function filterCitasHoyDirectly() {
+            switchTab('citas');
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            activeDateFilter = `${year}-${month}-${day}`;
+
+            const statusSelect = document.getElementById('filterCitaStatus');
+            if (statusSelect) statusSelect.value = 'todos';
+
+            document.getElementById('citasDateFilterBadge').classList.remove('hidden');
+            document.getElementById('citasDateBadgeText').innerText = `Mostrando citas de hoy (${activeDateFilter})`;
+            renderAppointments();
+        }
+
+        function clearDateFilter() {
+            activeDateFilter = null;
+            document.getElementById('citasDateFilterBadge').classList.add('hidden');
+            renderAppointments();
         }
 
         function switchTab(tab) {
@@ -1350,11 +1390,16 @@
             const listContainer = document.getElementById('appointmentsList');
             const statusFilter = document.getElementById('filterCitaStatus').value;
             
-            const filtered = citas.filter(c => statusFilter === 'todos' || c.status === statusFilter);
+            const filtered = citas.filter(c => {
+                const matchStatus = statusFilter === 'todos' || c.status === statusFilter;
+                const matchDate = !activeDateFilter || c.fecha === activeDateFilter;
+                return matchStatus && matchDate;
+            });
+
             listContainer.innerHTML = '';
 
             if (filtered.length === 0) {
-                listContainer.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 text-sm">No hay citas registradas.</div>`;
+                listContainer.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 text-sm">No hay citas registradas con los criterios seleccionados.</div>`;
                 return;
             }
 
