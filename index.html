@@ -115,7 +115,7 @@
                             <path d="M38 36 C46 36, 68 34, 70 48 C72 62, 60 76, 54 90 C48 104, 38 106, 30 96 C24 88, 28 72, 34 60 C38 52, 30 42, 38 36 Z" 
                                   stroke="url(#brandGradient)" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" />
                             <path d="M 28 62 C 10 56, 4 72, 16 84 C 26 90, 36 80, 32 66 C 30 63, 29 62, 28 62 Z" 
-                                  fill="url(#leafGradient)" opacity="0.9" />
+                              fill="url(#leafGradient)" opacity="0.9" />
                             <path d="M 14 78 Q 22 74, 30 66" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.8" />
                         </svg>
                     </div>
@@ -371,6 +371,23 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- CONSENTIMIENTO Y FIRMA DIGITAL EN EL MODAL DE REGISTRO -->
+                    <div class="bg-teal-50/70 p-4 rounded-2xl border border-teal-200 space-y-3">
+                        <h4 class="text-xs font-bold text-teal-900 uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-signature"></i> Consentimiento Informado y Firma
+                        </h4>
+                        <p class="text-[11px] text-teal-800 leading-relaxed">El paciente autoriza la realización de la valoración podológica preventiva, comprendiendo los riesgos y aceptando voluntariamente.</p>
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <label class="text-xs font-semibold text-slate-700">Firma del Paciente:</label>
+                                <button type="button" onclick="clearSignature()" class="text-xs text-red-600 hover:text-red-700 font-medium cursor-pointer"><i class="fa-solid fa-eraser mr-1"></i>Limpiar Firma</button>
+                            </div>
+                            <div class="bg-white border border-slate-300 rounded-xl overflow-hidden shadow-sm">
+                                <canvas id="signatureCanvas" class="w-full h-36 cursor-crosshair touch-none"></canvas>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
 
@@ -495,7 +512,7 @@
         let canvas, ctx, isDrawing = false, hasSignature = false, currentSignatureBase64 = '';
         let activePatientForPhotos = null;
         let currentCarouselIndex = 0;
-        let activeDateFilter = null; // Filtro temporal para fechas de citas
+        let activeDateFilter = null;
 
         window.onload = function() {
             checkAuth();
@@ -662,7 +679,6 @@
             document.getElementById('statCitasHoy').innerText = citas.filter(c => c.fecha === todayStr && c.status === 'Programada').length;
         }
 
-        // ACCESOS DIRECTOS DESDE LAS TARJETAS (KPIs)
         function filterOnicomicosisDirectly() {
             switchTab('pacientes');
             const selectFilter = document.getElementById('filterPadecimientosSelect');
