@@ -234,7 +234,7 @@
         </main>
     </div>
 
-    <!-- MODAL NUEVO / EDITAR PACIENTE (HISTORIA CLÍNICA ADAPTABLE Y CON SCROLL) -->
+    <!-- MODAL NUEVO / EDITAR PACIENTE (HISTORIA CLÍNICA) -->
     <div id="patientModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
         <div class="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl my-auto overflow-hidden">
             
@@ -662,7 +662,7 @@
             if (!obsString) return data;
 
             try {
-                if (obsString.startsWith("{")) {
+                if (obsString.trim().startsWith("{")) {
                     const parsed = JSON.parse(obsString);
                     return { ...data, ...parsed };
                 }
@@ -1099,7 +1099,7 @@
         }
 
         function filterPatients() {
-            const query = document.getElementById('searchInput'].value.toLowerCase();
+            const query = document.getElementById('searchInput').value.toLowerCase();
             const padecimientoFilter = document.getElementById('filterPadecimientosSelect').value;
 
             const filtered = pacientes.filter(p => {
