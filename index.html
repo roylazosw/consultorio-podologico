@@ -236,44 +236,110 @@
 
     <!-- MODAL NUEVO / EDITAR PACIENTE -->
     <div id="patientModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white border border-slate-200 rounded-3xl max-w-xl w-full p-6 space-y-6 shadow-xl my-8">
+        <div class="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full p-6 space-y-6 shadow-xl my-8">
             <div class="flex justify-between items-center border-b border-slate-100 pb-4">
                 <h3 id="patientModalTitle" class="text-lg font-bold text-slate-900 flex items-center gap-2">
-                    <i class="fa-solid fa-user-pen text-teal-600"></i> Registrar Nuevo Paciente
+                    <i class="fa-solid fa-user-pen text-teal-600"></i> Registrar Historia Clínica Podológica
                 </h3>
                 <button onclick="closeModal('patientModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             
-            <form id="patientForm" onsubmit="savePatient(event)" class="space-y-4">
+            <form id="patientForm" onsubmit="savePatient(event)" class="space-y-5">
                 <input type="hidden" id="editPatientId">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="md:col-span-2">
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre Completo *</label>
-                        <input type="text" id="nombre" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Edad *</label>
-                        <input type="number" id="edad" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Teléfono</label>
-                        <input type="tel" id="telefono" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Ocupación</label>
-                        <input type="text" id="ocupacion" placeholder="Ej. Comerciante, Docente..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
-                    </div>
-                </div>
-
+                
+                <!-- SECCIÓN: DATOS DEL PACIENTE -->
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Dirección</label>
-                    <input type="text" id="direccion" placeholder="Calle, número, colonia, ciudad..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                    <h4 class="text-xs font-bold text-teal-700 uppercase tracking-wider mb-2"><i class="fa-solid fa-id-card mr-1"></i> Datos del Paciente</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div class="md:col-span-2">
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Nombre Completo *</label>
+                            <input type="text" id="nombre" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Edad *</label>
+                            <input type="number" id="edad" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Teléfono</label>
+                            <input type="tel" id="telefono" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Ocupación</label>
+                            <input type="text" id="ocupacion" placeholder="Ej. Comerciante, Docente..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label class="block text-[11px] font-semibold text-slate-600 mb-1">Dirección</label>
+                        <input type="text" id="direccion" placeholder="Calle, número, colonia, ciudad..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                    </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                <!-- SECCIÓN: SIGNOS VITALES -->
+                <div class="border-t border-slate-100 pt-4">
+                    <h4 class="text-xs font-bold text-teal-700 uppercase tracking-wider mb-2"><i class="fa-solid fa-heart-pulse mr-1"></i> Signos Vitales</h4>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">TA (mmHg)</label>
+                            <input type="text" id="signoTA" placeholder="120/80" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-teal-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">FC (lpm)</label>
+                            <input type="text" id="signoFC" placeholder="75" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-teal-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">FR (rpm)</label>
+                            <input type="text" id="signoFR" placeholder="18" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-teal-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">Temp (°C)</label>
+                            <input type="text" id="signoTemp" placeholder="36.5" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-teal-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">Glucosa (mg/dl)</label>
+                            <input type="text" id="signoGlucosa" placeholder="95" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-teal-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">Peso (kg)</label>
+                            <input type="text" id="signoPeso" placeholder="70" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-teal-500">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-semibold text-slate-500 mb-1">Talla (cm)</label>
+                            <input type="text" id="signoTalla" placeholder="170" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-teal-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN: ANTECEDENTES HEREDOFAMILIARES -->
+                <div class="border-t border-slate-100 pt-4">
+                    <h4 class="text-xs font-bold text-teal-700 uppercase tracking-wider mb-2"><i class="fa-solid fa-users-line mr-1"></i> Antecedentes Heredofamiliares</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Mamá</label>
+                            <input type="text" id="antMama" placeholder="Enfermedades crónicas..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-semibold text-slate-600 mb-1">Papá</label>
+                            <input type="text" id="antPapa" placeholder="Enfermedades crónicas..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECCIÓN: ANTECEDENTES PATOLÓGICOS Y VALORACIÓN -->
+                <div class="border-t border-slate-100 pt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <h4 class="text-xs font-bold text-teal-700 uppercase tracking-wider mb-2"><i class="fa-solid fa-notes-medical mr-1"></i> Antecedentes Patológicos</h4>
+                        <div id="patologicosContainer" class="space-y-1.5 bg-slate-50 p-3 rounded-2xl border border-slate-100"></div>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-bold text-teal-700 uppercase tracking-wider mb-2"><i class="fa-solid fa-shoe-prints mr-1"></i> Valoración Podológica</h4>
+                        <div id="valoracionContainer" class="space-y-1.5 bg-slate-50 p-3 rounded-2xl border border-slate-100"></div>
+                    </div>
+                </div>
+
+                <!-- FOTOGRAFÍA Y OBSERVACIONES -->
+                <div class="border-t border-slate-100 pt-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Fotografía del Paciente</label>
                         <div class="flex items-center gap-3">
@@ -281,21 +347,15 @@
                             <input type="file" id="fotoFile" accept="image/*" onchange="compressAndPreviewImage(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-600 hover:file:bg-teal-100 cursor-pointer">
                         </div>
                     </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-2">Padecimientos Podológicos Frecuentes</label>
-                    <div id="padecimientosContainer" class="flex flex-wrap gap-2"></div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Observaciones / Alergias / Medicamentos</label>
-                    <textarea id="observaciones" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900"></textarea>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">Observaciones / Alergias / Notas</label>
+                        <textarea id="observaciones" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-teal-500 text-slate-900"></textarea>
+                    </div>
                 </div>
 
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
                     <button type="button" onclick="closeModal('patientModal')" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">Cancelar</button>
-                    <button type="submit" id="btnSavePatient" class="px-5 py-2 rounded-xl text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white shadow-md shadow-teal-600/20 cursor-pointer">Guardar Paciente</button>
+                    <button type="submit" id="btnSavePatient" class="px-5 py-2 rounded-xl text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white shadow-md shadow-teal-600/20 cursor-pointer">Guardar Historia Clínica</button>
                 </div>
             </form>
         </div>
@@ -353,13 +413,25 @@
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const padecimientosDisponibles = [
-            "Diabetes Mellitus (Pie Diabético)",
-            "Onicocriptosis (Uña encarnada)",
-            "Onicomicosis (Hongos en uñas)",
-            "Pie de Atleta",
-            "Callosidades / Tilomas",
-            "Hiperqueratosis"
+        const listaPatologicos = [
+            "Diabetes",
+            "Hipertensión",
+            "Problemas Circulatorios",
+            "Problemas Renales",
+            "Hemofilia / Trastornos de Coagulación",
+            "Alergias"
+        ];
+
+        const listaValoracion = [
+            "Pie plano",
+            "Pie cavo",
+            "Hallux valgus",
+            "Onicomicosis",
+            "Onicopitosis",
+            "Onicodistrofia",
+            "Corte de uñas",
+            "Deslaminado",
+            "Verruga Plantar"
         ];
 
         let pacientes = [];
@@ -375,7 +447,7 @@
             if (isAuthenticated) {
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('appContent').classList.remove('hidden');
-                renderPadecimientosCheckboxes();
+                renderCheckboxes();
                 loadDataFromCloud();
             } else {
                 document.getElementById('loginScreen').classList.remove('hidden');
@@ -435,7 +507,10 @@
         function updateStats() {
             document.getElementById('statTotalPacientes').innerText = pacientes.length;
             document.getElementById('statCitasPendientes').innerText = citas.filter(c => c.status === 'Programada').length;
-            document.getElementById('statPacientesDiabeticos').innerText = pacientes.filter(p => p.padecimientos && p.padecimientos.some(pad => pad.toLowerCase().includes('diabetes'))).length;
+            document.getElementById('statPacientesDiabeticos').innerText = pacientes.filter(p => {
+                const parsed = parseObservaciones(p.observaciones);
+                return parsed.patologicos && parsed.patologicos.some(item => item.toLowerCase().includes('diabetes'));
+            }).length;
             
             const now = new Date();
             const year = now.getFullYear();
@@ -465,15 +540,27 @@
             }
         }
 
-        function renderPadecimientosCheckboxes(selected = []) {
-            const container = document.getElementById('padecimientosContainer');
-            container.innerHTML = '';
-            padecimientosDisponibles.forEach(pad => {
-                const isChecked = selected.includes(pad) ? 'checked' : '';
-                container.innerHTML += `
-                    <label class="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-xs cursor-pointer hover:border-teal-500/50">
-                        <input type="checkbox" name="padecimiento" value="${pad}" ${isChecked} class="rounded border-slate-300 bg-white text-teal-600 focus:ring-0">
-                        <span class="text-slate-700">${pad}</span>
+        function renderCheckboxes(selectedPat = [], selectedVal = []) {
+            const containerPat = document.getElementById('patologicosContainer');
+            containerPat.innerHTML = '';
+            listaPatologicos.forEach(item => {
+                const isChecked = selectedPat.includes(item) ? 'checked' : '';
+                containerPat.innerHTML += `
+                    <label class="flex items-center gap-2 text-xs cursor-pointer text-slate-700">
+                        <input type="checkbox" name="patologico" value="${item}" ${isChecked} class="rounded border-slate-300 text-teal-600 focus:ring-0">
+                        <span>${item}</span>
+                    </label>
+                `;
+            });
+
+            const containerVal = document.getElementById('valoracionContainer');
+            containerVal.innerHTML = '';
+            listaValoracion.forEach(item => {
+                const isChecked = selectedVal.includes(item) ? 'checked' : '';
+                containerVal.innerHTML += `
+                    <label class="flex items-center gap-2 text-xs cursor-pointer text-slate-700">
+                        <input type="checkbox" name="valoracion" value="${item}" ${isChecked} class="rounded border-slate-300 text-teal-600 focus:ring-0">
+                        <span>${item}</span>
                     </label>
                 `;
             });
@@ -526,64 +613,83 @@
             reader.readAsDataURL(file);
         }
 
-        // Función auxiliar para extraer datos empaquetados en observaciones
+        // Empaquetador y desempaquetador inteligente para almacenar todo en observaciones sin tocar columnas de Supabase
         function parseObservaciones(obsString) {
-            let ocupacion = "";
-            let direccion = "";
-            let notas = obsString || "";
+            let data = { ocupacion: "", direccion: "", ta: "", fc: "", fr: "", temp: "", glucosa: "", peso: "", talla: "", mama: "", papa: "", patologicos: [], valoracion: [], notas: obsString || "" };
+            if (!obsString) return data;
 
+            try {
+                if (obsString.startsWith("{")) {
+                    const parsed = JSON.parse(obsString);
+                    return { ...data, ...parsed };
+                }
+            } catch (e) {}
+
+            // Compatibilidad con versión anterior de texto plano
+            let notas = obsString;
             if (notas.includes("[OCUPACION:")) {
                 const parts = notas.split("[OCUPACION:");
                 notas = parts[0].trim();
                 const rest = parts[1].split("]");
-                ocupacion = rest[0].trim();
-                const remainingNotes = rest.slice(1).join("]").trim();
-                if (remainingNotes) notas = remainingNotes;
+                data.ocupacion = rest[0].trim();
+                const remaining = rest.slice(1).join("]").trim();
+                if (remaining) notas = remaining;
             }
-
             if (notas.includes("[DIRECCION:")) {
                 const parts = notas.split("[DIRECCION:");
                 const rest = parts[1].split("]");
-                direccion = rest[0].trim();
-                const remainingNotes = parts[0].trim() + " " + rest.slice(1).join("]").trim();
-                notas = remainingNotes.trim();
+                data.direccion = rest[0].trim();
+                const remaining = parts[0].trim() + " " + rest.slice(1).join("]").trim();
+                notas = remaining.trim();
             }
-
-            return { ocupacion, direccion, notas };
+            data.notas = notas;
+            return data;
         }
 
         function openPatientModal(id = null) {
             if (id) {
                 const p = pacientes.find(item => item.id === id);
                 if (!p) return;
-                document.getElementById('patientModalTitle').innerHTML = `<i class="fa-solid fa-user-pen text-teal-600"></i> Editar Paciente`;
+                document.getElementById('patientModalTitle').innerHTML = `<i class="fa-solid fa-user-pen text-teal-600"></i> Editar Historia Clínica`;
                 document.getElementById('btnSavePatient').innerText = 'Guardar Cambios';
                 document.getElementById('editPatientId').value = p.id;
                 document.getElementById('nombre').value = p.nombre || '';
                 document.getElementById('edad').value = p.edad || '';
                 document.getElementById('telefono').value = p.telefono || '';
                 
-                // Extraer ocupación y dirección desde las observaciones guardadas
                 const parsed = parseObservaciones(p.observaciones);
                 document.getElementById('ocupacion').value = parsed.ocupacion || '';
                 document.getElementById('direccion').value = parsed.direccion || '';
+                document.getElementById('signoTA').value = parsed.ta || '';
+                document.getElementById('signoFC').value = parsed.fc || '';
+                document.getElementById('signoFR').value = parsed.fr || '';
+                document.getElementById('signoTemp').value = parsed.temp || '';
+                document.getElementById('signoGlucosa').value = parsed.glucosa || '';
+                document.getElementById('signoPeso').value = parsed.peso || '';
+                document.getElementById('signoTalla').value = parsed.talla || '';
+                document.getElementById('antMama').value = parsed.mama || '';
+                document.getElementById('antPapa').value = parsed.papa || '';
                 document.getElementById('observaciones').value = parsed.notas || '';
                 
+                // Compatibilidad con padecimientos antiguos
+                let patList = parsed.patologicos || [];
+                if (p.padecimientos && patList.length === 0) patList = p.padecimientos;
+
                 currentPhotoBase64 = (p.foto && p.foto.length > 20) ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
                 document.getElementById('previewFoto').src = currentPhotoBase64;
                 document.getElementById('fotoFile').value = '';
 
-                renderPadecimientosCheckboxes(p.padecimientos || []);
+                renderCheckboxes(patList, parsed.valoracion || []);
             } else {
-                document.getElementById('patientModalTitle').innerHTML = `<i class="fa-solid fa-user-plus text-teal-600"></i> Registrar Nuevo Paciente`;
-                document.getElementById('btnSavePatient').innerText = 'Guardar Paciente';
+                document.getElementById('patientModalTitle').innerHTML = `<i class="fa-solid fa-user-plus text-teal-600"></i> Registrar Historia Clínica Podológica`;
+                document.getElementById('btnSavePatient').innerText = 'Guardar Historia Clínica';
                 document.getElementById('patientForm').reset();
                 document.getElementById('editPatientId').value = '';
                 
                 currentPhotoBase64 = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
                 document.getElementById('previewFoto').src = currentPhotoBase64;
                 
-                renderPadecimientosCheckboxes([]);
+                renderCheckboxes([], []);
             }
             openModal('patientModal');
         }
@@ -625,25 +731,36 @@
             const nombre = document.getElementById('nombre').value;
             const edad = parseInt(document.getElementById('edad').value);
             const telefono = document.getElementById('telefono').value;
-            const ocupacion = document.getElementById('ocupacion').value.trim();
-            const direccion = document.getElementById('direccion').value.trim();
-            const notas = document.getElementById('observaciones').value.trim();
             
-            // Empaquetar ocupación y dirección dentro del campo observaciones existente
-            let observacionesFinal = notas;
-            if (ocupacion) observacionesFinal += ` [OCUPACION: ${ocupacion}]`;
-            if (direccion) observacionesFinal += ` [DIRECCION: ${direccion}]`;
+            const patCheckboxes = document.querySelectorAll('input[name="patologico"]:checked');
+            const patologicos = Array.from(patCheckboxes).map(cb => cb.value);
 
-            const checkboxes = document.querySelectorAll('input[name="padecimiento"]:checked');
-            const padecimientos = Array.from(checkboxes).map(cb => cb.value);
+            const valCheckboxes = document.querySelectorAll('input[name="valoracion"]:checked');
+            const valoracion = Array.from(valCheckboxes).map(cb => cb.value);
 
-            // Objeto limpio que solo contiene columnas estándar de tu base de datos
+            const clinicalData = {
+                ocupacion: document.getElementById('ocupacion').value.trim(),
+                direccion: document.getElementById('direccion').value.trim(),
+                ta: document.getElementById('signoTA').value.trim(),
+                fc: document.getElementById('signoFC').value.trim(),
+                fr: document.getElementById('signoFR').value.trim(),
+                temp: document.getElementById('signoTemp').value.trim(),
+                glucosa: document.getElementById('signoGlucosa').value.trim(),
+                peso: document.getElementById('signoPeso').value.trim(),
+                talla: document.getElementById('signoTalla').value.trim(),
+                mama: document.getElementById('antMama').value.trim(),
+                papa: document.getElementById('antPapa').value.trim(),
+                patologicos: patologicos,
+                valoracion: valoracion,
+                notas: document.getElementById('observaciones').value.trim()
+            };
+
             const patientData = { 
                 nombre, 
                 edad, 
                 telefono, 
-                padecimientos, 
-                observaciones: observacionesFinal.trim(), 
+                padecimientos: patologicos, // Mantenemos compatibilidad con filtros previos
+                observaciones: JSON.stringify(clinicalData), 
                 foto: currentPhotoBase64 
             };
 
@@ -757,11 +874,11 @@
             }
 
             list.forEach(p => {
-                const badges = p.padecimientos ? p.padecimientos.map(pad => `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2.5 py-0.5 rounded-lg text-[10px] font-semibold">${pad}</span>`).join('') : '';
                 const fotoPaciente = (p.foto && p.foto.length > 20) ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
-
-                // Desempaquetar para mostrar en la tarjeta
                 const parsed = parseObservaciones(p.observaciones);
+
+                const badgesPat = parsed.patologicos ? parsed.patologicos.map(item => `<span class="bg-red-50 text-red-700 border border-red-100 px-2 py-0.5 rounded-md text-[10px] font-semibold">${item}</span>`).join('') : '';
+                const badgesVal = parsed.valoracion ? parsed.valoracion.map(item => `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2 py-0.5 rounded-md text-[10px] font-semibold">${item}</span>`).join('') : '';
 
                 grid.innerHTML += `
                     <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 flex flex-col justify-between">
@@ -775,7 +892,7 @@
                                     </div>
                                 </div>
                                 <div class="flex gap-1">
-                                    <button onclick="openPatientModal('${p.id}')" class="p-2 text-slate-400 hover:text-teal-600 transition-all cursor-pointer" title="Editar Paciente">
+                                    <button onclick="openPatientModal('${p.id}')" class="p-2 text-slate-400 hover:text-teal-600 transition-all cursor-pointer" title="Editar Ficha">
                                         <i class="fa-solid fa-pen"></i>
                                     </button>
                                     <button onclick="deletePatient('${p.id}')" class="p-2 text-slate-400 hover:text-red-500 transition-all cursor-pointer" title="Eliminar Paciente">
@@ -783,11 +900,12 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="text-xs space-y-1 text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                            <div class="text-[11px] space-y-1 text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                                 <p><strong class="text-slate-700">Ocupación:</strong> ${parsed.ocupacion || 'No especificada'}</p>
                                 <p><strong class="text-slate-700">Dirección:</strong> ${parsed.direccion || 'No especificada'}</p>
+                                ${(parsed.ta || parsed.glucosa) ? `<p class="pt-1 text-teal-700 font-medium">TA: ${parsed.ta || 'N/D'} | Glucosa: ${parsed.glucosa || 'N/D'} mg/dl</p>` : ''}
                             </div>
-                            <div class="flex flex-wrap gap-1.5">${badges}</div>
+                            ${(badgesPat || badgesVal) ? `<div class="space-y-1"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Historial y Valoración:</p><div class="flex flex-wrap gap-1">${badgesPat} ${badgesVal}</div></div>` : ''}
                             <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">${parsed.notas || 'Sin observaciones'}</p>
                         </div>
                     </div>
@@ -879,7 +997,7 @@
                                   (p.telefono && p.telefono.includes(query)) || 
                                   (parsed.ocupacion && parsed.ocupacion.toLowerCase().includes(query)) || 
                                   (parsed.direccion && parsed.direccion.toLowerCase().includes(query));
-                const matchPad = padecimientoFilter === 'todos' || (p.padecimientos && p.padecimientos.some(pad => pad.includes(padecimientoFilter)));
+                const matchPad = padecimientoFilter === 'todos' || (parsed.patologicos && parsed.patologicos.some(item => item.includes(padecimientoFilter)));
                 return matchText && matchPad;
             });
             renderPatients(filtered);
