@@ -382,6 +382,29 @@
         </div>
     </div>
 
+    <!-- MODAL DETALLE / VER HISTORIAL CLÍNICO -->
+    <div id="viewHistoryModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+        <div class="bg-white border border-slate-200 rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl my-auto overflow-hidden">
+            <div class="flex justify-between items-center border-b border-slate-100 px-6 py-4 bg-teal-50/50 shrink-0">
+                <h3 class="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-notes-medical text-teal-600 text-xl"></i> Historial Clínico del Paciente
+                </h3>
+                <button onclick="closeModal('viewHistoryModal')" class="text-slate-400 hover:text-slate-600 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-all cursor-pointer"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+            
+            <div id="historyContentModal" class="p-5 sm:p-6 overflow-y-auto flex-1 space-y-5 text-sm">
+                <!-- Se llena dinámicamente con JS -->
+            </div>
+
+            <div class="flex justify-end gap-3 px-6 py-4 bg-slate-50 border-t border-slate-100 shrink-0">
+                <button type="button" onclick="window.print()" class="px-5 py-2.5 rounded-xl text-sm font-medium bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200 cursor-pointer transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-print"></i> Imprimir Ficha
+                </button>
+                <button type="button" onclick="closeModal('viewHistoryModal')" class="px-5 py-2.5 rounded-xl text-sm font-medium bg-slate-200 text-slate-700 hover:bg-slate-300 cursor-pointer transition-all">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- MODAL NUEVO / EDITAR CITA -->
     <div id="appointmentModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 space-y-6 shadow-xl">
@@ -712,6 +735,70 @@
             openModal('patientModal');
         }
 
+        function viewPatientHistory(id) {
+            const p = pacientes.find(item => item.id === id);
+            if (!p) return;
+            const parsed = parseObservaciones(p.observaciones);
+            const fotoPaciente = (p.foto && p.foto.length > 20) ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
+
+            const badgesPat = parsed.patologicos && parsed.patologicos.length > 0 ? parsed.patologicos.map(item => `<span class="bg-red-50 text-red-700 border border-red-100 px-2.5 py-1 rounded-lg text-xs font-semibold">${item}</span>`).join('') : '<span class="text-slate-400 text-xs">Ninguno registrado</span>';
+            const badgesVal = parsed.valoracion && parsed.valoracion.length > 0 ? parsed.valoracion.map(item => `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2.5 py-1 rounded-lg text-xs font-semibold">${item}</span>`).join('') : '<span class="text-slate-400 text-xs">Ninguna registrada</span>';
+
+            const container = document.getElementById('historyContentModal');
+            container.innerHTML = `
+                <div class="flex items-center gap-4 bg-teal-50/60 p-4 rounded-2xl border border-teal-100">
+                    <img src="${fotoPaciente}" class="w-16 h-16 rounded-full object-cover border-2 border-teal-600 shadow-sm">
+                    <div>
+                        <h4 class="font-bold text-slate-900 text-base">${p.nombre}</h4>
+                        <p class="text-xs text-slate-600">Edad: ${p.edad} años • Tel: ${p.telefono || 'No registrado'}</p>
+                        <p class="text-xs text-slate-600 mt-0.5">Ocupación: ${parsed.ocupacion || 'No especificada'}</p>
+                    </div>
+                </div>
+
+                <div class="space-y-1 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                    <p><strong class="text-slate-700">Dirección:</strong> ${parsed.direccion || 'No especificada'}</p>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+                    <h5 class="text-xs font-bold text-teal-800 uppercase tracking-wider"><i class="fa-solid fa-heart-pulse mr-1"></i> Signos Vitales</h5>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                        <div class="bg-white p-2 rounded-xl border border-slate-200"><span class="text-slate-400 block text-[10px]">TA</span> <strong class="text-slate-800">${parsed.ta || 'N/D'}</strong></div>
+                        <div class="bg-white p-2 rounded-xl border border-slate-200"><span class="text-slate-400 block text-[10px]">FC</span> <strong class="text-slate-800">${parsed.fc || 'N/D'}</strong></div>
+                        <div class="bg-white p-2 rounded-xl border border-slate-200"><span class="text-slate-400 block text-[10px]">FR</span> <strong class="text-slate-800">${parsed.fr || 'N/D'}</strong></div>
+                        <div class="bg-white p-2 rounded-xl border border-slate-200"><span class="text-slate-400 block text-[10px]">Temp</span> <strong class="text-slate-800">${parsed.temp || 'N/D'} °C</strong></div>
+                        <div class="bg-white p-2 rounded-xl border border-slate-200"><span class="text-slate-400 block text-[10px]">Glucosa</span> <strong class="text-slate-800">${parsed.glucosa || 'N/D'}</strong></div>
+                        <div class="bg-white p-2 rounded-xl border border-slate-200"><span class="text-slate-400 block text-[10px]">Peso</span> <strong class="text-slate-800">${parsed.peso || 'N/D'} kg</strong></div>
+                        <div class="bg-white p-2 rounded-xl border border-slate-200"><span class="text-slate-400 block text-[10px]">Talla</span> <strong class="text-slate-800">${parsed.talla || 'N/D'} cm</strong></div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
+                    <h5 class="text-xs font-bold text-teal-800 uppercase tracking-wider"><i class="fa-solid fa-users-line mr-1"></i> Antecedentes Heredofamiliares</h5>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <div class="bg-white p-2.5 rounded-xl border border-slate-200"><span class="text-slate-400 block text-[10px]">Mamá</span> <span class="text-slate-800 font-medium">${parsed.mama || 'Sin antecedentes'}</span></div>
+                        <div class="bg-white p-2.5 rounded-xl border border-slate-200"><span class="text-slate-400 block text-[10px]">Papá</span> <span class="text-slate-800 font-medium">${parsed.papa || 'Sin antecedentes'}</span></div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2">
+                        <h5 class="text-xs font-bold text-teal-800 uppercase tracking-wider">Patológicos</h5>
+                        <div class="flex flex-wrap gap-1.5">${badgesPat}</div>
+                    </div>
+                    <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-2">
+                        <h5 class="text-xs font-bold text-teal-800 uppercase tracking-wider">Valoración Podológica</h5>
+                        <div class="flex flex-wrap gap-1.5">${badgesVal}</div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1.5">
+                    <h5 class="text-xs font-bold text-teal-800 uppercase tracking-wider"><i class="fa-solid fa-note-sticky mr-1"></i> Observaciones / Alergias / Notas</h5>
+                    <p class="text-xs text-slate-700 bg-white p-3 rounded-xl border border-slate-200">${parsed.notas || 'Sin observaciones registradas.'}</p>
+                </div>
+            `;
+            openModal('viewHistoryModal');
+        }
+
         function openAppointmentModal(id = null) {
             updatePatientSelect();
             if (id) {
@@ -899,7 +986,7 @@
                 const badgesVal = parsed.valoracion ? parsed.valoracion.map(item => `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2 py-0.5 rounded-md text-[10px] font-semibold">${item}</span>`).join('') : '';
 
                 grid.innerHTML += `
-                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 flex flex-col justify-between">
+                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-4 flex flex-col justify-between">
                         <div class="space-y-3">
                             <div class="flex justify-between items-start">
                                 <div class="flex items-center gap-3">
@@ -924,7 +1011,13 @@
                                 ${(parsed.ta || parsed.glucosa) ? `<p class="pt-1 text-teal-700 font-medium">TA: ${parsed.ta || 'N/D'} | Glucosa: ${parsed.glucosa || 'N/D'} mg/dl</p>` : ''}
                             </div>
                             ${(badgesPat || badgesVal) ? `<div class="space-y-1"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Historial y Valoración:</p><div class="flex flex-wrap gap-1">${badgesPat} ${badgesVal}</div></div>` : ''}
-                            <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">${parsed.notas || 'Sin observaciones'}</p>
+                        </div>
+                        
+                        <!-- BOTÓN VER HISTORIAL CLÍNICO -->
+                        <div class="pt-2 border-t border-slate-100">
+                            <button onclick="viewPatientHistory('${p.id}')" class="w-full bg-teal-50 hover:bg-teal-100 text-teal-700 border border-teal-200 py-2.5 px-4 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+                                <i class="fa-solid fa-notes-medical"></i> Ver Historial Clínico
+                            </button>
                         </div>
                     </div>
                 `;
@@ -1006,7 +1099,7 @@
         }
 
         function filterPatients() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
+            const query = document.getElementById('searchInput'].value.toLowerCase();
             const padecimientoFilter = document.getElementById('filterPadecimientosSelect').value;
 
             const filtered = pacientes.filter(p => {
