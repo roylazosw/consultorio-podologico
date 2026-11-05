@@ -15,7 +15,7 @@
             theme: {
                 extend: {
                     colors: {
-                        tealbrand: {
+                        brand: {
                             50: '#f0fdfa',
                             100: '#ccfbf1',
                             500: '#009699',
@@ -34,19 +34,19 @@
     <div id="loginScreen" class="fixed inset-0 bg-slate-100 z-50 flex items-center justify-center p-4">
         <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-8 space-y-6 shadow-xl">
             <div class="text-center space-y-3">
-                <!-- Logotipo Exacto a la Imagen -->
-                <div class="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm inline-flex items-center justify-center w-16 h-16">
-                    <svg viewBox="0 0 200 240" class="w-12 h-12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Hoja en el arco del pie -->
-                        <path d="M 75 100 C 40 100 20 120 20 150 C 20 175 45 190 75 170 C 75 140 75 120 75 100 Z" fill="#69c8cd" stroke="#009699" stroke-width="6" stroke-linejoin="round"/>
-                        <path d="M 25 150 Q 50 145 75 140" stroke="#009699" stroke-width="5" stroke-linecap="round"/>
-                        <!-- Contorno del Pie -->
-                        <path d="M 105 55 C 150 65 150 130 115 175 C 90 205 90 220 120 220 C 150 220 160 170 160 110 C 160 65 130 45 105 55 Z" stroke="#009699" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                        <!-- Dedos -->
-                        <ellipse cx="90" cy="35" rx="13" ry="17" fill="#69c8cd" stroke="#009699" stroke-width="6"/>
-                        <ellipse cx="123" cy="30" rx="10" ry="14" fill="#69c8cd" stroke="#009699" stroke-width="5"/>
-                        <ellipse cx="150" cy="40" rx="8" ry="11" fill="#69c8cd" stroke="#009699" stroke-width="5"/>
-                        <ellipse cx="170" cy="60" rx="7" ry="9" fill="#69c8cd" stroke="#009699" stroke-width="5"/>
+                <!-- Logotipo Exacto Calcado de tu Imagen -->
+                <div class="bg-white p-2 rounded-2xl border border-slate-100 shadow-sm inline-flex items-center justify-center w-16 h-16">
+                    <svg viewBox="0 0 100 100" class="w-12 h-12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Dedos del pie (circulitos superiores de izq a der) -->
+                        <circle cx="38" cy="18" r="6" stroke="#009699" stroke-width="3" fill="#e0f2fe"/>
+                        <circle cx="53" cy="15" r="6" stroke="#009699" stroke-width="3" fill="#e0f2fe"/>
+                        <circle cx="68" cy="20" r="5.5" stroke="#009699" stroke-width="3" fill="#e0f2fe"/>
+                        <circle cx="80" cy="29" r="4.5" stroke="#009699" stroke-width="3" fill="#e0f2fe"/>
+                        <!-- Hoja lateral izquierda -->
+                        <path d="M 32 55 C 10 55 5 70 15 80 C 25 90 40 80 40 65 C 40 60 38 55 32 55 Z" stroke="#009699" stroke-width="3" fill="#a7f3d0"/>
+                        <path d="M 16 75 C 24 73 30 68 36 62" stroke="#009699" stroke-width="2.5" stroke-linecap="round"/>
+                        <!-- Silueta principal del pie -->
+                        <path d="M 35 28 C 30 40 30 55 36 70 C 42 85 55 90 65 85 C 78 78 82 55 82 40 C 82 28 65 25 53 28 C 45 30 38 25 35 28 Z" stroke="#009699" stroke-width="3.5" stroke-linejoin="round" fill="none"/>
                     </svg>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-900">Pie saludable</h2>
@@ -81,7 +81,7 @@
                     Usuario o contraseña incorrectos.
                 </div>
 
-                <button type="submit" class="w-full bg-[#009699] hover:bg-[#007f82] text-white py-3 rounded-xl text-sm font-semibold transition-all shadow-md shadow-teal-600/20 flex items-center justify-center gap-2 cursor-pointer">
+                <button type="submit" class="w-full bg-[#009699] hover:bg-[#007f82] text-white py-3 rounded-xl text-sm font-semibold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesión
                 </button>
             </form>
@@ -95,14 +95,14 @@
             <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="flex items-center gap-3">
                     <div class="bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-center w-12 h-12">
-                        <svg viewBox="0 0 200 240" class="w-9 h-9" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M 75 100 C 40 100 20 120 20 150 C 20 175 45 190 75 170 C 75 140 75 120 75 100 Z" fill="#69c8cd" stroke="#009699" stroke-width="6" stroke-linejoin="round"/>
-                            <path d="M 25 150 Q 50 145 75 140" stroke="#009699" stroke-width="5" stroke-linecap="round"/>
-                            <path d="M 105 55 C 150 65 150 130 115 175 C 90 205 90 220 120 220 C 150 220 160 170 160 110 C 160 65 130 45 105 55 Z" stroke="#009699" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                            <ellipse cx="90" cy="35" rx="13" ry="17" fill="#69c8cd" stroke="#009699" stroke-width="6"/>
-                            <ellipse cx="123" cy="30" rx="10" ry="14" fill="#69c8cd" stroke="#009699" stroke-width="5"/>
-                            <ellipse cx="150" cy="40" rx="8" ry="11" fill="#69c8cd" stroke="#009699" stroke-width="5"/>
-                            <ellipse cx="170" cy="60" rx="7" ry="9" fill="#69c8cd" stroke="#009699" stroke-width="5"/>
+                        <svg viewBox="0 0 100 100" class="w-9 h-9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="38" cy="18" r="6" stroke="#009699" stroke-width="3" fill="#e0f2fe"/>
+                            <circle cx="53" cy="15" r="6" stroke="#009699" stroke-width="3" fill="#e0f2fe"/>
+                            <circle cx="68" cy="20" r="5.5" stroke="#009699" stroke-width="3" fill="#e0f2fe"/>
+                            <circle cx="80" cy="29" r="4.5" stroke="#009699" stroke-width="3" fill="#e0f2fe"/>
+                            <path d="M 32 55 C 10 55 5 70 15 80 C 25 90 40 80 40 65 C 40 60 38 55 32 55 Z" stroke="#009699" stroke-width="3" fill="#a7f3d0"/>
+                            <path d="M 16 75 C 24 73 30 68 36 62" stroke="#009699" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M 35 28 C 30 40 30 55 36 70 C 42 85 55 90 65 85 C 78 78 82 55 82 40 C 82 28 65 25 53 28 C 45 30 38 25 35 28 Z" stroke="#009699" stroke-width="3.5" stroke-linejoin="round" fill="none"/>
                         </svg>
                     </div>
                     <div>
