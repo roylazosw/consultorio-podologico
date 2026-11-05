@@ -198,7 +198,7 @@
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                     <div class="relative w-full md:w-96">
                         <i class="fa-solid fa-search absolute left-3.5 top-3.5 text-slate-400"></i>
-                        <input type="text" id="searchInput" oninput="filterPatients()" placeholder="Buscar por nombre, teléfono, ocupación..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900 placeholder-slate-400">
+                        <input type="text" id="searchInput" oninput="filterPatients()" placeholder="Buscar por nombre, teléfono o padecimiento..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900 placeholder-slate-400">
                     </div>
                     <div class="flex items-center gap-2 w-full md:w-auto">
                         <span class="text-xs text-slate-500 font-medium whitespace-nowrap">Filtrar por:</span>
@@ -246,8 +246,8 @@
             
             <form id="patientForm" onsubmit="savePatient(event)" class="space-y-4">
                 <input type="hidden" id="editPatientId">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="md:col-span-2">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre Completo *</label>
                         <input type="text" id="nombre" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
                     </div>
@@ -256,43 +256,27 @@
                         <input type="number" id="edad" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
                     </div>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Teléfono</label>
                         <input type="tel" id="telefono" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">Ocupación</label>
-                        <input type="text" id="ocupacion" placeholder="Ej. Comerciante, Docente..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">Dirección</label>
-                    <input type="text" id="direccion" placeholder="Calle, número, colonia, ciudad..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-                    <div>
                         <label class="block text-xs font-semibold text-slate-600 mb-1">Fotografía del Paciente</label>
                         <div class="flex items-center gap-3">
-                            <img id="previewFoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150" class="w-12 h-12 rounded-full object-cover border border-slate-200 shrink-0 shadow-sm">
+                            <img id="previewFoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150" class="w-12 h-12 rounded-full object-cover border border-slate-200 shrink-0">
                             <input type="file" id="fotoFile" accept="image/*" onchange="compressAndPreviewImage(event)" class="w-full text-xs text-slate-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-teal-50 file:text-teal-600 hover:file:bg-teal-100 cursor-pointer">
                         </div>
                     </div>
                 </div>
-
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-2">Padecimientos Podológicos Frecuentes</label>
                     <div id="padecimientosContainer" class="flex flex-wrap gap-2"></div>
                 </div>
-
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Observaciones / Alergias / Medicamentos</label>
-                    <textarea id="observaciones" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900"></textarea>
+                    <textarea id="observaciones" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900"></textarea>
                 </div>
-
                 <div class="flex justify-end gap-3 pt-4 border-t border-slate-100">
                     <button type="button" onclick="closeModal('patientModal')" class="px-4 py-2 rounded-xl text-sm font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer">Cancelar</button>
                     <button type="submit" id="btnSavePatient" class="px-5 py-2 rounded-xl text-sm font-semibold bg-teal-600 hover:bg-teal-500 text-white shadow-md shadow-teal-600/20 cursor-pointer">Guardar Paciente</button>
@@ -414,26 +398,17 @@
         async function loadDataFromCloud() {
             try {
                 const { data: pacientesData, error: errPac } = await _supabase.from('pacientes').select('*');
-                if (errPac) {
-                    console.error('Error cargando pacientes:', errPac);
-                } else {
-                    pacientes = pacientesData || [];
-                    console.log('Pacientes cargados desde Supabase:', pacientes);
-                }
+                if (!errPac) pacientes = pacientesData || [];
 
-                const { data: citasData, error: errCit } = await _supabase.from('citas').select('*');
-                if (errCit) {
-                    console.error('Error cargando citas:', errCit);
-                } else {
-                    citas = citasData || [];
-                }
+                const { data: citasData, error: errCit } = await _supabase.from('citas').select('id, paciente_id, fecha, hora, motivo, status');
+                if (!errCit) citas = citasData || [];
 
                 updateStats();
                 renderPatients();
                 renderAppointments();
                 updatePatientSelect();
             } catch (e) {
-                console.error('Excepción general al cargar datos:', e);
+                console.error('Error al cargar datos:', e);
             }
         }
 
@@ -492,6 +467,7 @@
             document.getElementById(modalId).classList.add('hidden');
         }
 
+        // Función optimizada para comprimir la foto y evitar errores de tamaño en Supabase
         function compressAndPreviewImage(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -502,8 +478,8 @@
                 img.src = e.target.result;
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 250;
-                    const MAX_HEIGHT = 250;
+                    const MAX_WIDTH = 300;
+                    const MAX_HEIGHT = 300;
                     let width = img.width;
                     let height = img.height;
 
@@ -524,7 +500,8 @@
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                    // Convertir a formato comprimido JPEG Base64
+                    currentPhotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
                     document.getElementById('previewFoto').src = currentPhotoBase64;
                 };
             };
@@ -541,11 +518,9 @@
                 document.getElementById('nombre').value = p.nombre || '';
                 document.getElementById('edad').value = p.edad || '';
                 document.getElementById('telefono').value = p.telefono || '';
-                document.getElementById('ocupacion').value = p.ocupacion || '';
-                document.getElementById('direccion').value = p.direccion || '';
                 document.getElementById('observaciones').value = p.observaciones || '';
                 
-                currentPhotoBase64 = (p.foto && p.foto.length > 20) ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
+                currentPhotoBase64 = p.foto && p.foto.startsWith('data:image') ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
                 document.getElementById('previewFoto').src = currentPhotoBase64;
                 document.getElementById('fotoFile').value = '';
 
@@ -601,8 +576,6 @@
             const nombre = document.getElementById('nombre').value;
             const edad = parseInt(document.getElementById('edad').value);
             const telefono = document.getElementById('telefono').value;
-            const ocupacion = document.getElementById('ocupacion').value;
-            const direccion = document.getElementById('direccion').value;
             const observaciones = document.getElementById('observaciones').value;
             
             const checkboxes = document.querySelectorAll('input[name="padecimiento"]:checked');
@@ -612,28 +585,23 @@
                 nombre, 
                 edad, 
                 telefono, 
-                ocupacion,
-                direccion,
                 padecimientos, 
                 observaciones, 
                 foto: currentPhotoBase64 
             };
             
-            console.log("Datos a enviar a Supabase:", patientData);
-
             let error;
             if (editId) {
-                const res = await _supabase.from('pacientes').update(patientData).eq('id', editId);
-                error = res.error;
+                const { err } = await _supabase.from('pacientes').update(patientData).eq('id', editId);
+                error = err;
             } else {
                 patientData.id = 'pac_' + Date.now();
-                const res = await _supabase.from('pacientes').insert([patientData]);
-                error = res.error;
+                const { err } = await _supabase.from('pacientes').insert([patientData]);
+                error = err;
             }
 
             if (error) {
-                console.error("Error devuelto por Supabase:", error);
-                alert('Error al guardar en Supabase: ' + error.message);
+                alert('Error al guardar: ' + error.message);
                 return;
             }
 
@@ -643,7 +611,7 @@
         }
 
         async function deletePatient(id) {
-            if (confirm('¿Estás seguro de eliminar este paciente?')) {
+            if (confirm('¿Estás seguro de eliminar este paciente? Se eliminarán también sus registros.')) {
                 const { error } = await _supabase.from('pacientes').delete().eq('id', id);
                 if (error) {
                     alert('Error al eliminar: ' + error.message);
@@ -669,13 +637,13 @@
 
             let error;
             if (editId) {
-                const res = await _supabase.from('citas').update(citaData).eq('id', editId);
-                error = res.error;
+                const { err } = await _supabase.from('citas').update(citaData).eq('id', editId);
+                error = err;
             } else {
                 citaData.id = 'cit_' + Date.now();
                 citaData.status = 'Programada';
-                const res = await _supabase.from('citas').insert([citaData]);
-                error = res.error;
+                const { err } = await _supabase.from('citas').insert([citaData]);
+                error = err;
             }
 
             if (error) {
@@ -733,14 +701,14 @@
 
             list.forEach(p => {
                 const badges = p.padecimientos ? p.padecimientos.map(pad => `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2.5 py-0.5 rounded-lg text-[10px] font-semibold">${pad}</span>`).join('') : '';
-                const fotoPaciente = (p.foto && p.foto.length > 20) ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
+                const fotoPaciente = p.foto && p.foto.startsWith('data:image') ? p.foto : 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
 
                 grid.innerHTML += `
                     <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 flex flex-col justify-between">
                         <div class="space-y-3">
                             <div class="flex justify-between items-start">
                                 <div class="flex items-center gap-3">
-                                    <img src="${fotoPaciente}" class="w-12 h-12 rounded-full object-cover border border-slate-200 shadow-sm">
+                                    <img src="${fotoPaciente}" class="w-12 h-12 rounded-full object-cover border border-slate-200">
                                     <div>
                                         <h4 class="font-bold text-slate-900 text-sm">${p.nombre}</h4>
                                         <p class="text-xs text-slate-500">Edad: ${p.edad} años • Tel: ${p.telefono || 'No registrado'}</p>
@@ -754,10 +722,6 @@
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </div>
-                            </div>
-                            <div class="text-xs space-y-1 text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                                <p><strong class="text-slate-700">Ocupación:</strong> ${p.ocupacion || 'No especificada'}</p>
-                                <p><strong class="text-slate-700">Dirección:</strong> ${p.direccion || 'No especificada'}</p>
                             </div>
                             <div class="flex flex-wrap gap-1.5">${badges}</div>
                             <p class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">${p.observaciones || 'Sin observaciones'}</p>
@@ -846,7 +810,7 @@
             const padecimientoFilter = document.getElementById('filterPadecimientosSelect').value;
 
             const filtered = pacientes.filter(p => {
-                const matchText = p.nombre.toLowerCase().includes(query) || (p.telefono && p.telefono.includes(query)) || (p.ocupacion && p.ocupacion.toLowerCase().includes(query)) || (p.direccion && p.direccion.toLowerCase().includes(query));
+                const matchText = p.nombre.toLowerCase().includes(query) || (p.telefono && p.telefono.includes(query));
                 const matchPad = padecimientoFilter === 'todos' || (p.padecimientos && p.padecimientos.some(pad => pad.includes(padecimientoFilter)));
                 return matchText && matchPad;
             });
