@@ -395,7 +395,8 @@
                 const { data: pacientesData, error: errPac } = await _supabase.from('pacientes').select('*');
                 if (!errPac) pacientes = pacientesData || [];
 
-                const { data: citasData, error: errCit } = await _supabase.from('citas').select('*');
+                // Solución al error 400: Seleccionamos explícitamente solo las columnas existentes
+                const { data: citasData, error: errCit } = await _supabase.from('citas').select('id, paciente_id, fecha, hora, motivo, status');
                 if (!errCit) citas = citasData || [];
 
                 updateStats();
@@ -488,7 +489,7 @@
             const consultorio = document.getElementById('citaConsultorio').value;
             const motivoInput = document.getElementById('citaMotivo').value || 'Consulta podológica';
             
-            // Guardamos el consultorio dentro del motivo para no requerir modificar la tabla en Supabase
+            // Guardamos el consultorio dentro del campo motivo para no modificar la base de datos
             const motivoFinal = `[${consultorio}] ${motivoInput}`;
 
             const citaData = {
@@ -555,7 +556,7 @@
                 const nombrePaciente = paciente ? paciente.nombre : 'Paciente general';
                 const badgeColor = c.status === 'Cancelada' ? 'bg-red-50 text-red-600 border-red-200' : 'bg-amber-50 text-amber-700 border-amber-200';
                 
-                // Extraer el consultorio del texto del motivo si lo contiene
+                // Formatear y extraer sucursal del motivo
                 let consultorioHTML = '';
                 let motivoTexto = c.motivo || '';
                 if (motivoTexto.startsWith('[Metepec]')) {
