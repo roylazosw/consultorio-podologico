@@ -834,7 +834,7 @@
             const padecimientoFilter = document.getElementById('filterPadecimientosSelect').value;
 
             const filtered = pacientes.filter(p => {
-                const matchText = p.nombre.toLowerCase().includes(query) || (p.telefono && p.telefono.includes(query)) || (p.ocupacion && p.ocupacion.toLowerCase().includes(query));
+                const matchText = p.nombre.toLowerCase().includes(query) || (p.telefono && p.telefono.includes(query)) || (p.ocupacion && p.ocupacion.toLowerCase().includes(query)) || (p.direccion && p.direccion.toLowerCase().includes(query));
                 const matchPad = padecimientoFilter === 'todos' || (p.padecimientos && p.padecimientos.some(pad => pad.includes(padecimientoFilter)));
                 return matchText && matchPad;
             });
