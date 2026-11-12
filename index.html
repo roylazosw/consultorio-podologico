@@ -255,6 +255,7 @@
             <div class="p-5 sm:p-6 overflow-y-auto flex-1 space-y-5">
                 <form id="patientForm" onsubmit="savePatient(event)" class="space-y-5">
                     <input type="hidden" id="editPatientId">
+                    <input type="hidden" id="linkAppointmentId">
                     
                     <div class="bg-teal-50/70 p-4 sm:p-5 rounded-2xl border border-teal-200 space-y-3.5 shadow-sm">
                         <h4 class="text-xs font-bold text-teal-900 uppercase tracking-wider flex items-center gap-1.5">
@@ -444,21 +445,47 @@
         </div>
     </div>
 
-    <!-- MODAL NUEVO / EDITAR CITA -->
+    <!-- MODAL NUEVO / EDITAR CITA (CON OPCIÓN DE CITA RÁPIDA SIN REGISTRO) -->
     <div id="appointmentModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 space-y-6 shadow-xl">
+        <div class="bg-white border border-slate-200 rounded-3xl max-w-md w-full p-6 space-y-5 shadow-xl">
             <div class="flex justify-between items-center border-b border-slate-100 pb-4">
                 <h3 id="appointmentModalTitle" class="text-lg font-bold text-slate-900 flex items-center gap-2">
                     <i class="fa-solid fa-calendar-check text-teal-600"></i> Agendar Nueva Cita
                 </h3>
-                <button onclick="closeModal('appointmentModal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+                <button onclick="closeModal('appointmentModal')" class="text-slate-400 hover:text-slate-600 cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <form id="appointmentForm" onsubmit="saveAppointment(event)" class="space-y-4">
                 <input type="hidden" id="editAppointmentId">
-                <div>
+                
+                <!-- Selector Tipo de Paciente -->
+                <div class="bg-slate-100 p-1 rounded-xl grid grid-cols-2 gap-1 border border-slate-200">
+                    <button type="button" id="btnTipoRegistrado" onclick="setTipoPacienteCita('registrado')" class="py-2 px-3 rounded-lg text-xs font-bold transition-all bg-white text-teal-700 shadow-sm cursor-pointer">
+                        <i class="fa-solid fa-user-check mr-1"></i> Paciente Registrado
+                    </button>
+                    <button type="button" id="btnTipoRapido" onclick="setTipoPacienteCita('rapido')" class="py-2 px-3 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 cursor-pointer">
+                        <i class="fa-solid fa-bolt mr-1"></i> Cita Rápida (Nuevo)
+                    </button>
+                </div>
+
+                <!-- Contenedor Paciente Registrado -->
+                <div id="divPacienteRegistrado">
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Seleccionar Paciente *</label>
                     <select id="citaPacienteId" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900"></select>
                 </div>
+
+                <!-- Contenedor Cita Rápida (Paciente Nuevo sin expediente) -->
+                <div id="divPacienteRapido" class="hidden space-y-3 bg-amber-50/60 p-3.5 rounded-2xl border border-amber-200">
+                    <p class="text-[11px] text-amber-800 font-medium"><i class="fa-solid fa-circle-info mr-1"></i> Agenda la cita solo con sus datos básicos y completa su historial cuando acuda a consulta.</p>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Nombre del Paciente *</label>
+                        <input type="text" id="citaRapidaNombre" placeholder="Nombre completo" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 mb-1">Teléfono (Para WhatsApp)</label>
+                        <input type="tel" id="citaRapidaTelefono" placeholder="10 dígitos" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
+                    </div>
+                </div>
+
                 <div>
                     <label class="block text-xs font-semibold text-slate-600 mb-1">Consultorio / Sucursal *</label>
                     <select id="citaConsultorio" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-teal-500 text-slate-900">
@@ -533,6 +560,7 @@
         let activePatientForPhotos = null;
         let currentCarouselIndex = 0;
         let activeDateFilter = null;
+        let tipoPacienteCitaActual = 'registrado';
 
         window.onload = function() {
             checkAuth();
@@ -917,7 +945,8 @@
             return data;
         }
 
-        function openPatientModal(id = null) {
+        function openPatientModal(id = null, prefillData = null) {
+            document.getElementById('linkAppointmentId').value = '';
             if (id) {
                 const p = pacientes.find(item => item.id === id);
                 if (!p) return;
@@ -957,6 +986,12 @@
                 document.getElementById('patientForm').reset();
                 document.getElementById('editPatientId').value = '';
                 
+                if (prefillData) {
+                    document.getElementById('nombre').value = prefillData.nombre || '';
+                    document.getElementById('telefono').value = prefillData.telefono || '';
+                    document.getElementById('linkAppointmentId').value = prefillData.citaId || '';
+                }
+
                 currentPhotoBase64 = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=150';
                 document.getElementById('previewFoto').src = currentPhotoBase64;
                 
@@ -964,6 +999,10 @@
                 renderCheckboxes([], [], []);
             }
             openModal('patientModal');
+        }
+
+        function completarRegistroDesdeCita(citaId, nombre, telefono) {
+            openPatientModal(null, { citaId, nombre, telefono });
         }
 
         function viewPatientHistory(id) {
@@ -1232,6 +1271,58 @@
             if (updatedPatient) renderCarouselHTML(updatedPatient);
         }
 
+        function setTipoPacienteCita(tipo) {
+            tipoPacienteCitaActual = tipo;
+            const btnReg = document.getElementById('btnTipoRegistrado');
+            const btnRap = document.getElementById('btnTipoRapido');
+            const divReg = document.getElementById('divPacienteRegistrado');
+            const divRap = document.getElementById('divPacienteRapido');
+            const selPac = document.getElementById('citaPacienteId');
+            const inpNom = document.getElementById('citaRapidaNombre');
+
+            if (tipo === 'registrado') {
+                btnReg.className = "py-2 px-3 rounded-lg text-xs font-bold transition-all bg-white text-teal-700 shadow-sm cursor-pointer";
+                btnRap.className = "py-2 px-3 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 cursor-pointer";
+                divReg.classList.remove('hidden');
+                divRap.classList.add('hidden');
+                selPac.required = true;
+                inpNom.required = false;
+            } else {
+                btnRap.className = "py-2 px-3 rounded-lg text-xs font-bold transition-all bg-white text-amber-700 shadow-sm cursor-pointer";
+                btnReg.className = "py-2 px-3 rounded-lg text-xs font-bold transition-all text-slate-600 hover:text-slate-900 cursor-pointer";
+                divRap.classList.remove('hidden');
+                divReg.classList.add('hidden');
+                selPac.required = false;
+                inpNom.required = true;
+            }
+        }
+
+        function parseMotivoCita(motivoRaw) {
+            let res = { consultorio: '', nuevoNombre: '', nuevoTel: '', motivoLimpio: motivoRaw || '' };
+            if (!motivoRaw) return res;
+
+            let texto = motivoRaw;
+            if (texto.startsWith('[Metepec]')) {
+                res.consultorio = 'Metepec';
+                texto = texto.replace('[Metepec]', '').trim();
+            } else if (texto.startsWith('[Toluca]')) {
+                res.consultorio = 'Toluca';
+                texto = texto.replace('[Toluca]', '').trim();
+            }
+
+            if (texto.includes('[NUEVO:')) {
+                const match = texto.match(/\[NUEVO:(.*?)\|(.*?)\]/);
+                if (match) {
+                    res.nuevoNombre = match[1].trim();
+                    res.nuevoTel = match[2].trim();
+                    texto = texto.replace(match[0], '').trim();
+                }
+            }
+
+            res.motivoLimpio = texto || 'Consulta podológica';
+            return res;
+        }
+
         function openAppointmentModal(id = null) {
             updatePatientSelect();
             if (id) {
@@ -1241,24 +1332,29 @@
                 document.getElementById('appointmentModalTitle').innerHTML = `<i class="fa-solid fa-calendar-pen text-teal-600"></i> Editar Cita`;
                 document.getElementById('btnSaveAppointment').innerText = 'Guardar Cambios';
                 document.getElementById('editAppointmentId').value = cita.id;
-                document.getElementById('citaPacienteId').value = cita.paciente_id;
                 document.getElementById('citaFecha').value = cita.fecha;
                 document.getElementById('citaHora').value = cita.hora;
 
-                let motivoLimpio = cita.motivo || '';
-                if (motivoLimpio.startsWith('[Metepec]')) {
-                    document.getElementById('citaConsultorio').value = 'Metepec';
-                    motivoLimpio = motivoLimpio.replace('[Metepec]', '').trim();
-                } else if (motivoLimpio.startsWith('[Toluca]')) {
-                    document.getElementById('citaConsultorio').value = 'Toluca';
-                    motivoLimpio = motivoLimpio.replace('[Toluca]', '').trim();
+                const parsedMotivo = parseMotivoCita(cita.motivo);
+                if (parsedMotivo.consultorio) {
+                    document.getElementById('citaConsultorio').value = parsedMotivo.consultorio;
                 }
-                document.getElementById('citaMotivo').value = motivoLimpio;
+                document.getElementById('citaMotivo').value = parsedMotivo.motivoLimpio;
+
+                if (parsedMotivo.nuevoNombre) {
+                    setTipoPacienteCita('rapido');
+                    document.getElementById('citaRapidaNombre').value = parsedMotivo.nuevoNombre;
+                    document.getElementById('citaRapidaTelefono').value = parsedMotivo.nuevoTel;
+                } else {
+                    setTipoPacienteCita('registrado');
+                    document.getElementById('citaPacienteId').value = cita.paciente_id;
+                }
             } else {
                 document.getElementById('appointmentModalTitle').innerHTML = `<i class="fa-solid fa-calendar-check text-teal-600"></i> Agendar Nueva Cita`;
                 document.getElementById('btnSaveAppointment').innerText = 'Agendar';
                 document.getElementById('appointmentForm').reset();
                 document.getElementById('editAppointmentId').value = '';
+                setTipoPacienteCita('registrado');
             }
             openModal('appointmentModal');
         }
@@ -1266,6 +1362,7 @@
         async function savePatient(e) {
             e.preventDefault();
             const editId = document.getElementById('editPatientId').value;
+            const linkCitaId = document.getElementById('linkAppointmentId').value;
             const nombre = document.getElementById('nombre').value;
             const edad = parseInt(document.getElementById('edad').value);
             const telefono = document.getElementById('telefono').value;
@@ -1333,11 +1430,13 @@
             };
 
             let error;
+            let newPatientId = editId;
             if (editId) {
                 const res = await _supabase.from('pacientes').update(patientData).eq('id', editId);
                 error = res.error;
             } else {
-                patientData.id = 'pac_' + Date.now();
+                newPatientId = 'pac_' + Date.now();
+                patientData.id = newPatientId;
                 const res = await _supabase.from('pacientes').insert([patientData]);
                 error = res.error;
             }
@@ -1347,9 +1446,23 @@
                 return;
             }
 
+            // Si viene desde una cita rápida, vincular la cita al paciente recién creado y limpiar etiqueta [NUEVO:...]
+            if (linkCitaId && newPatientId) {
+                const citaVincular = citas.find(c => c.id === linkCitaId);
+                if (citaVincular) {
+                    const parsedM = parseMotivoCita(citaVincular.motivo);
+                    const motivoActualizado = parsedM.consultorio ? `[${parsedM.consultorio}] ${parsedM.motivoLimpio}` : parsedM.motivoLimpio;
+                    await _supabase.from('citas').update({
+                        paciente_id: newPatientId,
+                        motivo: motivoActualizado
+                    }).eq('id', linkCitaId);
+                }
+            }
+
             await loadDataFromCloud();
             closeModal('patientModal');
             document.getElementById('patientForm').reset();
+            document.getElementById('linkAppointmentId').value = '';
         }
 
         async function deletePatient(id) {
@@ -1368,10 +1481,21 @@
             const editId = document.getElementById('editAppointmentId').value;
             const consultorio = document.getElementById('citaConsultorio').value;
             const motivoInput = document.getElementById('citaMotivo').value || 'Consulta podológica';
-            const motivoFinal = `[${consultorio}] ${motivoInput}`;
+            
+            let pacienteIdFinal = '';
+            let motivoFinal = `[${consultorio}] ${motivoInput}`;
+
+            if (tipoPacienteCitaActual === 'rapido') {
+                const nombreRap = document.getElementById('citaRapidaNombre').value.trim().replace(/[\[\]\|]/g, '');
+                const telRap = document.getElementById('citaRapidaTelefono').value.trim().replace(/[\[\]\|]/g, '');
+                pacienteIdFinal = null;
+                motivoFinal = `[${consultorio}] [NUEVO:${nombreRap}|${telRap}] ${motivoInput}`;
+            } else {
+                pacienteIdFinal = document.getElementById('citaPacienteId').value;
+            }
 
             const citaData = {
-                paciente_id: document.getElementById('citaPacienteId').value,
+                paciente_id: pacienteIdFinal,
                 fecha: document.getElementById('citaFecha').value,
                 hora: document.getElementById('citaHora').value,
                 motivo: motivoFinal
@@ -1525,31 +1649,42 @@
             }
 
             filtered.forEach((c, index) => {
-                const paciente = pacientes.find(p => p.id === c.paciente_id);
-                const nombrePaciente = paciente ? paciente.nombre : 'Paciente general';
-                const telefonoPaciente = paciente ? paciente.telefono : '';
+                const paciente = c.paciente_id ? pacientes.find(p => p.id === c.paciente_id) : null;
+                const parsedMotivo = parseMotivoCita(c.motivo);
+                const esSinRegistro = !paciente && Boolean(parsedMotivo.nuevoNombre);
+
+                const nombrePaciente = paciente ? paciente.nombre : (parsedMotivo.nuevoNombre || 'Paciente general');
+                const telefonoPaciente = paciente ? paciente.telefono : (parsedMotivo.nuevoTel || '');
                 
                 let consultorioHTML = '';
-                let motivoTexto = c.motivo || '';
-                if (motivoTexto.startsWith('[Metepec]')) {
-                    consultorioHTML = `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2 py-0.5 rounded-md text-[10px] font-bold"><i class="fa-solid fa-location-dot mr-1"></i>Metepec</span>`;
-                    motivoTexto = motivoTexto.replace('[Metepec]', '').trim();
-                } else if (motivoTexto.startsWith('[Toluca]')) {
-                    consultorioHTML = `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2 py-0.5 rounded-md text-[10px] font-bold"><i class="fa-solid fa-location-dot mr-1"></i>Toluca</span>`;
-                    motivoTexto = motivoTexto.replace('[Toluca]', '').trim();
+                if (parsedMotivo.consultorio) {
+                    consultorioHTML = `<span class="bg-teal-50 text-teal-700 border border-teal-100 px-2 py-0.5 rounded-md text-[10px] font-bold"><i class="fa-solid fa-location-dot mr-1"></i>${parsedMotivo.consultorio}</span>`;
                 }
+
+                const badgeSinRegistroHTML = esSinRegistro 
+                    ? `<span class="bg-amber-50 text-amber-700 border border-amber-200 px-2 py-0.5 rounded-md text-[10px] font-bold inline-flex items-center gap-1 mt-1"><i class="fa-solid fa-user-clock"></i> Sin registro</span>` 
+                    : '';
+
+                const botonCompletarRegistroHTML = esSinRegistro
+                    ? `<button onclick="completarRegistroDesdeCita('${c.id}', '${nombrePaciente.replace(/'/g, "\\'")}', '${telefonoPaciente.replace(/'/g, "\\'")}')" class="w-full bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm">
+                           <i class="fa-solid fa-file-medical text-sm"></i> Completar Registro e Historia Clínica
+                       </button>`
+                    : '';
 
                 const selectId = `statusSelect_${index}`;
 
                 listContainer.innerHTML += `
-                    <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm space-y-3 flex flex-col justify-between">
+                    <div class="bg-white border ${esSinRegistro ? 'border-amber-200' : 'border-slate-200'} rounded-2xl p-5 shadow-sm space-y-3 flex flex-col justify-between">
                         <div class="space-y-2">
                             <div class="flex justify-between items-center">
                                 <span class="text-xs font-bold text-teal-600"><i class="fa-solid fa-calendar mr-1"></i> ${c.fecha} - ${c.hora} hrs</span>
                                 ${consultorioHTML}
                             </div>
                             <div class="flex justify-between items-start">
-                                <h4 class="font-bold text-slate-900 text-sm">${nombrePaciente}</h4>
+                                <div>
+                                    <h4 class="font-bold text-slate-900 text-sm">${nombrePaciente}</h4>
+                                    ${badgeSinRegistroHTML}
+                                </div>
                                 <div class="flex gap-1">
                                     <button onclick="openAppointmentModal('${c.id}')" class="p-1.5 text-slate-400 hover:text-teal-600 transition-all cursor-pointer" title="Editar Cita">
                                         <i class="fa-solid fa-pen text-xs"></i>
@@ -1559,13 +1694,15 @@
                                     </button>
                                 </div>
                             </div>
-                            <p class="text-xs text-slate-500">Motivo: ${motivoTexto}</p>
+                            <p class="text-xs text-slate-500">Motivo: ${parsedMotivo.motivoLimpio}</p>
                         </div>
                         
                         <div class="space-y-2 pt-2 border-t border-slate-100">
+                            ${botonCompletarRegistroHTML}
+
                             <!-- Botón de Recordatorio WhatsApp -->
                             <div>
-                                <button onclick="enviarWhatsApp('${nombrePaciente}', '${c.fecha}', '${c.hora}', '${motivoTexto}', '${telefonoPaciente}')" class="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm">
+                                <button onclick="enviarWhatsApp('${nombrePaciente.replace(/'/g, "\\'")}', '${c.fecha}', '${c.hora}', '${parsedMotivo.motivoLimpio.replace(/'/g, "\\'")}', '${telefonoPaciente}')" class="w-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 py-2 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm">
                                     <i class="fa-brands fa-whatsapp text-sm"></i> Enviar Recordatorio por WhatsApp
                                 </button>
                             </div>
